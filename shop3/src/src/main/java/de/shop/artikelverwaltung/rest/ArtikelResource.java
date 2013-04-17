@@ -7,9 +7,11 @@ import java.net.URI;
 import java.util.Collection;
 import java.util.Locale;
 
+import de.shop.artikelverwaltung.domain.Artikel;
+
+
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -21,7 +23,6 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
-import de.shop.artikelverwaltung.domain.Artikel;
 import de.shop.util.LocaleHelper;
 import de.shop.util.Mock;
 import de.shop.util.NotFoundException;
@@ -82,7 +83,7 @@ public class ArtikelResource {
 		}
 		
 		// URLs innerhalb der gefundenen Bestellung anpassen
-		//uriHelperArtikel.UpdateUriArtikel(artikel, uriInfo);
+		uriHelperArtikel.updateUriArtikel(artikel, uriInfo);
 		return artikel;
 	}
 	
@@ -101,17 +102,36 @@ public class ArtikelResource {
 		}
 		
 		//Wollen wir ehrlich entfernen oder nur die Verfügbarkeit ändern ?
-		@DELETE
-		@Path("{id:[1-9][0-9]*}")
-		@Produces
-		public Response deleteArtikel(@PathParam("id") Long artikelId) {
-			@SuppressWarnings("unused")
-			final Locale locale = localeHelper.getLocale(headers);
+	//	@DELETE
+		//@Path("{id:[1-9][0-9]*}")
+		//@Produces
+		//public Response deleteArtikel(@PathParam("id") Long artikelId) {
+			//@SuppressWarnings("unused")
+			//final Locale locale = localeHelper.getLocale(headers);
 			
 			// TODO Anwendungskern statt Mock, Verwendung von Locale
-			Mock.deleteArtikel(artikelId);
-			return Response.noContent().build();
+			//Mock.deleteArtikel(artikelId);
+			//return Response.noContent().build();
+		//}
 	
+	//@GET
+	//@Path("{id:[1-9][0-9]*}/bestellungen")
+	//public Collection<Bestellung> findBestellungenByKundeId(@PathParam("id") Long kundeId) {
+		//@SuppressWarnings("unused")
+		//final Locale locale = localeHelper.getLocale(headers);
+		
+		//// TODO Anwendungskern statt Mock, Verwendung von Locale
+		//final Collection<Bestellung> bestellungen = Mock.findBestellungenByKundeId(kundeId);
+		//if (bestellungen.isEmpty()) {
+		//	throw new NotFoundException("Zur ID " + kundeId + " wurden keine Bestellungen gefunden");
+		//}
+		
+		//// URLs innerhalb der gefundenen Bestellungen anpassen
+		//for (Bestellung bestellung : bestellungen) {
+		//	uriHelperBestellung.updateUriBestellung(bestellung, uriInfo);
+		//}
+		
+		//return bestellungen;
+	//}
 	
-		}
 }

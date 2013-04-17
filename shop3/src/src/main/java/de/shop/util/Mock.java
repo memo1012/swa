@@ -7,8 +7,12 @@ import java.util.List;
 import java.util.Set;
 
 
+
+//Anfang Code JP
 import de.shop.artikelverwaltung.domain.Artikel;
 import de.shop.artikelverwaltung.domain.Kategorie;
+//Ende Code JP
+
 import de.shop.bestellverwaltung.domain.Bestellung;
 import de.shop.kundenverwaltung.domain.AbstractKunde;
 import de.shop.kundenverwaltung.domain.Adresse;
@@ -27,8 +31,9 @@ public final class Mock {
 	private static final int MAX_ID = 99;
 	private static final int MAX_KUNDEN = 8;
 	private static final int MAX_BESTELLUNGEN = 4;
+	private static final long TEST_ID = 50;
 	
-	
+	//JP
 	private static final int MAX_ARTIKELN = 8;
 
 	//Erstellt einen neue Kunde
@@ -92,6 +97,8 @@ public final class Mock {
 		return artikeln;
 	}
 	
+	
+	//Anfang JP
 	public static Artikel findArtikelById(Long artikelid){
 		if (artikelid> MAX_ARTIKELN)
 			return null;	
@@ -120,6 +127,26 @@ public final class Mock {
 		
 	}
 	
+	public static Artikel createArtikel(Artikel artikel) {
+
+		//final int breite = artikel.getBreite();
+		//inal int leange = artikel.getLaenge();
+
+		final Kategorie kategorie = artikel.getKategorie();
+		kategorie.setId(TEST_ID);
+		kategorie.setBeschreibung("Neue Beschreibung fur neue Artikel");
+
+		artikel.setKategorie(kategorie);
+
+		artikel.setId(TEST_ID);
+
+		System.out.println("Neuer artikel: " + artikel);
+
+		return artikel;
+
+
+		}
+	
 	public static Collection<Artikel> findArtikelnByBestellungId (Long bestellungid)
 	{
 		final Bestellung bestellung = findBestellungById(bestellungid);
@@ -136,6 +163,23 @@ public final class Mock {
 		return artikeln;
 		
 	}
+	
+	//Ende Code JP
+	
+	public static Bestellung createBestellung(Bestellung bestellung) {
+		
+		bestellung.setId(TEST_ID);
+		bestellung.setAusgeliefert(false);
+
+		System.out.println("Neue Bestellung: " + bestellung);
+		return bestellung;
+	}
+	
+	public static void updateBestellung(Bestellung bestellung) {
+		// TODO Auto-generated method stub
+		System.out.println("Aktualisierter Bestellung: " + bestellung);
+		}
+	
 	//Macht ein Liste von fake bestellungen , und korigiert , sagt dass es zum richtigen Kunden gehort
 	public static Collection<Bestellung> findBestellungenByKundeId(Long kundeId) {
 		final AbstractKunde kunde = findKundeById(kundeId);
@@ -152,23 +196,22 @@ public final class Mock {
 		
 		return bestellungen;
 	}
+
+	//Anfang JP
 	//WTF ? keine echte Beziehungen ? Wir bekommen eine List von Artikeln mit
 	public static Bestellung findBestellungById(Long id) {
 		if (id > MAX_ID) {
 			return null;
 		}
 		//Random ?
-		
-		
+				
 		final AbstractKunde kunde = findKundeById(id + 1);  // andere ID fuer den Kunden
 
 		final Bestellung bestellung = new Bestellung();
 		bestellung.setId(id);
 		bestellung.setAusgeliefert(false);
 		bestellung.setKunde(kunde);
-		
-		
-		
+				
 		//Random Generation
 		int lower = 1;
 		int higher = 5;
@@ -184,6 +227,9 @@ public final class Mock {
 		
 		return bestellung;
 	}
+	
+	//Ende JP
+
 	//Wahrscheinlich gibt es schon eine name oder kunde ?
 	//ES fuhlt hier nur die infos
 	public static AbstractKunde createKunde(AbstractKunde kunde) {
@@ -210,24 +256,14 @@ public final class Mock {
 	
 	public static void updateArtikel(Artikel artikel) {
 		// TODO Auto-generated method stub
-		System.out.println("Aktualisierter Artikel: " + artikel);
+		System.out.println("Aktualisierter artikel: " + artikel);
 		
 	}
-	public static void deleteArtikel(Long ArtikelId) {
-		System.out.println("Artikel mit ID=" + ArtikelId + " geloescht");
-	}
-	private Mock() { }
 
-	public static Artikel createArtikel(Artikel artikel) {
-		// TODO Auto-generated method stub
-		final String bezeichnung = artikel.getBezeichnung();
-		final int Leange =artikel.getLaenge();
-		System.out.println("Neuer Artikel: " + artikel);
-		return artikel;
-	}
+	private Mock() { /**/ }
+
+
 	
-	public static void updateBestellung(Bestellung bestellung) {
-		// TODO Auto-generated method stub
-		System.out.println("Aktualisierter Bestellung: " + bestellung);
-	}
+
+	
 }

@@ -2,12 +2,14 @@ package de.shop.bestellverwaltung.rest;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
+import java.net.URI;
 import java.util.Collection;
 import java.util.Locale;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -22,10 +24,11 @@ import de.shop.util.LocaleHelper;
 import de.shop.util.Mock;
 import de.shop.util.NotFoundException;
 
-
+//JP Code
 import de.shop.artikelverwaltung.domain.Artikel;
 import de.shop.artikelverwaltung.rest.UriHelperArtikel;
 
+//Ende JP
 
 @Path("/bestellungen")
 @Produces(APPLICATION_JSON)
@@ -40,14 +43,33 @@ public class BestellungResource {
 	@Inject
 	private UriHelperBestellung uriHelperBestellung;
 	
-	@Inject UriHelperArtikel uriHelperArtikel;
+		//Anfang JP	Warum gibt es hier eine Bemerkung ?
+		@Inject UriHelperArtikel uriHelperArtikel;
+		//Ende JP
+	
+	
 	
 	@Inject
 	private LocaleHelper localeHelper;
 	
+	@POST
+	@Consumes(APPLICATION_JSON)
+	@Produces
+	public Response createBestellung(Bestellung bestellung) {
+		
+		@SuppressWarnings("unused")
+		final Locale locale = localeHelper.getLocale(headers);
+		
+		// TODO Anwendungskern statt Mock, Verwendung von Locale
+		bestellung = Mock.createBestellung(bestellung);
+		final URI bestellungUri = uriHelperBestellung.getUriBestellung(bestellung, uriInfo);
+		return Response.created(bestellungUri).build();
+	}
+	
 	@GET
 	@Path("{id:[1-9][0-9]*}")
 	public Bestellung findBestellungById(@PathParam("id") Long id) {
+		
 		@SuppressWarnings("unused")
 		final Locale locale = localeHelper.getLocale(headers);
 		
@@ -62,27 +84,6 @@ public class BestellungResource {
 		return bestellung;
 	}
 	
-	@GET
-	@Path("{id:[1-9][0-9]*}/artikeln")
-	public Collection<Artikel> findArtikelnByBestellungId(@PathParam("id") Long bestellungId) {
-			
-		@SuppressWarnings("unused")
-		final Locale locale = localeHelper.getLocale(headers);
-		
-		// TODO Anwendungskern statt Mock, Verwendung von Locale
-		final Collection<Artikel> artikeln = Mock.findArtikelnByBestellungId(bestellungId);
-		if (artikeln.isEmpty()) {
-			throw new NotFoundException("Zur Bestellung ID " + bestellungId + " wurden keine Artikeln gefunden");
-		}
-		
-		// URLs innerhalb der gefundenen Bestellungen anpassen
-		for (Artikel artikel : artikeln) {
-			//uriHelperArtikel.updateUriArtikel(artikel, uriInfo);
-		}
-		
-		return artikeln;
-	
-	}
 	@PUT
 	@Consumes(APPLICATION_JSON)
 	@Produces
@@ -95,6 +96,26 @@ public class BestellungResource {
 		return Response.noContent().build();
 	}
 	
-}
-	
+	//Anfang JP Code
+	@GET
+	@Path("{id:[1-9][0-9]*}/artikeln")
+	public Collection<Artikel> findArtikelnByBestellungId(@PathParam("id") Long bestellungId) {
+				
+		@SuppressWarnings("unused")
+		final Locale locale = localeHelper.getLocale(headers);
 		
+		// TODO Anwendungskern statt Mock, Verwendung von Locale
+		final Collection<Artikel> artikeln = Mock.findArtikelnByBestellungId(bestellungId);
+		if (artikeln.isEmpty()) {
+			throw new NotFoundException("Zur Bestellung ID " + bestellungId + " wurden keine Artikeln gefunden");
+		}
+		
+		// URLs innerhalb der gefundenen Bestellungen anpassen
+		for (Artikel artikel : artikeln) {
+			uriHelperArtikel.updateUriArtikel(artikel, uriInfo);
+		}
+		
+		return artikeln;
+	}
+	//Ende JP Code	
+}
