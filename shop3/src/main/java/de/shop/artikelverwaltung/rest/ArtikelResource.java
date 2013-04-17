@@ -3,6 +3,9 @@ package de.shop.artikelverwaltung.rest;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static javax.ws.rs.core.MediaType.TEXT_PLAIN;
 
+
+
+
 import java.net.URI;
 import java.util.Collection;
 import java.util.Locale;
@@ -22,6 +25,8 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 import de.shop.artikelverwaltung.domain.Artikel;
+import de.shop.bestellverwaltung.domain.Bestellung;
+import de.shop.kundenverwaltung.domain.AbstractKunde;
 import de.shop.util.LocaleHelper;
 import de.shop.util.Mock;
 import de.shop.util.NotFoundException;
@@ -56,18 +61,49 @@ public class ArtikelResource {
 		return artikeln;		
 	}
 	
+	
+	//Here gibt es ein Problem irgendwo
 	@POST
 	@Consumes(APPLICATION_JSON)
 	@Produces
 	public Response createArtikel(Artikel artikel) {
+		
 		@SuppressWarnings("unused")
 		final Locale locale = localeHelper.getLocale(headers);
-		
+
 		// TODO Anwendungskern statt Mock, Verwendung von Locale
 		artikel = Mock.createArtikel(artikel);
 		final URI artikelUri = uriHelperArtikel.getUriArtikel(artikel, uriInfo);
 		return Response.created(artikelUri).build();
 	}
+	/*
+	
+	@POST 
+	@Consumes(APPLICATION_JSON)
+	@Produces
+	public Response createBestellung(Bestellung bestellung) {
+
+	@SuppressWarnings("unused")
+	final Locale locale = localeHelper.getLocale(headers);
+
+	// TODO Anwendungskern statt Mock, Verwendung von Locale
+	bestellung = Mock.createBestellung(bestellung);
+	final URI bestellungUri = uriHelperBestellung.getUriBestellung(bestellung, uriInfo);
+	return Response.created(bestellungUri).build();
+	}*/
+	
+	
+	/*public Response createBestellung(Bestellung bestellung) {
+
+		@SuppressWarnings("unused")
+		final Locale locale = localeHelper.getLocale(headers);
+
+		// TODO Anwendungskern statt Mock, Verwendung von Locale
+		bestellung = Mock.createBestellung(bestellung);
+		final URI bestellungUri = uriHelperBestellung.getUriBestellung(bestellung, uriInfo);
+		return Response.created(bestellungUri).build();
+		}
+	*/
 	
 	@GET
 	@Path("{id:[1-9][0-9]*}")
@@ -82,7 +118,7 @@ public class ArtikelResource {
 		}
 		
 		// URLs innerhalb der gefundenen Bestellung anpassen
-		//uriHelperArtikel.UpdateUriArtikel(artikel, uriInfo);
+		uriHelperArtikel.updateUriArtikel(artikel, uriInfo);
 		return artikel;
 	}
 	
@@ -100,18 +136,5 @@ public class ArtikelResource {
 			return Response.noContent().build();
 		}
 		
-		//Wollen wir ehrlich entfernen oder nur die Verfügbarkeit ändern ?
-		@DELETE
-		@Path("{id:[1-9][0-9]*}")
-		@Produces
-		public Response deleteArtikel(@PathParam("id") Long artikelId) {
-			@SuppressWarnings("unused")
-			final Locale locale = localeHelper.getLocale(headers);
-			
-			// TODO Anwendungskern statt Mock, Verwendung von Locale
-			Mock.deleteArtikel(artikelId);
-			return Response.noContent().build();
-	
-	
-		}
+
 }

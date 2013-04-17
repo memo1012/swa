@@ -6,9 +6,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-
+//Anfang Code JP
 import de.shop.artikelverwaltung.domain.Artikel;
 import de.shop.artikelverwaltung.domain.Kategorie;
+//Ende Code JP
+
 import de.shop.bestellverwaltung.domain.Bestellung;
 import de.shop.kundenverwaltung.domain.AbstractKunde;
 import de.shop.kundenverwaltung.domain.Adresse;
@@ -28,8 +30,9 @@ public final class Mock {
 	private static final int MAX_KUNDEN = 8;
 	private static final int MAX_BESTELLUNGEN = 4;
 	
-	
+	//JP
 	private static final int MAX_ARTIKELN = 8;
+	private static final long TEST_ID = 7;
 
 	//Erstellt einen neue Kunde
 	public static AbstractKunde findKundeById(Long id) {
@@ -92,6 +95,8 @@ public final class Mock {
 		return artikeln;
 	}
 	
+	
+	//Anfang JP
 	public static Artikel findArtikelById(Long artikelid){
 		if (artikelid> MAX_ARTIKELN)
 			return null;	
@@ -136,6 +141,10 @@ public final class Mock {
 		return artikeln;
 		
 	}
+	
+	//Ende Code JP
+	
+
 	//Macht ein Liste von fake bestellungen , und korigiert , sagt dass es zum richtigen Kunden gehort
 	public static Collection<Bestellung> findBestellungenByKundeId(Long kundeId) {
 		final AbstractKunde kunde = findKundeById(kundeId);
@@ -152,6 +161,8 @@ public final class Mock {
 		
 		return bestellungen;
 	}
+
+	//Anfang JP
 	//WTF ? keine echte Beziehungen ? Wir bekommen eine List von Artikeln mit
 	public static Bestellung findBestellungById(Long id) {
 		if (id > MAX_ID) {
@@ -184,6 +195,9 @@ public final class Mock {
 		
 		return bestellung;
 	}
+	
+	//Ende JP
+
 	//Wahrscheinlich gibt es schon eine name oder kunde ?
 	//ES fuhlt hier nur die infos
 	public static AbstractKunde createKunde(AbstractKunde kunde) {
@@ -210,24 +224,39 @@ public final class Mock {
 	
 	public static void updateArtikel(Artikel artikel) {
 		// TODO Auto-generated method stub
-		System.out.println("Aktualisierter Artikel: " + artikel);
+		System.out.println("Aktualisierter artikel: " + artikel);
 		
 	}
-	public static void deleteArtikel(Long ArtikelId) {
-		System.out.println("Artikel mit ID=" + ArtikelId + " geloescht");
-	}
-	private Mock() { }
+
+	private Mock() { /**/ }
 
 	public static Artikel createArtikel(Artikel artikel) {
-		// TODO Auto-generated method stub
-		final String bezeichnung = artikel.getBezeichnung();
-		final int Leange =artikel.getLaenge();
-		System.out.println("Neuer Artikel: " + artikel);
+		System.out.println("Neuer artikel: in progress");
+		//final String bezeichnung = artikel.getBezeichnung();
+		artikel.setId(TEST_ID);
+		
+		final Kategorie kategorie = artikel.getKategorie();
+		final String bechreibung = kategorie.getBeschreibung();
+		
+		kategorie.setId(TEST_ID);		
+		artikel.setKategorie(kategorie);		
+		System.out.println("Neuer artikel: " + artikel);	
+		
 		return artikel;
+		
+		
 	}
 	
-	public static void updateBestellung(Bestellung bestellung) {
-		// TODO Auto-generated method stub
-		System.out.println("Aktualisierter Bestellung: " + bestellung);
-	}
+	public static Bestellung createBestellung(Bestellung bestellung) {
+
+		bestellung.setId(TEST_ID);
+		bestellung.setAusgeliefert(false);
+
+		System.out.println("Neue Bestellung: " + bestellung);
+		return bestellung;
+		}
+
+	
+
+	
 }

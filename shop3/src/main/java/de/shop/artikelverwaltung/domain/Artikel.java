@@ -2,7 +2,6 @@ package de.shop.artikelverwaltung.domain;
 
 import java.io.Serializable;
 
-
 public class Artikel implements Serializable {
 	private static final long serialVersionUID = 1472129607838538329L;
 	
@@ -20,7 +19,7 @@ public class Artikel implements Serializable {
 	private double preis;
 	private boolean verfuegbarkeit;
 	
-	public  Long getId() {
+	public Long getId() {
 		return id;
 	}
 	public void setId(Long id) {
@@ -29,15 +28,19 @@ public class Artikel implements Serializable {
 	public String getBezeichnung() {
 		return bezeichnung;
 	}
-	public void setBezeichnung(String bezeichng) {
+	public void setBezeichnung(String bezeichnung) {
 		this.bezeichnung = bezeichnung;
 	}
+	
+	
 	public Kategorie getKategorie() {
 		return kategorie;
 	}
 	public void setKategorie(Kategorie kategorie) {
 		this.kategorie = kategorie;
 	}
+	
+	
 	public int getLaenge() {
 		return laenge;
 	}
@@ -125,6 +128,7 @@ public class Artikel implements Serializable {
 				return false;
 		} else if (!kategorie.equals(other.kategorie))
 			return false;
+			
 		if (laenge != other.laenge)
 			return false;
 		return true;
@@ -134,12 +138,17 @@ public class Artikel implements Serializable {
 	@Override
 	public String toString() {
 		return "Artikel [id=" + id + ", bezeichnung=" + bezeichnung
-				+ ", kategorie=" + kategorie + ", laenge=" + laenge
+				+ ", laenge=" + laenge
 				+ ", breite=" + breite + ", hoehe=" + hoehe + ", gewicht="
 				+ gewicht + ", preis=" + preis + ", verfuegbarkeit="
-				+ verfuegbarkeit + "]";
+				+ verfuegbarkeit + ",Kategorie="+kategorie+ "]";
 	}
-
+	
+	
+	
+	
+	
+	
 }
 	
 	

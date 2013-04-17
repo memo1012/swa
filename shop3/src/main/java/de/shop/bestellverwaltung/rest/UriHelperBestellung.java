@@ -9,6 +9,7 @@ import javax.ws.rs.core.UriInfo;
 
 import de.shop.bestellverwaltung.domain.Bestellung;
 import de.shop.kundenverwaltung.domain.AbstractKunde;
+import de.shop.kundenverwaltung.rest.KundeResource;
 import de.shop.kundenverwaltung.rest.UriHelperKunde;
 
 
@@ -17,8 +18,7 @@ public class UriHelperBestellung {
 	//hier brauchen wir die Uri von Kunde
 	@Inject
 	private UriHelperKunde uriHelperKunde;
-	
-	
+
 	
 	public void updateUriBestellung(Bestellung bestellung, UriInfo uriInfo) {
 		// URL fuer Kunde setzen
@@ -26,6 +26,17 @@ public class UriHelperBestellung {
 		if (kunde != null) {
 			final URI kundeUri = uriHelperKunde.getUriKunde(bestellung.getKunde(), uriInfo);
 			bestellung.setKundeUri(kundeUri);
+			
+			
+			//Teil JP
+			
+			final UriBuilder ub = uriInfo.getBaseUriBuilder()
+                    				.path(BestellungResource.class)
+                   					.path(BestellungResource.class, "findArtikelnByBestellungId");
+			
+			final URI artikelnUri = ub.build(bestellung.getId());
+			bestellung.setArtikelnUri(artikelnUri);
+			
 		}
 		
 	}
