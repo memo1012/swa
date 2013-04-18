@@ -98,6 +98,7 @@ public class Bestellung implements Serializable {
 	
 	@Override
 	public String toString() {
-		return "Bestellung [id=" + id + ", ausgeliefert=" + ausgeliefert + ", kundeUri=" + kundeUri + ", artikelnUri=" + artikelnUri + "]";
+		return "Bestellung [id=" + id + ", ausgeliefert=" + ausgeliefert 
+				+ ", kundeUri=" + kundeUri + ", artikelnUri=" + artikelnUri + "]";
 	}
 }

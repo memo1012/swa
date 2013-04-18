@@ -3,15 +3,10 @@ package de.shop.artikelverwaltung.rest;
 import java.net.URI;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
 import de.shop.artikelverwaltung.domain.Artikel;
-import de.shop.artikelverwaltung.rest.ArtikelResource;
-import de.shop.kundenverwaltung.domain.AbstractKunde;
-import de.shop.kundenverwaltung.rest.KundeResource;
-import de.shop.kundenverwaltung.rest.UriHelperKunde;
 
 
 @ApplicationScoped

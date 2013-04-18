@@ -33,6 +33,11 @@ public final class Mock {
 	//JP
 	private static final int MAX_ARTIKELN = 8;
 	private static final long TEST_ID = 7;
+	private static final int TEST_HOEHE = 67;
+	private static final int TEST_BREITE = 12;
+	private static final double TEST_GEWICHT = 3.2;
+	private static final int TEST_LAENGE = 22;
+	private static final double TEST_PREIS = 23.7;
 
 	//Erstellt einen neue Kunde
 	public static AbstractKunde findKundeById(Long id) {
@@ -97,19 +102,19 @@ public final class Mock {
 	
 	
 	//Anfang JP
-	public static Artikel findArtikelById(Long artikelid){
-		if (artikelid> MAX_ARTIKELN)
+	public static Artikel findArtikelById(Long artikelid) {
+		if (artikelid > MAX_ARTIKELN)
 			return null;	
 		
 		
 		final Artikel artikel = new Artikel();
 		artikel.setId(artikelid);
 		artikel.setBezeichnung("blabla Artikel Beschreibung");
-		artikel.setBreite(12);
-		artikel.setHoehe(67);
-		artikel.setGewicht(3.2);		
-		artikel.setLaenge(22);
-		artikel.setPreis(23.7);
+		artikel.setBreite(TEST_BREITE);
+		artikel.setHoehe(TEST_HOEHE);
+		artikel.setGewicht(TEST_GEWICHT);		
+		artikel.setLaenge(TEST_LAENGE);
+		artikel.setPreis(TEST_PREIS);
 		artikel.setVerfuegbarkeit(true);
 		
 		//Noch nicht verlangt
@@ -125,7 +130,7 @@ public final class Mock {
 		
 	}
 	
-	public static Collection<Artikel> findArtikelnByBestellungId (Long bestellungid)
+	public static Collection<Artikel> findArtikelnByBestellungId(Long bestellungid)
 	{
 		final Bestellung bestellung = findBestellungById(bestellungid);
 		
@@ -181,13 +186,13 @@ public final class Mock {
 		
 		
 		//Random Generation
-		int lower = 1;
-		int higher = 5;
-		int randomartikelanzahl = (int)(Math.random() * (higher - lower)) + lower;
+		final int lower = 1;
+		final int higher = 5;
+		final int randomartikelanzahl = (int)(Math.random() * (higher - lower)) + lower;
 		//Ende Random
 		final List<Artikel> artikeln = new ArrayList<>(randomartikelanzahl);
 		
-		for (int i=1; i<randomartikelanzahl;i++){
+		for (int i = 1; i < randomartikelanzahl; i++) {
 			
 			final Artikel artikel = findArtikelById(Long.valueOf(i));
 			artikeln.add(artikel);
@@ -236,15 +241,13 @@ public final class Mock {
 		artikel.setId(TEST_ID);
 		
 		final Kategorie kategorie = artikel.getKategorie();
-		final String bechreibung = kategorie.getBeschreibung();
 		
 		kategorie.setId(TEST_ID);		
 		artikel.setKategorie(kategorie);		
 		System.out.println("Neuer artikel: " + artikel);	
 		
 		return artikel;
-		
-		
+				
 	}
 	
 	public static Bestellung createBestellung(Bestellung bestellung) {
@@ -255,6 +258,11 @@ public final class Mock {
 		System.out.println("Neue Bestellung: " + bestellung);
 		return bestellung;
 		}
+
+	public static void updateBestellung(Bestellung bestellung) {
+		System.out.println("Aktualisierte Bestellung: " + bestellung);
+		
+	}
 
 	
 

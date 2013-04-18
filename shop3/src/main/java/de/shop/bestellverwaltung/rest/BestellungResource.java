@@ -10,6 +10,7 @@ import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -43,7 +44,8 @@ public class BestellungResource {
 	private UriHelperBestellung uriHelperBestellung;
 	
 		//Anfang JP	Warum gibt es hier eine Bemerkung ?
-		@Inject UriHelperArtikel uriHelperArtikel;
+		@Inject 
+		private UriHelperArtikel uriHelperArtikel;
 		//Ende JP
 	
 	
@@ -68,6 +70,18 @@ public class BestellungResource {
 		return bestellung;
 	}
 	
+
+	@PUT
+	@Consumes(APPLICATION_JSON)
+	@Produces
+	public Response updateBestellung(Bestellung bestellung) {
+		@SuppressWarnings("unused")
+		final Locale locale = localeHelper.getLocale(headers);
+
+		// TODO Anwendungskern statt Mock, Verwendung von Locale
+		Mock.updateBestellung(bestellung);
+		return Response.noContent().build();
+	}
 	
 	@POST 
 	@Consumes(APPLICATION_JSON)

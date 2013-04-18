@@ -2,10 +2,10 @@ package de.shop.artikelverwaltung.domain;
 
 import java.io.Serializable;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
 
-public class Kategorie {
-	private static final long serialVersionUID = -3029272617931844501L;
+public class Kategorie implements Serializable {
+	private static final long serialVersionUID = 3295212696771029278L;
+	
 	private Object id;
 	private String beschreibung;
 	
@@ -16,7 +16,6 @@ public class Kategorie {
 		return beschreibung;
 	}
 	
-	
 	//Sollen die �ffentlicht sein ?
 	public void setId(Object id) {
 		this.id = id;
@@ -24,8 +23,7 @@ public class Kategorie {
 	public void setBeschreibung(String beschreibung) {
 		this.beschreibung = beschreibung;
 	}
-	
-	
+		
 	//Hashcode and Equals
 	@Override
 	public int hashCode() {
@@ -45,32 +43,27 @@ public class Kategorie {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Kategorie other = (Kategorie) obj;
+		final Kategorie other = (Kategorie) obj;
 		if (beschreibung == null) {
 			if (other.beschreibung != null)
 				return false;
-		} else if (!beschreibung.equals(other.beschreibung))
+		} 
+		else if (!beschreibung.equals(other.beschreibung))
 			return false;
 		if (id == null) {
 			if (other.id != null)
 				return false;
-		} else if (!id.equals(other.id))
+		} 
+		else if (!id.equals(other.id))
 			return false;
 		return true;
 	}
-	
-	
+		
 	//ToString Methode
 	@Override
 	public String toString() {
 		return "Kategorie [id=" + id + ", beschreibung=" + beschreibung + "]";
 	}
-	
-	
+		
 	//Die anderen klassen haben kein Konstruktor ?
-
-	
-	
-	
-
 }

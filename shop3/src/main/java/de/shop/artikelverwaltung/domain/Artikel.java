@@ -1,6 +1,7 @@
 package de.shop.artikelverwaltung.domain;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 public class Artikel implements Serializable {
 	private static final long serialVersionUID = 1472129607838538329L;
@@ -16,7 +17,7 @@ public class Artikel implements Serializable {
 	private int breite;
 	private int hoehe;
 	private double gewicht; //in KG
-	private double preis;
+	private BigDecimal preis;
 	private boolean verfuegbarkeit;
 	
 	public Long getId() {
@@ -31,16 +32,14 @@ public class Artikel implements Serializable {
 	public void setBezeichnung(String bezeichnung) {
 		this.bezeichnung = bezeichnung;
 	}
-	
-	
+		
 	public Kategorie getKategorie() {
 		return kategorie;
 	}
 	public void setKategorie(Kategorie kategorie) {
 		this.kategorie = kategorie;
 	}
-	
-	
+		
 	public int getLaenge() {
 		return laenge;
 	}
@@ -97,6 +96,7 @@ public class Artikel implements Serializable {
 		result = prime * result + laenge;
 		return result;
 	}
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -105,11 +105,12 @@ public class Artikel implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Artikel other = (Artikel) obj;
+		final Artikel other = (Artikel) obj;
 		if (bezeichnung == null) {
 			if (other.bezeichnung != null)
 				return false;
-		} else if (!bezeichnung.equals(other.bezeichnung))
+		} 
+		else if (!bezeichnung.equals(other.bezeichnung))
 			return false;
 		if (breite != other.breite)
 			return false;
@@ -121,12 +122,14 @@ public class Artikel implements Serializable {
 		if (id == null) {
 			if (other.id != null)
 				return false;
-		} else if (!id.equals(other.id))
+		} 
+		else if (!id.equals(other.id))
 			return false;
 		if (kategorie == null) {
 			if (other.kategorie != null)
 				return false;
-		} else if (!kategorie.equals(other.kategorie))
+		} 
+		else if (!kategorie.equals(other.kategorie))
 			return false;
 			
 		if (laenge != other.laenge)
@@ -141,13 +144,8 @@ public class Artikel implements Serializable {
 				+ ", laenge=" + laenge
 				+ ", breite=" + breite + ", hoehe=" + hoehe + ", gewicht="
 				+ gewicht + ", preis=" + preis + ", verfuegbarkeit="
-				+ verfuegbarkeit + ",Kategorie="+kategorie+ "]";
+				+ verfuegbarkeit + ",Kategorie=" + kategorie + "]";
 	}
-	
-	
-	
-	
-	
 	
 }
 	

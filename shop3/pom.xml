@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-
+<!-- hello test comit -->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
@@ -67,15 +67,83 @@
 	</organization>
 	
 	<developers>
-		<developer>
-			<id>memo1012</id>
-			<name>Morten.Mendel</name>
-			<email>Morten.mendel@web.de</email>
+	    <developer>
+			<id>geya1011</id>
+			<name>Yannick.Gentner</name>
+			<email>y.gentner@gmail.com</email>
 			<url>http://www.iwi.hs-karlsruhe.de</url>
 			<organization>Hochschule Karlsruhe</organization>
 			<organizationUrl>http://www.iwi.hs-karlsruhe.de</organizationUrl>
 			<roles>
-				<role>Dozent</role>
+				<role>Student</role>
+			</roles>
+			<timezone>+1</timezone>     <!-- relativ zu GMT -->
+			<properties>
+				<!--
+				<picUrl>http://my.host.com/my/pic.gif</picUrl>
+				-->
+			</properties>
+		</developer>
+	    <developer>
+			<id>memo1012</id>
+			<name>Morten.Mendel</name>
+			<email>morten.mendel@web.de</email>
+			<url>http://www.iwi.hs-karlsruhe.de</url>
+			<organization>Hochschule Karlsruhe</organization>
+			<organizationUrl>http://www.iwi.hs-karlsruhe.de</organizationUrl>
+			<roles>
+				<role>Student</role>
+			</roles>
+			<timezone>+1</timezone>     <!-- relativ zu GMT -->
+			<properties>
+				<!--
+				<picUrl>http://my.host.com/my/pic.gif</picUrl>
+				-->
+			</properties>
+		</developer>
+	    <developer>
+			<id>juma1015</id>
+			<name>Marina.Jurcec</name>
+			<email>minwi@live.de</email>
+			<url>http://www.iwi.hs-karlsruhe.de</url>
+			<organization>Hochschule Karlsruhe</organization>
+			<organizationUrl>http://www.iwi.hs-karlsruhe.de</organizationUrl>
+			<roles>
+				<role>Student</role>
+			</roles>
+			<timezone>+1</timezone>     <!-- relativ zu GMT -->
+			<properties>
+				<!--
+				<picUrl>http://my.host.com/my/pic.gif</picUrl>
+				-->
+			</properties>
+		</developer>
+	    <developer>
+			<id>muol1011</id>
+			<name>Oliver.Müller</name>
+			<email>olivermueller90@googlemail.com</email>
+			<url>http://www.iwi.hs-karlsruhe.de</url>
+			<organization>Hochschule Karlsruhe</organization>
+			<organizationUrl>http://www.iwi.hs-karlsruhe.de</organizationUrl>
+			<roles>
+				<role>Student</role>
+			</roles>
+			<timezone>+1</timezone>     <!-- relativ zu GMT -->
+			<properties>
+				<!--
+				<picUrl>http://my.host.com/my/pic.gif</picUrl>
+				-->
+			</properties>
+		</developer>
+		<developer>
+			<id>boje1013</id>
+			<name>Jean-Pierre.Bourhis</name>
+			<email>jp.bourhis@gmail.com</email>
+			<url>http://www.iwi.hs-karlsruhe.de</url>
+			<organization>Hochschule Karlsruhe</organization>
+			<organizationUrl>http://www.iwi.hs-karlsruhe.de</organizationUrl>
+			<roles>
+				<role>Student</role>
 			</roles>
 			<timezone>+1</timezone>     <!-- relativ zu GMT -->
 			<properties>
@@ -99,7 +167,7 @@
 		<testklassen>**/*Test.java</testklassen>
 		
 		<baseuri>http://localhost</baseuri>
-		<port>8888</port>
+		<port>8080</port>
 		<basepath>/shop/rest</basepath>
 
 		<arquillian.managedOrRemote>managed</arquillian.managedOrRemote>
