@@ -64,10 +64,10 @@ public class Artikel implements Serializable {
 	public void setGewicht(double gewicht) {
 		this.gewicht = gewicht;
 	}
-	public double getPreis() {
+	public BigDecimal getPreis() {
 		return preis;
 	}
-	public void setPreis(double preis) {
+	public void setPreis(BigDecimal preis) {
 		this.preis = preis;
 	}
 	public boolean isVerfuegbarkeit() {

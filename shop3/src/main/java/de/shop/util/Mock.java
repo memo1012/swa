@@ -1,16 +1,13 @@
 package de.shop.util;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-//Anfang Code JP
 import de.shop.artikelverwaltung.domain.Artikel;
 import de.shop.artikelverwaltung.domain.Kategorie;
-//Ende Code JP
-
 import de.shop.bestellverwaltung.domain.Bestellung;
 import de.shop.kundenverwaltung.domain.AbstractKunde;
 import de.shop.kundenverwaltung.domain.Adresse;
@@ -30,14 +27,14 @@ public final class Mock {
 	private static final int MAX_KUNDEN = 8;
 	private static final int MAX_BESTELLUNGEN = 4;
 	
-	//JP
+
 	private static final int MAX_ARTIKELN = 8;
 	private static final long TEST_ID = 7;
 	private static final int TEST_HOEHE = 67;
 	private static final int TEST_BREITE = 12;
 	private static final double TEST_GEWICHT = 3.2;
 	private static final int TEST_LAENGE = 22;
-	private static final double TEST_PREIS = 23.7;
+	private static final BigDecimal TEST_PREIS = new BigDecimal (23.44);
 
 	//Erstellt einen neue Kunde
 	public static AbstractKunde findKundeById(Long id) {
@@ -100,8 +97,6 @@ public final class Mock {
 		return artikeln;
 	}
 	
-	
-	//Anfang JP
 	public static Artikel findArtikelById(Long artikelid) {
 		if (artikelid > MAX_ARTIKELN)
 			return null;	
@@ -147,9 +142,6 @@ public final class Mock {
 		
 	}
 	
-	//Ende Code JP
-	
-
 	//Macht ein Liste von fake bestellungen , und korigiert , sagt dass es zum richtigen Kunden gehort
 	public static Collection<Bestellung> findBestellungenByKundeId(Long kundeId) {
 		final AbstractKunde kunde = findKundeById(kundeId);
