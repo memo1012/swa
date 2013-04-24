@@ -19,6 +19,7 @@ public class Artikel implements Serializable {
 	private double gewicht; //in KG
 	private BigDecimal preis;
 	private boolean verfuegbarkeit;
+	private int ka;
 	
 	public Long getId() {
 		return id;
