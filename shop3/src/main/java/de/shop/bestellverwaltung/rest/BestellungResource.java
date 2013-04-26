@@ -22,6 +22,7 @@ import javax.ws.rs.core.UriInfo;
 import de.shop.bestellverwaltung.domain.Bestellung;
 import de.shop.util.LocaleHelper;
 import de.shop.util.Mock;
+import de.shop.util.MockService;
 import de.shop.util.NotFoundException;
 
 //JP Code
@@ -79,7 +80,7 @@ public class BestellungResource {
 		final Locale locale = localeHelper.getLocale(headers);
 
 		// TODO Anwendungskern statt Mock, Verwendung von Locale
-		Mock.updateBestellung(bestellung);
+		MockService.updateBestellung(bestellung);
 		return Response.noContent().build();
 	}
 	

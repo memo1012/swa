@@ -1,137 +1,58 @@
 package de.shop.artikelverwaltung.rest;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
-import static javax.ws.rs.core.MediaType.TEXT_PLAIN;
 
+import java.lang.invoke.MethodHandles;
 
-
-
-import java.net.URI;
-import java.util.Collection;
-import java.util.Locale;
-
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
+import org.jboss.logging.Logger;
+
 import de.shop.artikelverwaltung.domain.Artikel;
-import de.shop.util.LocaleHelper;
-import de.shop.util.Mock;
+import de.shop.artikelverwaltung.service.ArtikelService;
+import de.shop.util.Log;
 import de.shop.util.NotFoundException;
 
-@Path("/artikeln")
+@Path("/artikel")
 @Produces(APPLICATION_JSON)
 @Consumes
+@RequestScoped
+@Log
 public class ArtikelResource {
-	@Context
-	private UriInfo uriInfo;
-	
-	@Context
-	private HttpHeaders headers;
-
-	@Inject
-	private UriHelperArtikel uriHelperArtikel;
+	private static final Logger LOGGER = Logger.getLogger(MethodHandles.lookup().lookupClass());
 	
 	@Inject
-	private LocaleHelper localeHelper;
+	private ArtikelService as;
 	
-	
-	@GET
-	@Produces(TEXT_PLAIN)
-	@Path("version")
-	public String getVersion() {
-		return "1.0";
+	@PostConstruct
+	private void postConstruct() {
+		LOGGER.debugf("CDI-faehiges Bean %s wurde erzeugt", this);
 	}
 	
-	@GET
-	public Collection<Artikel> findArtikeln() {
-		final Collection<Artikel> artikeln = Mock.findAllArtikeln();
-		return artikeln;		
+	@PreDestroy
+	private void preDestroy() {
+		LOGGER.debugf("CDI-faehiges Bean %s wird geloescht", this);
 	}
-	
-	
-	//Here gibt es ein Problem irgendwo
-	@POST
-	@Consumes(APPLICATION_JSON)
-	@Produces
-	public Response createArtikel(Artikel artikel) {
-		
-		@SuppressWarnings("unused")
-		final Locale locale = localeHelper.getLocale(headers);
-
-		// TODO Anwendungskern statt Mock, Verwendung von Locale
-		artikel = Mock.createArtikel(artikel);
-		final URI artikelUri = uriHelperArtikel.getUriArtikel(artikel, uriInfo);
-		return Response.created(artikelUri).build();
-	}
-	/*
-	
-	@POST 
-	@Consumes(APPLICATION_JSON)
-	@Produces
-	public Response createBestellung(Bestellung bestellung) {
-
-	@SuppressWarnings("unused")
-	final Locale locale = localeHelper.getLocale(headers);
-
-	// TODO Anwendungskern statt Mock, Verwendung von Locale
-	bestellung = Mock.createBestellung(bestellung);
-	final URI bestellungUri = uriHelperBestellung.getUriBestellung(bestellung, uriInfo);
-	return Response.created(bestellungUri).build();
-	}*/
-	
-	
-	/*public Response createBestellung(Bestellung bestellung) {
-
-		@SuppressWarnings("unused")
-		final Locale locale = localeHelper.getLocale(headers);
-
-		// TODO Anwendungskern statt Mock, Verwendung von Locale
-		bestellung = Mock.createBestellung(bestellung);
-		final URI bestellungUri = uriHelperBestellung.getUriBestellung(bestellung, uriInfo);
-		return Response.created(bestellungUri).build();
-		}
-	*/
 	
 	@GET
 	@Path("{id:[1-9][0-9]*}")
-	public Artikel findArtikelgById(@PathParam("id") Long id) {
-		@SuppressWarnings("unused")
-		final Locale locale = localeHelper.getLocale(headers);
-		
-		// TODO Anwendungskern statt Mock, Verwendung von Locale
-		final Artikel artikel = Mock.findArtikelById(id);
+	public Artikel findArtikelById(@PathParam("id") Long id, @Context UriInfo uriInfo) {
+		final Artikel artikel = as.findArtikelById(id);
 		if (artikel == null) {
-			throw new NotFoundException("Keine Artikel mit der ID " + id + " gefunden.");
+			final String msg = "Kein Artikel gefunden mit der ID " + id;
+			throw new NotFoundException(msg);
 		}
-		
-		// URLs innerhalb der gefundenen Bestellung anpassen
-		uriHelperArtikel.updateUriArtikel(artikel, uriInfo);
+
 		return artikel;
 	}
-	
-	
-	//Update
-		@PUT
-		@Consumes(APPLICATION_JSON)
-		@Produces
-		public Response updateArtikel(Artikel artikel) {
-			@SuppressWarnings("unused")
-			final Locale locale = localeHelper.getLocale(headers);
-			
-			// TODO Anwendungskern statt Mock, Verwendung von Locale
-			Mock.updateArtikel(artikel);
-			return Response.noContent().build();
-		}
-		
-
 }
