@@ -29,7 +29,6 @@ import de.shop.util.NotFoundException;
 import de.shop.artikelverwaltung.domain.Artikel;
 import de.shop.artikelverwaltung.rest.UriHelperArtikel;
 
-//Ende JP
 
 @Path("/bestellungen")
 @Produces(APPLICATION_JSON)
@@ -44,10 +43,10 @@ public class BestellungResource {
 	@Inject
 	private UriHelperBestellung uriHelperBestellung;
 	
-		//Anfang JP	Warum gibt es hier eine Bemerkung ?
-		@Inject 
-		private UriHelperArtikel uriHelperArtikel;
-		//Ende JP
+		
+	@Inject 
+	private UriHelperArtikel uriHelperArtikel;
+		
 	
 	
 	
@@ -80,7 +79,7 @@ public class BestellungResource {
 		final Locale locale = localeHelper.getLocale(headers);
 
 		// TODO Anwendungskern statt Mock, Verwendung von Locale
-		MockService.updateBestellung(bestellung);
+		Mock.updateBestellung(bestellung);
 		return Response.noContent().build();
 	}
 	
@@ -122,7 +121,7 @@ public class BestellungResource {
 		
 		return artikeln;
 	}
-	//Ende JP Code
+	
 	
 	
 	

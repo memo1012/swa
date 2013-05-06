@@ -9,9 +9,15 @@ import java.lang.annotation.Target;
 import javax.enterprise.inject.Alternative;
 import javax.enterprise.inject.Stereotype;
 
+
+
 @Alternative
 @Stereotype
 @Target(TYPE)
 @Retention(RUNTIME)
 public @interface MockService {
+
+
+	 
 }
+

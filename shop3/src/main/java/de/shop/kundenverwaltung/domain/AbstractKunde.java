@@ -2,6 +2,7 @@ package de.shop.kundenverwaltung.domain;
 
 import java.io.Serializable;
 import java.net.URI;
+import java.util.Date;
 import java.util.List;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
@@ -25,6 +26,7 @@ public abstract class AbstractKunde implements Serializable {
 	private String nachname;
 	private String email;
 	private Adresse adresse;
+	private Date seit;
 	@JsonIgnore
 	private List<Bestellung> bestellungen;
 	private URI bestellungenUri;
@@ -65,6 +67,13 @@ public abstract class AbstractKunde implements Serializable {
 	public void setBestellungenUri(URI bestellungenUri) {
 		this.bestellungenUri = bestellungenUri;
 	}
+	public void setSeit(Date seit) {
+		this.seit = seit;
+	}
+	public Date getSeit()
+	{
+		return seit;
+	}
 
 	@Override
 	public int hashCode() {
@@ -95,6 +104,7 @@ public abstract class AbstractKunde implements Serializable {
 	@Override
 	public String toString() {
 		return "AbstractKunde [id=" + id + ", nachname=" + nachname
-				+ ", email=" + email + ", bestellungenUri=" + bestellungenUri + "]";
+				+ ", email=" + email + ", bestellungenUri=" + bestellungenUri + seit + "]";
 	}
+	
 }
