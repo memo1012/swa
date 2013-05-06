@@ -94,7 +94,35 @@ kunden.add(kunde);
 }
 return kunden;
 }
-
+public static AbstractKunde findKundeByEmail(String email) {
+	if (email.startsWith("x")) {
+		return null;
+	}	
+	final AbstractKunde kunde = email.length() % 2 == 1 ? new Privatkunde() : new Firmenkunde();
+	kunde.setId(Long.valueOf(email.length()));
+	kunde.setNachname("Nachname");
+	kunde.setEmail(email);
+	final GregorianCalendar seitCal = new GregorianCalendar(JAHR, MONAT, TAG);
+	final Date seit = seitCal.getTime();
+	kunde.setSeit(seit);
+	
+	final Adresse adresse = new Adresse();
+	adresse.setId(kunde.getId() + 1);        // andere ID fuer die Adresse
+	adresse.setPlz("12345");
+	adresse.setOrt("Testort");
+	adresse.setKunde(kunde);
+	kunde.setAdresse(adresse);
+	
+	if (kunde.getClass().equals(Privatkunde.class)) {
+		final Privatkunde privatkunde = (Privatkunde) kunde;
+		final Set<HobbyType> hobbies = new HashSet<>();
+		hobbies.add(HobbyType.LESEN);
+		hobbies.add(HobbyType.REISEN);
+		privatkunde.setHobbies(hobbies);
+	}
+	
+	return kunde;
+	}
 
 public static Collection<Artikel> findAllArtikeln() {
 final int anzahl = MAX_ARTIKELN;
@@ -168,13 +196,12 @@ kunde.setBestellungen(bestellungen);
 return bestellungen;
 }
 
-//Anfang JP
-//WTF ? keine echte Beziehungen ? Wir bekommen eine List von Artikeln mit
+
 public static Bestellung findBestellungById(Long id) {
 if (id > MAX_ID) {
 return null;
 }
-//Random ?
+
 
 
 final AbstractKunde kunde = findKundeById(id + 1); // andere ID fuer den Kunden
@@ -202,7 +229,6 @@ artikeln.add(artikel);
 return bestellung;
 }
 
-//Ende JP
 
 //Wahrscheinlich gibt es schon eine name oder kunde ?
 //ES fuhlt hier nur die infos
@@ -216,15 +242,16 @@ adresse.setId((Long.valueOf(nachname.length())) + 1);
 adresse.setKunde(kunde);
 kunde.setBestellungen(null);
 
-System.out.println("Neuer Kunde: " + kunde);
+LOGGER.infof("Neuer Kunde: %s", kunde);
 return kunde;
 }
 
 public static void updateKunde(AbstractKunde kunde) {
-System.out.println("Aktualisierter Kunde: " + kunde);
+	LOGGER.infof("Aktualisierter Kunde: %s", kunde);
 }
 
 public static void deleteKunde(Long kundeId) {
+	LOGGER.infof("Geloeschter Kunde: %s", kundeId);
 System.out.println("Kunde mit ID=" + kundeId + " geloescht");
 }
 
@@ -255,6 +282,7 @@ public static Bestellung createBestellung(Bestellung bestellung) {
 
 bestellung.setId(TEST_ID);
 bestellung.setAusgeliefert(false);
+LOGGER.infof("Neue Bestellung: BestellId fuer Kunde: %s", bestellung);
 
 System.out.println("Neue Bestellung: " + bestellung);
 return bestellung;
