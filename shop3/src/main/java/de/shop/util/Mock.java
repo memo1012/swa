@@ -3,11 +3,10 @@ package de.shop.util;
 import java.lang.invoke.MethodHandles;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.jboss.logging.Logger;
@@ -74,9 +73,9 @@ privatkunde.setHobbies(hobbies);
 return kunde;
 }
 
-public static Collection<AbstractKunde> findAllKunden() {
+public static List<AbstractKunde> findAllKunden() {
 final int anzahl = MAX_KUNDEN;
-final Collection<AbstractKunde> kunden = new ArrayList<>(anzahl);
+final List<AbstractKunde> kunden = new ArrayList<>(anzahl);
 for (int i = 1; i <= anzahl; i++) {
 final AbstractKunde kunde = findKundeById(Long.valueOf(i));
 kunden.add(kunde);	
@@ -84,9 +83,9 @@ kunden.add(kunde);
 return kunden;
 }
 
-public static Collection<AbstractKunde> findKundenByNachname(String nachname) {
+public static List<AbstractKunde> findKundenByNachname(String nachname) {
 final int anzahl = nachname.length();
-final Collection<AbstractKunde> kunden = new ArrayList<>(anzahl);
+final List<AbstractKunde> kunden = new ArrayList<>(anzahl);
 for (int i = 1; i <= anzahl; i++) {
 final AbstractKunde kunde = findKundeById(Long.valueOf(i));
 kunde.setNachname(nachname);
@@ -124,9 +123,9 @@ public static AbstractKunde findKundeByEmail(String email) {
 	return kunde;
 	}
 
-public static Collection<Artikel> findAllArtikeln() {
+public static List<Artikel> findAllArtikeln() {
 final int anzahl = MAX_ARTIKELN;
-final Collection<Artikel> artikeln = new ArrayList<>(anzahl);
+final List<Artikel> artikeln = new ArrayList<>(anzahl);
 for (int i = 1; i <= anzahl; i++) {
 final Artikel artikel = findArtikelById(Long.valueOf(i));
 artikeln.add(artikel);	
@@ -162,7 +161,7 @@ return artikel;
 
 }
 
-public static Collection<Artikel> findArtikelnByBestellungId(Long bestellungid)
+public static List<Artikel> findArtikelnByBestellungId(Long bestellungid)
 {
 final Bestellung bestellung = findBestellungById(bestellungid);
 
@@ -180,7 +179,7 @@ return artikeln;
 }
 
 //Macht ein Liste von fake bestellungen , und korigiert , sagt dass es zum richtigen Kunden gehort
-public static Collection<Bestellung> findBestellungenByKundeId(Long kundeId) {
+public static List<Bestellung> findBestellungenByKundeId(Long kundeId) {
 final AbstractKunde kunde = findKundeById(kundeId);
 
 // Beziehungsgeflecht zwischen Kunde und Bestellungen aufbauen
@@ -250,9 +249,9 @@ public static void updateKunde(AbstractKunde kunde) {
 	LOGGER.infof("Aktualisierter Kunde: %s", kunde);
 }
 
-public static void deleteKunde(Long kundeId) {
-	LOGGER.infof("Geloeschter Kunde: %s", kundeId);
-System.out.println("Kunde mit ID=" + kundeId + " geloescht");
+public static void deleteKunde(AbstractKunde kunde) {
+	LOGGER.infof("Geloeschter Kunde: %s", kunde);
+System.out.println("Kunde mit ID=" + kunde + " geloescht");
 }
 
 public static void updateArtikel(Artikel artikel) {

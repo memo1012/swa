@@ -20,8 +20,6 @@ public class Bestellung implements Serializable {
 	private AbstractKunde kunde;
 	private URI kundeUri;
 	
-	
-	//Anfang JP Code
 	@JsonIgnore
 	private Collection<Artikel> artikeln;
 	private URI artikelnUri;
@@ -41,7 +39,7 @@ public class Bestellung implements Serializable {
 		this.artikeln = artikeln;
 	}
 	
-	// Ende JP Code
+
 	
 	
 	

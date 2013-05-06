@@ -162,12 +162,12 @@ public class KundeResource {
 	@DELETE
 	@Path("{id:[1-9][0-9]*}")
 	@Produces
-	public Response deleteKunde(@PathParam("id") Long kundeId) {
+	public Response deleteKunde(@PathParam("id") AbstractKunde kunde) {
 		@SuppressWarnings("unused")
 		final Locale locale = localeHelper.getLocale(headers);
 		
 		// TODO Anwendungskern statt Mock, Verwendung von Locale
-		Mock.deleteKunde(kundeId);
+		Mock.deleteKunde(kunde);
 		return Response.noContent().build();
 	}
 }
