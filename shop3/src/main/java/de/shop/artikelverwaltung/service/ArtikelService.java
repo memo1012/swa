@@ -17,4 +17,13 @@ public class ArtikelService implements Serializable {
 		
 		//test
 	}
+	
+	public Artikel CreateArtikel(long id){		
+		return null;
+	}
+	
+	public Artikel DeleteArtikel(Artikel artikel){
+		return null;		
+	}
+	
 }
