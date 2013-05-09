@@ -13,6 +13,8 @@ import javax.validation.groups.Default;
 import org.jboss.logging.Logger;
 
 import de.shop.artikelverwaltung.domain.Artikel;
+import de.shop.kundenverwaltung.domain.AbstractKunde;
+import de.shop.kundenverwaltung.service.KundeDeleteBestellungException;
 import de.shop.util.Log;
 import de.shop.util.Mock;
 import de.shop.util.ValidatorProvider;
@@ -39,16 +41,17 @@ public class ArtikelService implements Serializable {
 		LOGGER.debugf("CDI-faehiges Bean %s wird geloescht", this);
 	}
 
-	public Artikel findArtikelById(Long id) {
+	public Artikel FindArtikelById(Long artikelid, Locale locale) {
 		// TODO id pruefen
+		ValidateArtikelId(artikelid,locale);
 		// TODO Datenbanzugriffsschicht statt Mock
-		return Mock.findArtikelById(id);
+		return Mock.findArtikelById(artikelid);
 		
-		//test
+		
 	}
 	
 	
-	public Artikel findArtikelByBeschreibung(){
+	public Artikel FindArtikelByBeschreibung(){
 		
 		return null;
 	}
@@ -66,7 +69,7 @@ public class ArtikelService implements Serializable {
 		// Werden alle Constraints beim Einfuegen gewahrt?
 		ValidateArtikel(artikel, locale, Default.class);
 
-		// Pruefung, ob die Email-Adresse schon existiert
+		// Pruefung, ob die Bezeichnung schon existiert
 		// TODO Datenbanzugriffsschicht statt Mock
 		//if (Mock.findArtikelByBezeichnung(artikel.getBezeichnung()) != null) {
 			//throw new BezeichnungExistsException(artikel.getBezeichnung());
@@ -81,6 +84,11 @@ public class ArtikelService implements Serializable {
 	}
 
 	
+	private void ValidateArtikelId(long artikelid,Locale locale){
+		
+		
+	}
+	
 	private void ValidateArtikel(Artikel artikel, Locale locale, Class<?>... groups){
 		
 		// Werden alle Constraints beim Einfuegen gewahrt?
@@ -93,9 +101,40 @@ public class ArtikelService implements Serializable {
 		
 	}
 	
-	public Artikel DeleteArtikel(Artikel artikel){
+	
+	
+	public Artikel UpdateArtikel(Artikel artikel){
 		return null;		
 	}
+	
+	public void DeleteArtikel(Long artikelId, Locale locale){
+			ValidateArtikelId(artikelId,locale);
+			
+			final Artikel artikel = FindArtikelById(artikelId,locale);
+			if(artikel==null){
+				return;}
+			
+			// TODO Datenbanzugriffsschicht statt Mock
+			Mock.deleteArtikel(artikel);
+			
+	}
+			
+	//	public void deleteKunde(Long kundeId, Locale locale) {
+		//	validateKundeId(kundeId, locale);
+			//final AbstractKunde kunde = findKundeById(kundeId, locale);
+			//if (kunde == null) {
+				//return;
+			//}
+
+			// Gibt es Bestellungen?
+			//if (!kunde.getBestellungen().isEmpty()) {
+				//throw new KundeDeleteBestellungException(kunde);
+			//}
+			
+			////  Datenbanzugriffsschicht statt Mock
+			//Mock.deleteKunde(kunde);
+		//}
+	
 	
 	
 	
