@@ -15,6 +15,10 @@ import org.jboss.logging.Logger;
 import de.shop.artikelverwaltung.domain.Artikel;
 import de.shop.kundenverwaltung.domain.AbstractKunde;
 import de.shop.kundenverwaltung.service.KundeDeleteBestellungException;
+import de.shop.artikelverwaltung.service.ArtikelServiceException;
+import de.shop.artikelverwaltung.service.ArtikelValidationException;
+import de.shop.artikelverwaltung.service.InvalidArtikelException;
+
 import de.shop.util.Log;
 import de.shop.util.Mock;
 import de.shop.util.ValidatorProvider;
@@ -96,7 +100,7 @@ public class ArtikelService implements Serializable {
 				
 				final Set<ConstraintViolation<Artikel>> violations = validator.validate(artikel, groups);
 				if (!violations.isEmpty()) {
-					//throw new InvalidArtikelException(artikel, violations);
+					throw new InvalidArtikelException(artikel, violations);
 				}
 		
 	}
