@@ -14,11 +14,13 @@ import org.jboss.logging.Logger;
 
 import de.shop.artikelverwaltung.domain.Artikel;
 import de.shop.kundenverwaltung.domain.AbstractKunde;
+import de.shop.kundenverwaltung.service.EmailExistsException;
 import de.shop.kundenverwaltung.service.InvalidNachnameException;
 import de.shop.kundenverwaltung.service.KundeDeleteBestellungException;
 import de.shop.artikelverwaltung.service.ArtikelServiceException;
 import de.shop.artikelverwaltung.service.ArtikelValidationException;
 import de.shop.artikelverwaltung.service.InvalidArtikelException;
+import de.shop.util.IdGroup;
 import de.shop.util.Log;
 import de.shop.util.Mock;
 import de.shop.util.ValidatorProvider;
@@ -117,8 +119,24 @@ public class ArtikelService implements Serializable {
 	
 	
 	
-	public Artikel UpdateArtikel(Artikel artikel){
-		return null;		
+	public Artikel UpdateArtikel(Artikel artikel,Locale locale){
+		if(artikel == null){
+			return null;
+		}
+		
+		ValidateArtikel(artikel,locale,Default.class, IdGroup.class);
+		
+		// Pruefung, ob die Bezeichnung schon existiert
+		final Artikel vorhandenerartikel = Mock.findArtikelByBezeichnung(artikel.getBezeichnung());
+		
+		// Gibt es die Email-Adresse bei einem anderen, bereits vorhandenen Kunden?
+				if (vorhandenerartikel.getId().longValue() != artikel.getId().longValue()) {
+					throw new BezeichnungExistsException(artikel.getABezeichnung());
+				}
+				
+				// TODO Datenbanzugriffsschicht statt Mock
+				Mock.updateArtikel(artikel);
+		
 	}
 	
 	public void DeleteArtikel(Long artikelId, Locale locale){
