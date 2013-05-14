@@ -14,11 +14,11 @@ import org.jboss.logging.Logger;
 
 import de.shop.artikelverwaltung.domain.Artikel;
 import de.shop.kundenverwaltung.domain.AbstractKunde;
+import de.shop.kundenverwaltung.service.InvalidNachnameException;
 import de.shop.kundenverwaltung.service.KundeDeleteBestellungException;
 import de.shop.artikelverwaltung.service.ArtikelServiceException;
 import de.shop.artikelverwaltung.service.ArtikelValidationException;
 import de.shop.artikelverwaltung.service.InvalidArtikelException;
-
 import de.shop.util.Log;
 import de.shop.util.Mock;
 import de.shop.util.ValidatorProvider;
@@ -105,6 +105,16 @@ public class ArtikelService implements Serializable {
 		
 	}
 	
+	private void validateBezeichnung(String bezeichnung, Locale locale) {
+		final Validator validator = validatorProvider.getValidator(locale);
+		final Set<ConstraintViolation<Artikel>> violations = validator.validateValue(Artikel.class,
+				                                                                           "bezeichnung",
+				                                                                           bezeichnung,
+				                                                                           Default.class);
+		if (!violations.isEmpty())
+			throw new InvalidBezeichnungException(bezeichnung, violations);
+	}
+	
 	
 	
 	public Artikel UpdateArtikel(Artikel artikel){
@@ -119,25 +129,11 @@ public class ArtikelService implements Serializable {
 				return;}
 			
 			// TODO Datenbanzugriffsschicht statt Mock
-			Mock.deleteArtikel(artikel);
+			Mock.DeleteArtikel(artikel);
 			
 	}
 			
-	//	public void deleteKunde(Long kundeId, Locale locale) {
-		//	validateKundeId(kundeId, locale);
-			//final AbstractKunde kunde = findKundeById(kundeId, locale);
-			//if (kunde == null) {
-				//return;
-			//}
-
-			// Gibt es Bestellungen?
-			//if (!kunde.getBestellungen().isEmpty()) {
-				//throw new KundeDeleteBestellungException(kunde);
-			//}
-			
-			////  Datenbanzugriffsschicht statt Mock
-			//Mock.deleteKunde(kunde);
-		//}
+	
 	
 	
 	

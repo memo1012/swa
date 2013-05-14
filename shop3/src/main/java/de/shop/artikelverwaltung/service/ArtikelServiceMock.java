@@ -9,11 +9,11 @@ import de.shop.util.MockService;
 public class ArtikelServiceMock extends ArtikelService {
 	private static final long serialVersionUID = -2919310633845009282L;
 
-	@Override
-	public Artikel findArtikelById(Long id) {
-		final Artikel artikel = new Artikel();
-		artikel.setId(id);
-		artikel.setBezeichnung("Bezeichnung_" + id + "_Mock");
-		return artikel;
-	}
+	//@Override
+	//public Artikel findArtikelById(Long id) {
+		//final Artikel artikel = new Artikel();
+		//artikel.setId(id);
+		//artikel.setBezeichnung("Bezeichnung_" + id + "_Mock");
+		//return artikel;
+	//}
 }
