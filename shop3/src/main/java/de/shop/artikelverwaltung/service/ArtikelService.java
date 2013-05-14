@@ -131,7 +131,7 @@ public class ArtikelService implements Serializable {
 		
 		// Gibt es die Email-Adresse bei einem anderen, bereits vorhandenen Kunden?
 				if (vorhandenerartikel.getId().longValue() != artikel.getId().longValue()) {
-					throw new BezeichnungExistsException(artikel.getABezeichnung());
+					throw new BezeichnungExistsException(artikel.getBezeichnung());
 				}
 				
 				// TODO Datenbanzugriffsschicht statt Mock
