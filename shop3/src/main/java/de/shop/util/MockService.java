@@ -17,7 +17,7 @@ import javax.enterprise.inject.Stereotype;
 @Retention(RUNTIME)
 public @interface MockService {
 
-
+//int test ();
 	 
 }
 
