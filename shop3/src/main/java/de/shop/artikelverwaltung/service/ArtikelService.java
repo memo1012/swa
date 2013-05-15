@@ -15,6 +15,7 @@ import org.jboss.logging.Logger;
 import de.shop.artikelverwaltung.domain.Artikel;
 import de.shop.kundenverwaltung.domain.AbstractKunde;
 import de.shop.kundenverwaltung.service.EmailExistsException;
+import de.shop.kundenverwaltung.service.InvalidKundeIdException;
 import de.shop.kundenverwaltung.service.InvalidNachnameException;
 import de.shop.kundenverwaltung.service.KundeDeleteBestellungException;
 import de.shop.artikelverwaltung.service.ArtikelServiceException;
@@ -25,6 +26,7 @@ import de.shop.util.Log;
 import de.shop.util.Mock;
 import de.shop.util.ValidatorProvider;
 
+import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
@@ -57,43 +59,52 @@ public class ArtikelService implements Serializable {
 	}
 	
 	
-	public Artikel FindArtikelByBeschreibung(){
+	public Artikel FindArtikelByBezeichnung(String bezeichnung, Locale locale){
 		
-		return null;
+		validateBezeichnung(bezeichnung, locale);
+		
+		// TODO Datenbanzugriffsschicht statt Mock
+		Artikel artikel = Mock.findArtikelByBezeichnung(bezeichnung);
+		return artikel;
+		
 	}
 	
 	
-	public Artikel CreateArtikel(Artikel artikel, Locale locale){		
+	public Artikel CreateArtikel(Artikel artikel, Locale locale){	
 	
-		
 		if (artikel == null) {
 			return artikel;
 		}
 		
 		
-
 		// Werden alle Constraints beim Einfuegen gewahrt?
 		ValidateArtikel(artikel, locale, Default.class);
 
 		// Pruefung, ob die Bezeichnung schon existiert
 		// TODO Datenbanzugriffsschicht statt Mock
-		//if (Mock.findArtikelByBezeichnung(artikel.getBezeichnung()) != null) {
-			//throw new BezeichnungExistsException(artikel.getBezeichnung());
-		//}
+		if (Mock.findArtikelByBezeichnung(artikel.getBezeichnung()) != null) {
+			throw new BezeichnungExistsException(artikel.getBezeichnung());
+		}
 
 		artikel = Mock.createArtikel(artikel);
 
 		return artikel;
 		
-		
-		//return null;
 	}
 
 	
-	private void ValidateArtikelId(long artikelid,Locale locale){
+	private void ValidateArtikelId(long artikelId,Locale locale){
 		
-		
+		final Validator validator = validatorProvider.getValidator(locale);
+		final Set<ConstraintViolation<Artikel>> violations = validator.validateValue(Artikel.class,
+				                                                                           "id",
+				                                                                           artikelId,
+				                                                                           IdGroup.class);
+		if (!violations.isEmpty())
+			throw new InvalidArtikelIdException(artikelId, violations);
 	}
+	
+	
 	
 	private void ValidateArtikel(Artikel artikel, Locale locale, Class<?>... groups){
 		
@@ -136,6 +147,8 @@ public class ArtikelService implements Serializable {
 				
 				// TODO Datenbanzugriffsschicht statt Mock
 				Mock.updateArtikel(artikel);
+				
+				return artikel;
 		
 	}
 	
