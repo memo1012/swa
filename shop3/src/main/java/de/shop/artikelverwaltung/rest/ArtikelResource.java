@@ -68,9 +68,17 @@ public class ArtikelResource {
 	}
 	
 	@GET
+	public Collection<Artikel> findArtikeln() {
+		//@SuppressWarnings("unused")
+		
+		final Collection<Artikel> artikeln = Mock.findAllArtikeln();
+		return artikeln;
+	}
+	
+	@GET
 	@Path("{id:[1-9][0-9]*}")
 	public Artikel findArtikelById(@PathParam("id") Long id, @Context UriInfo uriInfo) {
-		@SuppressWarnings("unused")
+		//@SuppressWarnings("unused")
 		final Locale locale = localeHelper.getLocale(headers);
 		final Artikel artikel = as.FindArtikelById(id,locale);
 		if (artikel == null) {

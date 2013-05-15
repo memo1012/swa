@@ -5,6 +5,7 @@ import java.lang.invoke.MethodHandles;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
@@ -13,11 +14,11 @@ import javax.validation.groups.Default;
 import org.jboss.logging.Logger;
 
 import de.shop.artikelverwaltung.domain.Artikel;
-import de.shop.kundenverwaltung.domain.AbstractKunde;
-import de.shop.kundenverwaltung.service.EmailExistsException;
-import de.shop.kundenverwaltung.service.InvalidKundeIdException;
-import de.shop.kundenverwaltung.service.InvalidNachnameException;
-import de.shop.kundenverwaltung.service.KundeDeleteBestellungException;
+//import de.shop.kundenverwaltung.domain.AbstractKunde;
+//import de.shop.kundenverwaltung.service.EmailExistsException;
+//import de.shop.kundenverwaltung.service.InvalidKundeIdException;
+//import de.shop.kundenverwaltung.service.InvalidNachnameException;
+//import de.shop.kundenverwaltung.service.KundeDeleteBestellungException;
 import de.shop.artikelverwaltung.service.ArtikelServiceException;
 import de.shop.artikelverwaltung.service.ArtikelValidationException;
 import de.shop.artikelverwaltung.service.InvalidArtikelException;
@@ -53,8 +54,8 @@ public class ArtikelService implements Serializable {
 		// TODO id pruefen
 		ValidateArtikelId(artikelid,locale);
 		// TODO Datenbanzugriffsschicht statt Mock
-		return Mock.findArtikelById(artikelid);
-		
+		final Artikel artikel =  Mock.findArtikelById(artikelid);
+		return artikel;
 		
 	}
 	
@@ -71,7 +72,11 @@ public class ArtikelService implements Serializable {
 	
 	
 	public Artikel CreateArtikel(Artikel artikel, Locale locale){	
-	
+	//null prufung
+	//Validierung
+	//Gibt es schon die gleiche Bezeichnung ?
+	//Generiert Objekt
+		
 		if (artikel == null) {
 			return artikel;
 		}
@@ -162,6 +167,11 @@ public class ArtikelService implements Serializable {
 			// TODO Datenbanzugriffsschicht statt Mock
 			Mock.DeleteArtikel(artikel);
 			
+	}
+
+	public Artikel Find(Object id) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 			
 	
