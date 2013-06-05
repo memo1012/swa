@@ -101,5 +101,6 @@ public class Artikel implements Serializable  {
 				+ artikelBezeichnung + ", preis=" + preis + ", farbe=" + farbe
 				+ ", verfuegbarkeit=" + verfuegbarkeit + "]";
 	}
+	//Test
 	
 }
