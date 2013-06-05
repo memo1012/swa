@@ -217,3 +217,6 @@ public class Artikel implements Serializable {
 	}
 
 }
+	//Testatkk
+	
+}
