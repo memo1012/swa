@@ -1,5 +1,7 @@
 package de.shop.mail;
 
+import static javax.ejb.TransactionAttributeType.SUPPORTS;
+
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.lang.invoke.MethodHandles;
@@ -8,6 +10,7 @@ import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.ejb.Asynchronous;
 import javax.ejb.Stateful;
+import javax.ejb.TransactionAttribute;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
@@ -20,13 +23,16 @@ import javax.mail.internet.MimeMessage;
 
 import org.jboss.logging.Logger;
 
+import de.shop.bestellverwaltung.domain.Bestellposition;
 import de.shop.bestellverwaltung.domain.Bestellung;
 import de.shop.bestellverwaltung.service.NeueBestellung;
 import de.shop.kundenverwaltung.domain.AbstractKunde;
+import de.shop.util.Log;
 import de.shop.util.Config;
 
 @ApplicationScoped
 @Stateful
+@Log
 public class BestellungObserver implements Serializable {
 	private static final long serialVersionUID = -1567643645881819340L;
 	private static final Logger LOGGER = Logger.getLogger(MethodHandles.lookup().lookupClass());
@@ -38,35 +44,37 @@ public class BestellungObserver implements Serializable {
 	@Inject
 	private Config config;
 	
-	private String absenderMail;
-	private String absenderName;
+	private String mailAbsender;
+	private String nameAbsender;
 
 	@PostConstruct
 	private void init() {
-		absenderMail = config.getAbsenderMail();
-		if (absenderMail == null) {
+		mailAbsender = config.getAbsenderMail();
+		if (mailAbsender == null) {
 			LOGGER.warn("Der Absender fuer Bestellung-Emails ist nicht gesetzt.");
 			return;
 		}
-		LOGGER.info("Absender fuer Bestellung-Emails: " + absenderMail);
+		LOGGER.info("Absender fuer Bestellung-Emails: " + mailAbsender);
 		
-		absenderName = config.getAbsenderName();
+		nameAbsender = config.getAbsenderName();
 	}
 	
 	@Asynchronous
+	@TransactionAttribute(SUPPORTS)
 	public void onCreateBestellung(@Observes @NeueBestellung Bestellung bestellung) {
 		final AbstractKunde kunde = bestellung.getKunde();
 		final String mailEmpfaenger = kunde.getEmail();
-		if (absenderMail == null || mailEmpfaenger == null) {
+		if (mailAbsender == null || mailEmpfaenger == null) {
 			return;
 		}
-		final String nameEmpfaenger = kunde.getNachname();
+		final String vorname = kunde.getVorname() == null ? "" : kunde.getVorname();
+		final String nameEmpfaenger = vorname + kunde.getNachname();
 		
 		final MimeMessage message = new MimeMessage(mailSession);
 
 		try {
 			// Absender setzen
-			final InternetAddress absenderObj = new InternetAddress(absenderMail, absenderName);
+			final InternetAddress absenderObj = new InternetAddress(mailAbsender, nameAbsender);
 			message.setFrom(absenderObj);
 			
 			// Empfaenger setzen
@@ -77,8 +85,11 @@ public class BestellungObserver implements Serializable {
 			message.setSubject("Neue Bestellung Nr. " + bestellung.getId());
 			
 			// Text setzen mit MIME Type "text/plain"
-			final StringBuilder sb = new StringBuilder(32);
+			final StringBuilder sb = new StringBuilder(256);
 			sb.append("Neue Bestellung Nr. " + bestellung.getId() + NEWLINE);
+			for (Bestellposition bp : bestellung.getBestellpositionen()) {
+				sb.append(bp.getAnzahl() + "\t" + bp.getArtikel().getBezeichnung() + NEWLINE);
+			}
 			final String text = sb.toString();
 			LOGGER.trace(text);
 			message.setText(text);
