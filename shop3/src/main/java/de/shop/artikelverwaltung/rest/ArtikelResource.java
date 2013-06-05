@@ -3,7 +3,7 @@ package de.shop.artikelverwaltung.rest;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
 import java.lang.invoke.MethodHandles;
-import java.util.Collection;
+import java.util.List;
 import java.util.Locale;
 
 import javax.annotation.PostConstruct;
@@ -11,25 +11,26 @@ import javax.annotation.PreDestroy;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 import org.jboss.logging.Logger;
 
 import de.shop.artikelverwaltung.domain.Artikel;
 import de.shop.artikelverwaltung.service.ArtikelService;
-import de.shop.kundenverwaltung.domain.AbstractKunde;
-import de.shop.kundenverwaltung.rest.UriHelperKunde;
 import de.shop.util.LocaleHelper;
 import de.shop.util.Log;
-import de.shop.util.Mock;
 import de.shop.util.NotFoundException;
 
 @Path("/artikel")
@@ -40,22 +41,17 @@ import de.shop.util.NotFoundException;
 public class ArtikelResource {
 	private static final Logger LOGGER = Logger.getLogger(MethodHandles.lookup().lookupClass());
 	
-	@Context
-	private UriInfo uriInfo;
+	@Inject
+	private LocaleHelper localeHelper;
 	
 	@Context
 	private HttpHeaders headers;
 	
 	@Inject
+	private UriHelperArtikel uriHelperArtikel;
+	
+	@Inject
 	private ArtikelService as;
-	
-	@Inject
-	private UriHelperArtikel uriHelperartikel;
-	
-	
-	
-	@Inject
-	private LocaleHelper localeHelper;
 	
 	@PostConstruct
 	private void postConstruct() {
@@ -68,53 +64,69 @@ public class ArtikelResource {
 	}
 	
 	@GET
-	public Collection<Artikel> findArtikeln() {
-		//@SuppressWarnings("unused")
-		
-		final Collection<Artikel> artikeln = Mock.findAllArtikeln();
-		return artikeln;
-	}
-	
-	@GET
 	@Path("{id:[1-9][0-9]*}")
 	public Artikel findArtikelById(@PathParam("id") Long id, @Context UriInfo uriInfo) {
-		//@SuppressWarnings("unused")
 		final Locale locale = localeHelper.getLocale(headers);
-		final Artikel artikel = as.FindArtikelById(id,locale);
+		final Artikel artikel = as.findArtikelById(id, locale);
 		if (artikel == null) {
 			final String msg = "Kein Artikel gefunden mit der ID " + id;
 			throw new NotFoundException(msg);
 		}
-
+		
 		return artikel;
 	}
 	
 	@GET
-	public Artikel findArtikelByBezeichnung(@QueryParam("bezeichnung") @DefaultValue("") String bezeichnung) {
-		@SuppressWarnings("unused")
+	public List<Artikel> findArtikelByBezeichnung(@QueryParam("bezeichnung") 
+		@DefaultValue("") String bezeichnung) {
 		final Locale locale = localeHelper.getLocale(headers);
 		
-		Artikel artikel = null;
-		Collection<Artikel> artikeln = null;
+		List<Artikel> artikelliste = null;
 		if ("".equals(bezeichnung)) {
-			// TODO Anwendungskern statt Mock, Verwendung von Locale
-			artikeln = Mock.findAllArtikeln();
-			if (artikeln==null) {
-				throw new NotFoundException("Es gibt kein vorhandene Artikel");
+			artikelliste = as.findAllArtikel();
+			if (artikelliste.isEmpty()) {
+				throw new NotFoundException("Keine Artikel vorhanden.");
 			}
 		}
 		else {
-			// TODO Anwendungskern statt Mock, Verwendung von Locale
-			artikel = Mock.findArtikelByBezeichnung(bezeichnung);
-			if (artikel==null) {
+			artikelliste = as.findArtikelByBezeichnung(bezeichnung, locale);
+			if (artikelliste.isEmpty()) {
 				throw new NotFoundException("Kein Artikel mit Bezeichnung " + bezeichnung + " gefunden.");
 			}
-		}
+		}		
+		return artikelliste;
+	}
+	
+	@POST
+	@Consumes(APPLICATION_JSON)
+	@Produces
+	public Response createArtikel(Artikel artikel) {
+		final Locale locale = localeHelper.getLocale(headers);
+		//artikel = as.createArtikel(artikel, locale);
+		as.createArtikel(artikel, locale);
 		
+		return Response.noContent().build();
+	}
+	
+	@PUT
+	@Consumes(APPLICATION_JSON)
+	@Produces
+	public Response updateArtikel(Artikel artikel) {
+		final Locale locale = localeHelper.getLocale(headers);
 		
-		uriHelperartikel.updateUriArtikel(artikel, uriInfo);
+		as.updateArtikel(artikel, locale);
 		
+		return Response.noContent().build();
+	}
+	
+	@DELETE
+	@Path("{id:[1-9][0-9]*}")
+	@Produces
+	public Response deleteArtikel(@PathParam("id") Long artikelId) {
+		final Locale locale = localeHelper.getLocale(headers);
 		
-		return artikel;
+		as.deleteArtikel(artikelId, locale);
+		
+		return Response.noContent().build();
 	}
 }

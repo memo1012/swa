@@ -68,7 +68,7 @@ public class KundeService implements Serializable {
 		validateNachname(nachname, locale);
 		
 		// TODO Datenbanzugriffsschicht statt Mock
-		List<AbstractKunde> kunden = Mock.findKundenByNachname(nachname);
+		final List<AbstractKunde> kunden = Mock.findKundenByNachname(nachname);
 		return kunden;
 	}
 	
@@ -91,6 +91,7 @@ public class KundeService implements Serializable {
 		validateKunde(kunde, locale, Default.class);
 
 		// Pruefung, ob die Email-Adresse schon existiert
+		
 		// TODO Datenbanzugriffsschicht statt Mock
 		if (Mock.findKundeByEmail(kunde.getEmail()) != null) {
 			throw new EmailExistsException(kunde.getEmail());
@@ -120,17 +121,17 @@ public class KundeService implements Serializable {
 		validateKunde(kunde, locale, Default.class, IdGroup.class);
 
 		// Pruefung, ob die Email-Adresse schon existiert
-		final AbstractKunde vorhandenerKunde = Mock.findKundeByEmail(kunde.getEmail());
+		//final AbstractKunde vorhandenerKunde = Mock.findKundeByEmail(kunde.getEmail());
 
 		// Gibt es die Email-Adresse bei einem anderen, bereits vorhandenen Kunden?
-		if (vorhandenerKunde.getId().longValue() != kunde.getId().longValue()) {
-			throw new EmailExistsException(kunde.getEmail());
-		}
+		//if (vorhandenerKunde.getId().longValue() != kunde.getId().longValue()) {
+			//throw new EmailExistsException(kunde.getEmail());
+		//}
 		
 		// TODO Datenbanzugriffsschicht statt Mock
 		Mock.updateKunde(kunde);
 		
-		return kunde;
+		return kunde; 
 	}
 
 	public void deleteKunde(Long kundeId, Locale locale) {

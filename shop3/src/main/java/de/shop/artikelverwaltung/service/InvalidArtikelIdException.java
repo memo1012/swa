@@ -5,11 +5,10 @@ import java.util.Collection;
 import javax.validation.ConstraintViolation;
 
 import de.shop.artikelverwaltung.domain.Artikel;
-import de.shop.artikelverwaltung.service.ArtikelValidationException;
 
-public class InvalidArtikelIdException extends ArtikelValidationException {
-
-	private static final long serialVersionUID = -5565868593840853840L;
+public class InvalidArtikelIdException extends AbstractArtikelValidationException {
+	private static final long serialVersionUID = -8973151010781329074L;
+	
 	private final Long artikelId;
 	
 	public InvalidArtikelIdException(Long artikelId, Collection<ConstraintViolation<Artikel>> violations) {

@@ -14,15 +14,9 @@ public class UriHelperArtikel {
 	public URI getUriArtikel(Artikel artikel, UriInfo uriInfo) {
 		final UriBuilder ub = uriInfo.getBaseUriBuilder()
 		                             .path(ArtikelResource.class)
-		                             .path(ArtikelResource.class, "findArtikelgById");
+		                             .path(ArtikelResource.class, "findArtikelById");
 		final URI uri = ub.build(artikel.getId());
 		return uri;
 	}
-	
-
-	public void updateUriArtikel(Artikel artikel, UriInfo uriInfo) {
-		
-	}
-
 	
 }

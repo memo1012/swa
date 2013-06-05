@@ -16,8 +16,10 @@ import javax.validation.groups.Default;
 
 import org.jboss.logging.Logger;
 
+import de.shop.bestellverwaltung.domain.Bestellposition;
 import de.shop.bestellverwaltung.domain.Bestellung;
 import de.shop.kundenverwaltung.domain.AbstractKunde;
+import de.shop.util.IdGroup;
 import de.shop.util.Log;
 import de.shop.util.Mock;
 import de.shop.util.ValidatorProvider;
@@ -61,11 +63,13 @@ public class BestellungServiceImpl implements BestellungService, Serializable {
 	}
 
 	@Override
-	public Bestellung createBestellung(Bestellung bestellung, AbstractKunde kunde, Locale locale) {
+	public Bestellung createBestellung(Bestellung bestellung, 
+			AbstractKunde kunde, List<Bestellposition> bestellpositionen, Locale locale) {
 		validateBestellung(bestellung, locale, Default.class);
+		validateBestellpositionen(bestellpositionen, locale, Default.class);
 		
 		// TODO Datenbanzugriffsschicht statt Mock
-		bestellung = Mock.createBestellung(bestellung);
+		bestellung = Mock.createBestellung(bestellung, kunde, bestellpositionen);
 		event.fire(bestellung);
 		
 		return bestellung;
@@ -79,5 +83,28 @@ public class BestellungServiceImpl implements BestellungService, Serializable {
 			LOGGER.debugf("createBestellung: violations=%s", violations);
 			throw new InvalidBestellungException(bestellung, violations);
 		}
+	}
+	
+	private void validateBestellpositionen(List<Bestellposition> bestellpositionen, Locale locale, Class<?>... groups) {
+		final Validator validator = validatorProvider.getValidator(locale);
+		
+		for (Bestellposition bestellposition : bestellpositionen) {
+			final Set<ConstraintViolation<Bestellposition>> violations = validator.validate(bestellposition);
+			if (violations != null && !violations.isEmpty()) {
+				LOGGER.debugf("createBestellung: violations=%s", violations);
+				throw new InvalidBestellpositionException(bestellposition, violations);
+			}
+		}
+	
+	}
+	
+	@Override
+	public Bestellung updateBestellung(Bestellung bestellung, Locale locale) {
+		if (bestellung == null) {
+			return null;
+		}
+		validateBestellung(bestellung, locale, Default.class, IdGroup.class);
+		Mock.updateBestellung(bestellung);
+		return bestellung;
 	}
 }
