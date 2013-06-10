@@ -217,6 +217,6 @@ public class Artikel implements Serializable {
 	}
 
 }
-	//Testatkkopopol315S
+	//Testatkkopopol315Sngfj
 	
 }
