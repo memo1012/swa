@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.lang.invoke.MethodHandles;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -39,6 +40,19 @@ public class ArtikelService implements Serializable {
 	@PreDestroy
 	private void preDestroy() {
 		LOGGER.debugf("CDI-faehiges Bean %s wird geloescht", this);
+	}
+	
+	
+	public Artikel createArtikel(Artikel artikel, Locale locale) {
+		if (artikel == null)
+			return artikel;
+		
+		// Validierung fehlt noch
+		
+		// try und catch ob es den artikel mit dieser id vllt schon gibt.
+		
+		em.persist(artikel);
+		return artikel;
 	}
 	
 	/**
