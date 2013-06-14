@@ -8,8 +8,10 @@ import static de.shop.util.Constants.KEINE_ID;
 
 
 
+
 import java.lang.invoke.MethodHandles;
 import java.net.URI;
+import java.util.Collection;
 import java.util.Locale;
 
 import javax.annotation.PostConstruct;
@@ -80,6 +82,16 @@ public class ArtikelResource {
 			throw new NotFoundException(msg);
 		}
 
+		return artikel;
+	}
+	@GET
+	@Path ("/prefix/Bez/{Bezeichnung}")
+	public Collection <Artikel> findArtikelbyBez(@PathParam("bezeichnung") String BezPrefix) {
+		final Collection <Artikel> artikel= as.findArtikelByBezeichnung(BezPrefix);
+		if (artikel == null) {
+			final String msg = "Kein Artikel gefunden mit der Bezeicnhng " + BezPrefix;
+			throw new NotFoundException(msg);
+		}
 		return artikel;
 	}
 	

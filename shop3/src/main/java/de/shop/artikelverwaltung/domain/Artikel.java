@@ -47,7 +47,12 @@ import de.shop.util.IdGroup;
             	query = "SELECT      a"
                         + " FROM     Artikel a"
 						+ " WHERE    a.preis < :" + Artikel.PARAM_PREIS
-			 	        + " ORDER BY a.id ASC")
+			 	        + " ORDER BY a.id ASC"),
+  /*	@NamedQuery(name  = Artikel.FIND_ARTIKEL_ID,
+  				query = "SELECT      a"
+  						+ " FROM     Artikel a"
+  						+ " WHERE    a.id = :" Id
+  						)*/
 })
 public class Artikel implements Serializable {
 	private static final long serialVersionUID = -3700579190995722151L;
