@@ -85,11 +85,11 @@ public class ArtikelResource {
 		return artikel;
 	}
 	@GET
-	@Path ("/Bez/{Bezeichnung}")
-	public Collection <Artikel> findArtikelbyBez(@PathParam("Bezeichnug") String Bez) {
-		final Collection <Artikel> artikel= as.findArtikelByBezeichnung(Bez);
+	@Path ("/prefix/bezeichnung/{Bezeichnung}")
+	public Collection <Artikel> findArtikelbyBez(@PathParam("Bezeichnug") String BezPrefix) {
+		final Collection <Artikel> artikel= as.findArtikelByBezeichnung(BezPrefix);
 		if (artikel == null) {
-			final String msg = "Kein Artikel gefunden mit der Bezeicnhng " + Bez;
+			final String msg = "Kein Artikel gefunden mit der Bezeicnhng " + BezPrefix;
 			throw new NotFoundException(msg);
 		}
 		return artikel;
