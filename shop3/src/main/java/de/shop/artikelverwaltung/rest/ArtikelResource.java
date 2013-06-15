@@ -85,8 +85,8 @@ public class ArtikelResource {
 		return artikel;
 	}
 	@GET
-	@Path ("/prefix/bezeichnung/{Bezeichnung}")
-	public Collection <Artikel> findArtikelbyBez(@PathParam("Bezeichnug") String BezPrefix) {
+	@Path ("/prefix/bezeichnung/{bezeichnung}")
+	public Collection <Artikel> findArtikelbybez(@PathParam("bezeichnug") String BezPrefix) {
 		final Collection <Artikel> artikel= as.findArtikelByBezeichnung(BezPrefix);
 		if (artikel == null) {
 			final String msg = "Kein Artikel gefunden mit der Bezeicnhng " + BezPrefix;
@@ -96,7 +96,7 @@ public class ArtikelResource {
 	}
 
 	@GET
-	@Path ("/prefix/Preis/{Preis}")
+	@Path ("/prefix/preis/{Preis}")
 	public Collection <Artikel> findArtikelbyPreis(@PathParam("Preis") String PreisPrefix) {
 		final Collection <Artikel> artikel= as.findArtikelByBezeichnung(PreisPrefix);
 		if (artikel == null) {
