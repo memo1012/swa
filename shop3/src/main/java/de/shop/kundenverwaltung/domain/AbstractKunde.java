@@ -88,8 +88,7 @@ import de.shop.util.IdGroup;
 	@NamedQuery(name  = AbstractKunde.FIND_NACHNAMEN_BY_PREFIX,
    	            query = "SELECT   DISTINCT k.nachname"
 				        + " FROM  AbstractKunde k "
-	            		+ " WHERE UPPER(k.nachname) LIKE UPPER(:"
-	            		+ AbstractKunde.PARAM_KUNDE_NACHNAME_PREFIX + ")"),
+	            		+ " WHERE UPPER(k.nachname) LIKE UPPER(:" + AbstractKunde.PARAM_KUNDE_NACHNAME_PREFIX + ")"),
 	@NamedQuery(name  = AbstractKunde.FIND_KUNDEN_BY_NACHNAME_FETCH_BESTELLUNGEN,
 	            query = "SELECT DISTINCT k"
 			            + " FROM   AbstractKunde k LEFT JOIN FETCH k.bestellungen"

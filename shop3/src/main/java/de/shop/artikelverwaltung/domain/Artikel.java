@@ -38,21 +38,27 @@ import de.shop.util.IdGroup;
 						+ " WHERE    a.ausgesondert = FALSE"
                         + " ORDER BY a.id ASC"),
 	@NamedQuery(name  = Artikel.FIND_ARTIKEL_BY_BEZ,
-            	query = "SELECT      a"
+            	query = "SELECT      a.bezeichnung"
                         + " FROM     Artikel a"
 						+ " WHERE    a.bezeichnung LIKE :" + Artikel.PARAM_BEZEICHNUNG
-						+ "          AND a.ausgesondert = FALSE"
+						//+ "          AND a.ausgesondert = FALSE"
 			 	        + " ORDER BY a.id ASC"),
    	@NamedQuery(name  = Artikel.FIND_ARTIKEL_MAX_PREIS,
             	query = "SELECT      a"
                         + " FROM     Artikel a"
 						+ " WHERE    a.preis < :" + Artikel.PARAM_PREIS
 			 	        + " ORDER BY a.id ASC"),
-  /*	@NamedQuery(name  = Artikel.FIND_ARTIKEL_ID,
+	/*@NamedQuery(name  = Artikel.FIND_ARTIKEL_PREIS,
+		       query = "SELECT      a"
+		    		   	+ " FROM     Artikel a"
+		    		   	+ " WHERE    a.preis = :"  + Artikel.PARAM_PREIS
+					 	),*/
+  	@NamedQuery(name  = Artikel.FIND_ARTIKEL_BY_ID,
   				query = "SELECT      a"
   						+ " FROM     Artikel a"
-  						+ " WHERE    a.id = :" Id
-  						)*/
+  						+ " WHERE    a.id = :" + Artikel.PARAM_ID
+  						//+ " ORDER BY a.id ASC"
+  						),
 })
 public class Artikel implements Serializable {
 	private static final long serialVersionUID = -3700579190995722151L;
@@ -64,9 +70,11 @@ public class Artikel implements Serializable {
 	public static final String FIND_VERFUEGBARE_ARTIKEL = PREFIX + "findVerfuegbareArtikel";
 	public static final String FIND_ARTIKEL_BY_BEZ = PREFIX + "findArtikelByBez";
 	public static final String FIND_ARTIKEL_MAX_PREIS = PREFIX + "findArtikelByMaxPreis";
+	public static final String FIND_ARTIKEL_BY_ID = PREFIX + "findArtikelById";
 
 	public static final String PARAM_BEZEICHNUNG = "bezeichnung";
 	public static final String PARAM_PREIS = "preis";
+	public static final String PARAM_ID = "id";
 
 	@Id
 	@GeneratedValue

@@ -75,7 +75,7 @@ public class ArtikelResource {
 	
 	@GET
 	@Path("{id:[1-9][0-9]*}")
-	public Artikel findArtikel(@PathParam("id") Long id) {
+	public Artikel findArtikelbyId(@PathParam("id") Long id) {
 		final Artikel artikel = as.findArtikelById(id);
 		if (artikel == null) {
 			final String msg = "Kein Artikel gefunden mit der ID " + id;
@@ -85,15 +85,27 @@ public class ArtikelResource {
 		return artikel;
 	}
 	@GET
-	@Path ("/prefix/Bez/{Bezeichnung}")
-	public Collection <Artikel> findArtikelbyBez(@PathParam("bezeichnung") String BezPrefix) {
-		final Collection <Artikel> artikel= as.findArtikelByBezeichnung(BezPrefix);
+	@Path ("/Bez/{Bezeichnung}")
+	public Collection <Artikel> findArtikelbyBez(@PathParam("Bezeichnug") String Bez) {
+		final Collection <Artikel> artikel= as.findArtikelByBezeichnung(Bez);
 		if (artikel == null) {
-			final String msg = "Kein Artikel gefunden mit der Bezeicnhng " + BezPrefix;
+			final String msg = "Kein Artikel gefunden mit der Bezeicnhng " + Bez;
 			throw new NotFoundException(msg);
 		}
 		return artikel;
 	}
+
+	@GET
+	@Path ("/prefix/Preis/{Preis}")
+	public Collection <Artikel> findArtikelbyPreis(@PathParam("Preis") String PreisPrefix) {
+		final Collection <Artikel> artikel= as.findArtikelByBezeichnung(PreisPrefix);
+		if (artikel == null) {
+			final String msg = "Kein Artikel für den Preis " + PreisPrefix + "gefunden!";
+			throw new NotFoundException(msg);
+	}
+	return artikel;
+}
+	
 	
 	@POST
 	@Consumes(APPLICATION_JSON)
