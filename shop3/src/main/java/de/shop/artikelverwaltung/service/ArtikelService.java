@@ -6,7 +6,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
-import java.util.ArrayList;
+
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -28,7 +28,6 @@ import org.jboss.logging.Logger;
 import com.google.common.base.Strings;
 
 import de.shop.artikelverwaltung.domain.Artikel;
-import de.shop.kundenverwaltung.service.InvalidNachnameException;
 import de.shop.util.Log;
 import de.shop.util.ValidatorProvider;
 

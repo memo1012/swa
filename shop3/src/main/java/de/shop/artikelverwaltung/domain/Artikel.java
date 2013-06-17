@@ -49,17 +49,17 @@ import de.shop.util.IdGroup;
                         + " FROM     Artikel a"
 						+ " WHERE    a.preis < :" + Artikel.PARAM_PREIS
 			 	        + " ORDER BY a.id ASC"),
-	/*@NamedQuery(name  = Artikel.FIND_ARTIKEL_PREIS,
-		       query = "SELECT      a"
-		    		   	+ " FROM     Artikel a"
-		    		   	+ " WHERE    a.preis = :"  + Artikel.PARAM_PREIS
-					 	),*/
   	@NamedQuery(name  = Artikel.FIND_ARTIKEL_BY_ID,
   				query = "SELECT      a"
   						+ " FROM     Artikel a"
   						+ " WHERE    a.id = :" + Artikel.PARAM_ID
-  						//+ " ORDER BY a.id ASC"
+  						+ " ORDER BY a.id ASC"
   						),
+//	@NamedQuery(name  = Artikel.HINZUFUEGEN,
+//		  		query = "INSERT INTO Artikel(id,ausgesondert,bezeichnung,preis,aktualisiert,erzeugt)"
+// 		  				+ "values(1,0,"Tisch",52,'20/05/2004 00:00:00,0','20/05/2004 00:00:00,0'),
+//  		  				
+  						
 })
 public class Artikel implements Serializable {
 	private static final long serialVersionUID = -3700579190995722151L;

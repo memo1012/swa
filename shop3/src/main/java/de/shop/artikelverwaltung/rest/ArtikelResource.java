@@ -8,10 +8,6 @@ import static de.shop.util.Constants.KEINE_ID;
 
 
 
-
-
-
-import java.awt.PageAttributes.MediaType;
 import java.lang.invoke.MethodHandles;
 import java.net.URI;
 import java.util.Collection;
@@ -31,8 +27,6 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
-import javax.xml.bind.annotation.XmlRootElement;
-
 import org.jboss.logging.Logger;
 
 import de.shop.artikelverwaltung.domain.Artikel;
@@ -101,16 +95,7 @@ public class ArtikelResource {
 		return artikel;
 	}
 
-	/*@GET
-	@Path ("/prefix/preis/{Preis}")
-	public Collection <Artikel> findArtikelbyPreis(@PathParam("Preis") String PreisPrefix) {
-		final Collection <Artikel> artikel= as.findArtikelByBezeichnung(PreisPrefix);
-		if (artikel == null) {
-			final String msg = "Kein Artikel für den Preis " + PreisPrefix + "gefunden!";
-			throw new NotFoundException(msg);
-	}
-	return artikel;
-}*/
+
 	
 	
 	@POST
@@ -119,12 +104,14 @@ public class ArtikelResource {
 	public Response createArtikel(Artikel artikel) {
 		final Locale locale = localeHelper.getLocale(headers);
 		
-		artikel.setId(KEINE_ID);
-		artikel.setBezeichnung(artikel.getBezeichnung());
+		
+		Artikel neuerArtikel = new Artikel();
+		neuerArtikel.setBezeichnung(artikel.getBezeichnung());
+		neuerArtikel.setPreis(artikel.getPreis());
 		
 		//LOGGER noch implementieren
 		
-		artikel = as.createArtikel(artikel, locale);
+		artikel = as.createArtikel(neuerArtikel, locale);
 		
 		final URI artikelUri = uriHelperArtikel.getUriArtikel(artikel, uriInfo);
 		return Response.created(artikelUri).build();
