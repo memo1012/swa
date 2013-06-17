@@ -41,8 +41,9 @@ import de.shop.util.IdGroup;
             	query = "SELECT      a.bezeichnung"
                         + " FROM     Artikel a"
 						+ " WHERE    a.bezeichnung LIKE :" + Artikel.PARAM_BEZEICHNUNG
-						//+ "          AND a.ausgesondert = FALSE"
-			 	        + " ORDER BY a.id ASC"),
+						+ "          AND a.ausgesondert = FALSE"
+			 	        //+ " ORDER BY a.id ASC"
+						),
    	@NamedQuery(name  = Artikel.FIND_ARTIKEL_MAX_PREIS,
             	query = "SELECT      a"
                         + " FROM     Artikel a"

@@ -86,8 +86,9 @@ public class ArtikelResource {
 	}
 	@GET
 	@Path ("/prefix/bezeichnung/{bezeichnung}")
-	public Collection <Artikel> findArtikelbybez(@PathParam("bezeichnug") String BezPrefix) {
-		final Collection <Artikel> artikel= as.findArtikelByBezeichnung(BezPrefix);
+	public Collection <String> findArtikelbybez(@PathParam("bezeichnung") String BezPrefix) {
+		final Locale locale = localeHelper.getLocale(headers);
+		final Collection <String> artikel= as.findArtikelByBezeichnung(BezPrefix,locale);
 		if (artikel == null) {
 			final String msg = "Kein Artikel gefunden mit der Bezeicnhng " + BezPrefix;
 			throw new NotFoundException(msg);
@@ -95,7 +96,7 @@ public class ArtikelResource {
 		return artikel;
 	}
 
-	@GET
+	/*@GET
 	@Path ("/prefix/preis/{Preis}")
 	public Collection <Artikel> findArtikelbyPreis(@PathParam("Preis") String PreisPrefix) {
 		final Collection <Artikel> artikel= as.findArtikelByBezeichnung(PreisPrefix);
@@ -104,7 +105,7 @@ public class ArtikelResource {
 			throw new NotFoundException(msg);
 	}
 	return artikel;
-}
+}*/
 	
 	
 	@POST

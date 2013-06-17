@@ -5,9 +5,12 @@ import java.lang.invoke.MethodHandles;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
+import java.util.ArrayList;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
@@ -16,14 +19,18 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validator;
+import javax.validation.groups.Default;
 
 import org.jboss.logging.Logger;
 
 import com.google.common.base.Strings;
 
 import de.shop.artikelverwaltung.domain.Artikel;
-
+import de.shop.kundenverwaltung.service.InvalidNachnameException;
 import de.shop.util.Log;
+import de.shop.util.ValidatorProvider;
 
 @Log
 public class ArtikelService implements Serializable {
@@ -42,6 +49,8 @@ public class ArtikelService implements Serializable {
 	private void preDestroy() {
 		LOGGER.debugf("CDI-faehiges Bean %s wird geloescht", this);
 	}
+	@Inject
+	private ValidatorProvider validatorProvider;
 	
 	
 	public Artikel createArtikel(Artikel artikel, Locale locale) {
@@ -118,21 +127,34 @@ public class ArtikelService implements Serializable {
 	
 	/**
 	 */
-	public List<Artikel> findArtikelByBezeichnung(String bezeichnung) {
+	public List<String> findArtikelByBezeichnung(String bezeichnung,Locale locale) {
+		
+		validateBezeichnung(bezeichnung, locale);
 		if (Strings.isNullOrEmpty(bezeichnung)) {
-			final List<Artikel> artikel = findVerfuegbareArtikel();
-			return artikel;
+			//final List<Artikel> artikel = findVerfuegbareArtikel();
+			//return artikel;
 		}
 		
-		final List<Artikel> artikel = em.createNamedQuery(Artikel.FIND_ARTIKEL_BY_BEZ, Artikel.class)
+		final List<String> artikel = em.createNamedQuery(Artikel.FIND_ARTIKEL_BY_BEZ, String.class)
 				                        .setParameter(Artikel.PARAM_BEZEICHNUNG, "%" + bezeichnung + "%")
 				                        .getResultList();
 		return artikel;
 	}
+	private void validateBezeichnung(String bezeichnung, Locale locale) {
+		final Validator validator = validatorProvider.getValidator(locale);
+		final Set<ConstraintViolation<Artikel>> violations = validator.validateValue(Artikel.class,
+				                                                                           "bezeichnung",
+				                                                                           bezeichnung,
+			                                                                         Default.class ); 
+		//if (!violations.isEmpty())
+			//throw new InvalidNachnameException(bezeichnung, violations);
+			
+			
+		}
 	
 	/**
 	 */
-	public List<Artikel> findArtikelByMaxPreis(double preis) {
+	public List<Artikel> findArtikelByPreis(double preis) {
 		final List<Artikel> artikel = em.createNamedQuery(Artikel.FIND_ARTIKEL_MAX_PREIS, Artikel.class)
 				                        .setParameter(Artikel.PARAM_PREIS, preis)
 				                        .getResultList();
