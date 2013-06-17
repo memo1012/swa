@@ -9,6 +9,9 @@ import static de.shop.util.Constants.KEINE_ID;
 
 
 
+
+
+import java.awt.PageAttributes.MediaType;
 import java.lang.invoke.MethodHandles;
 import java.net.URI;
 import java.util.Collection;
@@ -28,6 +31,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+import javax.xml.bind.annotation.XmlRootElement;
 
 import org.jboss.logging.Logger;
 
@@ -40,7 +44,7 @@ import de.shop.util.Transactional;
 
 
 @Path("/artikel")
-@Produces({ APPLICATION_XML, TEXT_XML, APPLICATION_JSON })
+@Produces({  APPLICATION_JSON, APPLICATION_XML, TEXT_XML})
 @Consumes
 @RequestScoped
 @Transactional
@@ -84,6 +88,7 @@ public class ArtikelResource {
 
 		return artikel;
 	}
+	
 	@GET
 	@Path ("/prefix/bezeichnung/{bezeichnung}")
 	public Collection <String> findArtikelbybez(@PathParam("bezeichnung") String BezPrefix) {
