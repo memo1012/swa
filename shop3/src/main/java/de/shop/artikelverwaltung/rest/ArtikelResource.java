@@ -8,6 +8,8 @@ import static de.shop.util.Constants.KEINE_ID;
 
 
 
+
+
 import java.lang.invoke.MethodHandles;
 import java.net.URI;
 import java.util.Collection;
@@ -27,10 +29,15 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+
 import org.jboss.logging.Logger;
 
 import de.shop.artikelverwaltung.domain.Artikel;
 import de.shop.artikelverwaltung.service.ArtikelService;
+import de.shop.kundenverwaltung.domain.AbstractKunde;
+import de.shop.kundenverwaltung.domain.Adresse;
+import de.shop.kundenverwaltung.domain.Privatkunde;
+import de.shop.kundenverwaltung.service.KundeService.FetchType;
 import de.shop.util.LocaleHelper;
 import de.shop.util.Log;
 import de.shop.util.NotFoundException;
@@ -84,12 +91,16 @@ public class ArtikelResource {
 	}
 	
 	@GET
-	@Path ("/prefix/bezeichnung/{bezeichnung}")
-	public Collection <String> findArtikelbybez(@PathParam("bezeichnung") String BezPrefix) {
+	@Path ("/bezeichnung/{bezeichnung}")
+	public Artikel findArtikelByBezeichnung(@PathParam("bezeichnung") String bezeichnung) {
+		//LOGGER.trace("In Artikel Ressource");
+		
 		final Locale locale = localeHelper.getLocale(headers);
-		final Collection <String> artikel= as.findArtikelByBezeichnung(BezPrefix,locale);
+		final Artikel artikel= as.findArtikelByBezeichnung(bezeichnung,locale);
+		//final AbstractKunde kunde = ks.findKundeById(id, , locale);
 		if (artikel == null) {
-			final String msg = "Kein Artikel gefunden mit der Bezeicnhng " + BezPrefix;
+			final String msg = "Kein Artikel gefunden mit der Bezeichnung " + bezeichnung;
+			//LOGGER.trace("Error In Artikel Ressource");
 			throw new NotFoundException(msg);
 		}
 		return artikel;
@@ -102,16 +113,15 @@ public class ArtikelResource {
 	@Consumes(APPLICATION_JSON)
 	@Produces
 	public Response createArtikel(Artikel artikel) {
+		
 		final Locale locale = localeHelper.getLocale(headers);
+
+		artikel.setId(KEINE_ID);
+		artikel.setBezeichnung(artikel.getBezeichnung());
 		
-		
-		Artikel neuerArtikel = new Artikel();
-		neuerArtikel.setBezeichnung(artikel.getBezeichnung());
-		neuerArtikel.setPreis(artikel.getPreis());
-		
-		//LOGGER noch implementieren
-		
-		artikel = as.createArtikel(neuerArtikel, locale);
+		//kunde = (Privatkunde) ks.createKunde(kunde, locale);
+		artikel = as.createArtikel(artikel, locale);
+		LOGGER.tracef("Artikel: %s", artikel);
 		
 		final URI artikelUri = uriHelperArtikel.getUriArtikel(artikel, uriInfo);
 		return Response.created(artikelUri).build();

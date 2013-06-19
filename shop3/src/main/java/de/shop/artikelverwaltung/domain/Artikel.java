@@ -55,6 +55,11 @@ import de.shop.util.IdGroup;
   						+ " WHERE    a.id = :" + Artikel.PARAM_ID
   						+ " ORDER BY a.id ASC"
   						),
+  	@NamedQuery(name  = Artikel.FIND_ARTIKEL_BY_BEZEICHNUNG,
+  		  		query = "SELECT      a"
+  		  				+ " FROM     Artikel a"
+  		  				+ " WHERE    a.bezeichnung LIKE :" + Artikel.PARAM_ARTIKEL_BEZEICHNUNG
+  		  				),						
 //	@NamedQuery(name  = Artikel.HINZUFUEGEN,
 //		  		query = "INSERT INTO Artikel(id,ausgesondert,bezeichnung,preis,aktualisiert,erzeugt)"
 // 		  				+ "values(1,0,"Tisch",52,'20/05/2004 00:00:00,0','20/05/2004 00:00:00,0'),
@@ -72,8 +77,10 @@ public class Artikel implements Serializable {
 	public static final String FIND_ARTIKEL_BY_BEZ = PREFIX + "findArtikelByBez";
 	public static final String FIND_ARTIKEL_MAX_PREIS = PREFIX + "findArtikelByMaxPreis";
 	public static final String FIND_ARTIKEL_BY_ID = PREFIX + "findArtikelById";
+	public static final String FIND_ARTIKEL_BY_BEZEICHNUNG = PREFIX + "findArtikelByBezeichnung";
 
 	public static final String PARAM_BEZEICHNUNG = "bezeichnung";
+	public static final String PARAM_ARTIKEL_BEZEICHNUNG = "bezeichnung";
 	public static final String PARAM_PREIS = "preis";
 	public static final String PARAM_ID = "id";
 
