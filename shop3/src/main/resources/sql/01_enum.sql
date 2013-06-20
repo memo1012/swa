@@ -18,7 +18,7 @@ INSERT INTO familienstand VALUES(0, 'LEDIG');
 INSERT INTO familienstand VALUES(1, 'VERHEIRATET');
 INSERT INTO familienstand VALUES(2, 'GESCHIEDEN');
 INSERT INTO familienstand VALUES(3, 'VERWITWET');
-INSERT INTO familienstand VALUES(4, 'Auf der Suche');
+INSERT INTO familienstand VALUES(4, 'AufderSuche');
 
 
 DROP TABLE hobby;
