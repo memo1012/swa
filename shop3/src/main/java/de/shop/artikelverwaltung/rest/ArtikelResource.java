@@ -93,7 +93,7 @@ public class ArtikelResource {
 	@GET
 	@Path ("/bezeichnung/{bezeichnung}")
 	public Artikel findArtikelByBezeichnung(@PathParam("bezeichnung") String bezeichnung) {
-		//LOGGER.trace("In Artikel Ressource");
+		
 		
 		final Locale locale = localeHelper.getLocale(headers);
 		final Artikel artikel= as.findArtikelByBezeichnung(bezeichnung,locale);
@@ -113,11 +113,13 @@ public class ArtikelResource {
 	@Consumes(APPLICATION_JSON)
 	@Produces
 	public Response createArtikel(Artikel artikel) {
+		LOGGER.trace("In Artikel Post");
+		LOGGER.tracef("Prob Artikel: %s", artikel);
 		
 		final Locale locale = localeHelper.getLocale(headers);
 
 		artikel.setId(KEINE_ID);
-		artikel.setBezeichnung(artikel.getBezeichnung());
+		//artikel.setBezeichnung(artikel.getBezeichnung());
 		
 		//kunde = (Privatkunde) ks.createKunde(kunde, locale);
 		artikel = as.createArtikel(artikel, locale);

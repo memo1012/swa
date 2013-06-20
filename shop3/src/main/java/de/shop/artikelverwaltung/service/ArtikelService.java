@@ -76,10 +76,11 @@ public class ArtikelService implements Serializable {
 		}
 
 		// Die Methode ist in Agabe 2 vorhanden , muss kopieren , und gemacht !
-		validateArtikel(artikel, locale, Default.class);
+		//validateArtikel(artikel, locale, Default.class);
 		
 		// Pruefung, ob die Bezeichnung schon existiert
 		try {
+			LOGGER.trace("Prufung der Bezeichnung");
 			em.createNamedQuery(Artikel.FIND_ARTIKEL_BY_BEZEICHNUNG, Artikel.class)
 			  .setParameter(Artikel.PARAM_ARTIKEL_BEZEICHNUNG, artikel.getBezeichnung())
 			  .getSingleResult();
@@ -87,10 +88,11 @@ public class ArtikelService implements Serializable {
 		}
 		catch (NoResultException e) {
 			// Noch kein Artikel mit dieser Bezeichnung
-			LOGGER.trace("Email-Adresse existiert noch nicht");
+			LOGGER.trace("Bezeichnung existiert noch nicht");
 		}
-		
+		LOGGER.trace("Bevor Persist");
 		em.persist(artikel);
+		LOGGER.trace("Nach Persist");
 		return artikel;		
 	}
 	

@@ -32,6 +32,9 @@ import de.shop.util.IdGroup;
 @Entity
 @Table(name = "artikel")
 @NamedQueries({
+	@NamedQuery(name  = Artikel.FIND_ARTIKEL,
+        	query = "SELECT      a"
+        	        + " FROM     Artikel a"),
 	@NamedQuery(name  = Artikel.FIND_VERFUEGBARE_ARTIKEL,
             	query = "SELECT      a"
             	        + " FROM     Artikel a"
@@ -73,6 +76,7 @@ public class Artikel implements Serializable {
 	private static final int BEZEICHNUNG_LENGTH_MAX = 32;
 	
 	private static final String PREFIX = "Artikel.";
+	public static final String FIND_ARTIKEL = PREFIX + "findArtikel";
 	public static final String FIND_VERFUEGBARE_ARTIKEL = PREFIX + "findVerfuegbareArtikel";
 	public static final String FIND_ARTIKEL_BY_BEZ = PREFIX + "findArtikelByBez";
 	public static final String FIND_ARTIKEL_MAX_PREIS = PREFIX + "findArtikelByMaxPreis";
