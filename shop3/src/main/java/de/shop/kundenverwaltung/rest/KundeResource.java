@@ -216,7 +216,7 @@ public class KundeResource {
 	@POST
 	@Consumes(APPLICATION_JSON)
 	@Produces
-	public Response createPrivatkunde(Privatkunde kunde) {
+	public Response createPrivatkunde(AbstractKunde kunde) {
 		final Locale locale = localeHelper.getLocale(headers);
 
 		kunde.setId(KEINE_ID);
@@ -228,7 +228,7 @@ public class KundeResource {
 		}
 		kunde.setBestellungenUri(null);
 		
-		kunde = (Privatkunde) ks.createKunde(kunde, locale);
+		kunde =  ks.createKunde(kunde, locale);
 		LOGGER.tracef("Kunde: %s", kunde);
 		
 		final URI kundeUri = uriHelperKunde.getUriKunde(kunde, uriInfo);
