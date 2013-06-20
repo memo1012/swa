@@ -6,12 +6,16 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
-import java.util.ArrayList;
+
+
+
+
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -28,7 +32,8 @@ import org.jboss.logging.Logger;
 import com.google.common.base.Strings;
 
 import de.shop.artikelverwaltung.domain.Artikel;
-import de.shop.kundenverwaltung.service.InvalidNachnameException;
+import de.shop.kundenverwaltung.domain.AbstractKunde;
+import de.shop.util.IdGroup;
 import de.shop.util.Log;
 import de.shop.util.ValidatorProvider;
 
@@ -36,6 +41,18 @@ import de.shop.util.ValidatorProvider;
 public class ArtikelService implements Serializable {
 	private static final long serialVersionUID = 3076865030092242363L;
 	private static final Logger LOGGER = Logger.getLogger(MethodHandles.lookup().lookupClass());
+	
+	public enum FetchType {
+		NUR_ARTIKEL,
+		MIT_BESTELLUNGEN,
+		MIT_WARTUNGSVERTRAEGEN
+	}
+	
+	public enum OrderType {
+		KEINE,
+		ID
+	}
+	
 	
 	@PersistenceContext
 	private transient EntityManager em;
@@ -54,15 +71,29 @@ public class ArtikelService implements Serializable {
 	
 	
 	public Artikel createArtikel(Artikel artikel, Locale locale) {
-		if (artikel == null)
+		if (artikel == null) {
 			return artikel;
+		}
+
+		// Die Methode ist in Agabe 2 vorhanden , muss kopieren , und gemacht !
+		//validateArtikel(artikel, locale, Default.class);
 		
-		// Validierung fehlt noch
-		
-		// try und catch ob es den artikel mit dieser id vllt schon gibt.
-		
+		// Pruefung, ob die Bezeichnung schon existiert
+		try {
+			LOGGER.trace("Prufung der Bezeichnung");
+			em.createNamedQuery(Artikel.FIND_ARTIKEL_BY_BEZEICHNUNG, Artikel.class)
+			  .setParameter(Artikel.PARAM_ARTIKEL_BEZEICHNUNG, artikel.getBezeichnung())
+			  .getSingleResult();
+			throw new BezeichnungExistsException(artikel.getBezeichnung());
+		}
+		catch (NoResultException e) {
+			// Noch kein Artikel mit dieser Bezeichnung
+			LOGGER.trace("Bezeichnung existiert noch nicht");
+		}
+		LOGGER.trace("Bevor Persist");
 		em.persist(artikel);
-		return artikel;
+		LOGGER.trace("Nach Persist");
+		return artikel;		
 	}
 	
 	/**
@@ -127,18 +158,19 @@ public class ArtikelService implements Serializable {
 	
 	/**
 	 */
-	public List<String> findArtikelByBezeichnung(String bezeichnung,Locale locale) {
-		
+	public Artikel findArtikelByBezeichnung(String bezeichnung,Locale locale) {
+		LOGGER.trace("In Artikel Services");
 		validateBezeichnung(bezeichnung, locale);
-		if (Strings.isNullOrEmpty(bezeichnung)) {
-			//final List<Artikel> artikel = findVerfuegbareArtikel();
-			//return artikel;
+		LOGGER.trace("Nach Validation");
+		try {
+			final Artikel artikel = em.createNamedQuery(Artikel.FIND_ARTIKEL_BY_BEZEICHNUNG, Artikel.class)
+					                      .setParameter(Artikel.PARAM_ARTIKEL_BEZEICHNUNG, bezeichnung)
+					                      .getSingleResult();
+			return artikel;
 		}
-		
-		final List<String> artikel = em.createNamedQuery(Artikel.FIND_ARTIKEL_BY_BEZ, String.class)
-				                        .setParameter(Artikel.PARAM_BEZEICHNUNG, "%" + bezeichnung + "%")
-				                        .getResultList();
-		return artikel;
+		catch (NoResultException e) {
+			return null;
+		}
 	}
 	private void validateBezeichnung(String bezeichnung, Locale locale) {
 		final Validator validator = validatorProvider.getValidator(locale);
@@ -146,8 +178,8 @@ public class ArtikelService implements Serializable {
 				                                                                           "bezeichnung",
 				                                                                           bezeichnung,
 			                                                                         Default.class ); 
-		//if (!violations.isEmpty())
-			//throw new InvalidNachnameException(bezeichnung, violations);
+		if (!violations.isEmpty())
+			throw new InvalidBezeichnungException(bezeichnung, violations);
 			
 			
 		}
@@ -160,4 +192,30 @@ public class ArtikelService implements Serializable {
 				                        .getResultList();
 		return artikel;
 	}
+	
+	private void validateArtikelId(long artikelId,Locale locale){
+		
+		final Validator validator = validatorProvider.getValidator(locale);
+		final Set<ConstraintViolation<Artikel>> violations = validator.validateValue(Artikel.class,
+				                                                                           "id",
+				                                                                           artikelId,
+				                                                                           IdGroup.class);
+		if (!violations.isEmpty())
+			throw new InvalidArtikelIdException(artikelId, violations);
+	}
+	
+	
+	private void validateArtikel(Artikel artikel, Locale locale, Class<?>... groups){
+		
+		// Werden alle Constraints beim Einfuegen gewahrt?
+				final Validator validator = validatorProvider.getValidator(locale);
+				
+				final Set<ConstraintViolation<Artikel>> violations = validator.validate(artikel, groups);
+				if (!violations.isEmpty()) {
+					throw new InvalidArtikelException(artikel, violations);
+				}
+		
+	}
+	
+	
 }
