@@ -12,7 +12,6 @@ import static de.shop.util.Constants.KEINE_ID;
 
 import java.lang.invoke.MethodHandles;
 import java.net.URI;
-import java.util.Collection;
 import java.util.Locale;
 
 import javax.annotation.PostConstruct;
@@ -34,10 +33,7 @@ import org.jboss.logging.Logger;
 
 import de.shop.artikelverwaltung.domain.Artikel;
 import de.shop.artikelverwaltung.service.ArtikelService;
-import de.shop.kundenverwaltung.domain.AbstractKunde;
-import de.shop.kundenverwaltung.domain.Adresse;
-import de.shop.kundenverwaltung.domain.Privatkunde;
-import de.shop.kundenverwaltung.service.KundeService.FetchType;
+
 import de.shop.util.LocaleHelper;
 import de.shop.util.Log;
 import de.shop.util.NotFoundException;

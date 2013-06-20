@@ -29,10 +29,7 @@ import javax.validation.groups.Default;
 
 import org.jboss.logging.Logger;
 
-import com.google.common.base.Strings;
-
 import de.shop.artikelverwaltung.domain.Artikel;
-import de.shop.kundenverwaltung.domain.AbstractKunde;
 import de.shop.util.IdGroup;
 import de.shop.util.Log;
 import de.shop.util.ValidatorProvider;
