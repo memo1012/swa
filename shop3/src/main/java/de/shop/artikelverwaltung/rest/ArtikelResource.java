@@ -42,7 +42,7 @@ import de.shop.util.Transactional;
 
 
 @Path("/artikel")
-@Produces({  APPLICATION_JSON, APPLICATION_XML, TEXT_XML})
+@Produces({ APPLICATION_JSON, APPLICATION_XML, TEXT_XML })
 @Consumes
 @RequestScoped
 @Transactional
@@ -93,7 +93,7 @@ public class ArtikelResource {
 		
 		
 		final Locale locale = localeHelper.getLocale(headers);
-		final Artikel artikel= as.findArtikelByBezeichnung(bezeichnung,locale);
+		final Artikel artikel = as.findArtikelByBezeichnung(bezeichnung, locale);
 		//final AbstractKunde kunde = ks.findKundeById(id, , locale);
 		if (artikel == null) {
 			final String msg = "Kein Artikel gefunden mit der Bezeichnung " + bezeichnung;

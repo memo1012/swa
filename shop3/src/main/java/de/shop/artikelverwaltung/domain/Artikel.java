@@ -62,7 +62,7 @@ import de.shop.util.IdGroup;
   		  		query = "SELECT      a"
   		  				+ " FROM     Artikel a"
   		  				+ " WHERE    a.bezeichnung LIKE :" + Artikel.PARAM_ARTIKEL_BEZEICHNUNG
-  		  				),						
+  		  				)					
 //	@NamedQuery(name  = Artikel.HINZUFUEGEN,
 //		  		query = "INSERT INTO Artikel(id,ausgesondert,bezeichnung,preis,aktualisiert,erzeugt)"
 // 		  				+ "values(1,0,"Tisch",52,'20/05/2004 00:00:00,0','20/05/2004 00:00:00,0'),
@@ -248,7 +248,3 @@ public class Artikel implements Serializable {
 	}
 
 }
-
-
-	
-
