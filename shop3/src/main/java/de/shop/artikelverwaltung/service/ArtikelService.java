@@ -31,7 +31,6 @@ import javax.validation.groups.Default;
 import org.jboss.logging.Logger;
 
 import de.shop.artikelverwaltung.domain.Artikel;
-import de.shop.kundenverwaltung.domain.PasswordGroup;
 import de.shop.util.IdGroup;
 import de.shop.util.Log;
 import de.shop.util.ValidatorProvider;
@@ -157,7 +156,7 @@ public class ArtikelService implements Serializable {
 	
 	/**
 	 */
-	public Artikel findArtikelByBezeichnung(String bezeichnung,Locale locale) {
+	public Artikel findArtikelByBezeichnung(String bezeichnung, Locale locale) {
 		LOGGER.trace("In Artikel Services");
 		validateBezeichnung(bezeichnung, locale);
 		LOGGER.trace("Nach Validation");
@@ -188,7 +187,7 @@ public class ArtikelService implements Serializable {
 		final Artikel tmp = findArtikelById(artikel.getId());
 		if (tmp != null) {
 			em.detach(tmp);
-			if(tmp.getId().longValue() != artikel.getId().longValue()) {
+			if (tmp.getId().longValue() != artikel.getId().longValue()) {
 				//anderes Objekt mit gleicher Bezeichnung
 				throw new BezeichnungExistsException(artikel.getBezeichnung());
 			}
@@ -203,7 +202,7 @@ public class ArtikelService implements Serializable {
 		final Set<ConstraintViolation<Artikel>> violations = validator.validateValue(Artikel.class,
 				                                                                           "bezeichnung",
 				                                                                           bezeichnung,
-			                                                                         Default.class ); 
+			                                                                         Default.class); 
 		if (!violations.isEmpty())
 			throw new InvalidBezeichnungException(bezeichnung, violations);
 			
@@ -219,7 +218,7 @@ public class ArtikelService implements Serializable {
 		return artikel;
 	}
 	
-	private void validateArtikelId(long artikelId,Locale locale){
+	private void validateArtikelId(long artikelId, Locale locale) {
 		
 		final Validator validator = validatorProvider.getValidator(locale);
 		final Set<ConstraintViolation<Artikel>> violations = validator.validateValue(Artikel.class,
@@ -231,7 +230,7 @@ public class ArtikelService implements Serializable {
 	}
 	
 	
-	private void validateArtikel(Artikel artikel, Locale locale, Class<?>... groups){
+	private void validateArtikel(Artikel artikel, Locale locale, Class<?>... groups) {
 		
 		// Werden alle Constraints beim Einfuegen gewahrt?
 				final Validator validator = validatorProvider.getValidator(locale);

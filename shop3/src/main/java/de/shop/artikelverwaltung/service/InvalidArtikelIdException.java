@@ -5,7 +5,6 @@ import java.util.Collection;
 import javax.validation.ConstraintViolation;
 
 import de.shop.artikelverwaltung.domain.Artikel;
-import de.shop.artikelverwaltung.service.ArtikelValidationException;
 
 public class InvalidArtikelIdException extends ArtikelValidationException {
 

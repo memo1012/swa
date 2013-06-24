@@ -2,7 +2,7 @@ package de.shop.artikelverwaltung.service;
 
 import de.shop.util.AbstractShopException;
 
-public class ArtikelServiceException extends AbstractShopException{
+public class ArtikelServiceException extends AbstractShopException {
 	private static final long serialVersionUID = 6714045313426734583L;
 
 	public ArtikelServiceException(String msg) {
