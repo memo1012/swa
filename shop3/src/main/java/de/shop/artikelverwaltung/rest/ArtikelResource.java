@@ -10,6 +10,7 @@ import static de.shop.util.Constants.KEINE_ID;
 
 
 
+
 import java.lang.invoke.MethodHandles;
 import java.net.URI;
 import java.util.Locale;
@@ -21,6 +22,7 @@ import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -33,7 +35,6 @@ import org.jboss.logging.Logger;
 
 import de.shop.artikelverwaltung.domain.Artikel;
 import de.shop.artikelverwaltung.service.ArtikelService;
-
 import de.shop.util.LocaleHelper;
 import de.shop.util.Log;
 import de.shop.util.NotFoundException;
@@ -103,6 +104,36 @@ public class ArtikelResource {
 	}
 
 
+	/**
+	 * Mit der URL /artikel einen Artikel per PUT aktualisieren
+	 * @param artikel zu aktualisierende Daten des Artikel
+	 */
+	@PUT
+	@Consumes(APPLICATION_JSON)
+	@Produces
+	public void updateArtikel(Artikel artikel) {
+		// Vorhandenen Artikel ermitteln
+		final Locale locale = localeHelper.getLocale(headers);
+		final Artikel origArt = as.findArtikelById(artikel.getId());
+		if (origArt == null) {
+			// TODO msg passend zu locale
+			final String msg = "Kein Artikel gefunden mit der ID " + artikel.getId();
+			throw new NotFoundException(msg);
+		}
+		LOGGER.tracef("Artikel vorher: %s", origArt);
+	
+		// Daten des vorhandenen Kunden ueberschreiben
+		origArt.setValues(artikel);
+		LOGGER.tracef("Artikel nachher: %s", origArt);
+		
+		// Update durchfuehren
+		artikel = as.updateArtikel(origArt, locale);
+		if (artikel == null) {
+			// TODO msg passend zu locale
+			final String msg = "Kein Kunde gefunden mit der ID " + origArt.getId();
+			throw new NotFoundException(msg);
+		}
+	}
 	
 	
 	@POST

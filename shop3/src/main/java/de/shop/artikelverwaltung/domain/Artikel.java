@@ -139,6 +139,12 @@ public class Artikel implements Serializable {
 		aktualisiert = new Date();
 	}
 
+	public void setValues(Artikel a) {
+		bezeichnung = a.bezeichnung;
+		preis = a.preis;
+		ausgesondert = a.ausgesondert;
+	}
+	
 	public Long getId() {
 		return id;
 	}

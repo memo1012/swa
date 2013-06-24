@@ -11,6 +11,7 @@ import java.util.Set;
 
 
 
+
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.inject.Inject;
@@ -30,6 +31,7 @@ import javax.validation.groups.Default;
 import org.jboss.logging.Logger;
 
 import de.shop.artikelverwaltung.domain.Artikel;
+import de.shop.kundenverwaltung.domain.PasswordGroup;
 import de.shop.util.IdGroup;
 import de.shop.util.Log;
 import de.shop.util.ValidatorProvider;
@@ -169,6 +171,33 @@ public class ArtikelService implements Serializable {
 			return null;
 		}
 	}
+	
+	/**
+	 */
+	public Artikel updateArtikel(Artikel artikel, Locale locale) {
+		if (artikel == null) {
+			return null;
+		}
+
+		// Werden alle Constraints beim Modifizieren gewahrt?
+		validateArtikel(artikel, locale, Default.class, IdGroup.class);
+		
+		// kunde vom EntityManager trennen, weil anschliessend z.B. nach Id gesucht wird
+		em.detach(artikel);
+		
+		final Artikel tmp = findArtikelById(artikel.getId());
+		if (tmp != null) {
+			em.detach(tmp);
+			if(tmp.getId().longValue() != artikel.getId().longValue()) {
+				//anderes Objekt mit gleicher Bezeichnung
+				throw new BezeichnungExistsException(artikel.getBezeichnung());
+			}
+		}
+
+		em.merge(artikel);
+		return artikel;
+	}
+
 	private void validateBezeichnung(String bezeichnung, Locale locale) {
 		final Validator validator = validatorProvider.getValidator(locale);
 		final Set<ConstraintViolation<Artikel>> violations = validator.validateValue(Artikel.class,
