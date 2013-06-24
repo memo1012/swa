@@ -31,7 +31,6 @@ import javax.validation.groups.Default;
 import org.jboss.logging.Logger;
 
 import de.shop.artikelverwaltung.domain.Artikel;
-import de.shop.kundenverwaltung.domain.PasswordGroup;
 import de.shop.util.IdGroup;
 import de.shop.util.Log;
 import de.shop.util.ValidatorProvider;
