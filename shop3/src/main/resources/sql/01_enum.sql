@@ -7,12 +7,12 @@
 -- Tabellen fuer Enum-Werte *einmalig* anlegen und jeweils Werte einfuegen
 -- Beim ALLERERSTEN Aufruf die Zeilen mit "DROP TABLE ..." durch -- auskommentieren
 -- ===============================================================================
---DROP TABLE geschlecht;
+DROP TABLE geschlecht;
 CREATE TABLE geschlecht(id NUMBER(1) NOT NULL PRIMARY KEY, txt VARCHAR2(10) NOT NULL UNIQUE) CACHE;
 INSERT INTO geschlecht VALUES (0, 'MAENNLICH');
 INSERT INTO geschlecht VALUES (1, 'WEIBLICH');
 
---DROP TABLE familienstand;
+DROP TABLE familienstand;
 CREATE TABLE familienstand(id NUMBER(1) NOT NULL PRIMARY KEY, txt VARCHAR2(12) NOT NULL UNIQUE) CACHE;
 INSERT INTO familienstand VALUES(0, 'LEDIG');
 INSERT INTO familienstand VALUES(1, 'VERHEIRATET');
@@ -21,7 +21,7 @@ INSERT INTO familienstand VALUES(3, 'VERWITWET');
 INSERT INTO familienstand VALUES(4, 'AufderSuche');
 
 
---DROP TABLE hobby;
+DROP TABLE hobby;
 CREATE TABLE hobby(id NUMBER(1) NOT NULL PRIMARY KEY, txt VARCHAR2(16) NOT NULL UNIQUE) CACHE;
 INSERT INTO hobby VALUES (0, 'SPORT');
 INSERT INTO hobby VALUES (1, 'LESEN');
@@ -29,7 +29,7 @@ INSERT INTO hobby VALUES (2, 'REISEN');
 INSERT INTO hobby VALUES (3, 'Chillen');
 INSERT INTO hobby VALUES (4, 'Programiern');
 
---DROP TABLE transport_art;
+DROP TABLE transport_art;
 CREATE TABLE transport_art(id NUMBER(1) NOT NULL PRIMARY KEY, txt VARCHAR2(8) NOT NULL UNIQUE) CACHE;
 INSERT INTO transport_art VALUES (0, 'STRASSE');
 INSERT INTO transport_art VALUES (1, 'SCHIENE');
