@@ -6,6 +6,8 @@ import static javax.persistence.CascadeType.PERSIST;
 import static javax.persistence.CascadeType.REMOVE;
 import static javax.persistence.TemporalType.DATE;
 import static javax.persistence.TemporalType.TIMESTAMP;
+import static javax.persistence.FetchType.EAGER;
+import static javax.persistence.FetchType.LAZY;
 
 import java.io.Serializable;
 import java.lang.invoke.MethodHandles;
@@ -14,13 +16,18 @@ import java.net.URI;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -38,12 +45,14 @@ import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.Transient;
+import javax.persistence.UniqueConstraint;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlTransient;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonSubTypes;
@@ -54,7 +63,11 @@ import org.hibernate.validator.constraints.ScriptAssert;
 import org.jboss.logging.Logger;
 
 import de.shop.bestellverwaltung.domain.Bestellung;
+import de.shop.util.File;
 import de.shop.util.IdGroup;
+import de.shop.auth.domain.RolleType;
+
+
 
 
 // Alternativen bei @Inheritance
@@ -171,6 +184,9 @@ public abstract class AbstractKunde implements Serializable {
 	public static final String PARAM_KUNDE_ADRESSE_PLZ = "plz";
 	public static final String PARAM_KUNDE_SEIT = "seit";
 	public static final String PARAM_KUNDE_EMAIL = "email";
+	
+	public static final String GRAPH_BESTELLUNGEN = "bestellungen";
+	public static final String GRAPH_WARTUNGSVERTRAEGE = "wartungsvertraege";
 
 	@Id
 	@GeneratedValue
@@ -202,6 +218,11 @@ public abstract class AbstractKunde implements Serializable {
 	@Column(length = EMAIL_LENGTH_MAX, nullable = false, unique = true)
 	@Email(message = "{kundenverwaltung.kunde.email.pattern}")
 	private String email;
+	
+	@OneToOne(fetch = LAZY, cascade = { PERSIST, REMOVE })
+	@JoinColumn(name = "file_fk")
+	@XmlTransient
+	private File file;
 	
 	private boolean newsletter = false;
 	
@@ -240,6 +261,13 @@ public abstract class AbstractKunde implements Serializable {
 	@OrderColumn(name = "idx", nullable = false)
 	@JsonIgnore
 	private List<Wartungsvertrag> wartungsvertraege;
+	
+	@ElementCollection(fetch = EAGER)
+	@CollectionTable(name = "kunde_rolle",
+	                 joinColumns = @JoinColumn(name = "kunde_fk", nullable = false),
+   	                 uniqueConstraints =  @UniqueConstraint(columnNames = { "kunde_fk", "rolle" }))
+	@Column(table = "kunde_rolle", name = "rolle", length = 32, nullable = false)
+	private Set<RolleType> rollen;
 	
 	@Column(nullable = false)
 	@Temporal(TIMESTAMP)
@@ -465,7 +493,34 @@ public abstract class AbstractKunde implements Serializable {
 	public void setErzeugt(Date erzeugt) {
 		this.erzeugt = erzeugt == null ? null : (Date) erzeugt.clone();
 	}
+	
+	public AbstractKunde addRollen(Collection<RolleType> rollen) {
+		LOGGER.tracef("neue Rollen: %s", rollen);
+		if (this.rollen == null) {
+			this.rollen = new HashSet<>();
+		}
+		this.rollen.addAll(rollen);
+		LOGGER.tracef("Rollen nachher: %s", this.rollen);
+		return this;
+	}
+	
+	public AbstractKunde removeRollen(Collection<RolleType> rollen) {
+		LOGGER.tracef("zu entfernende Rollen: %s", rollen);
+		if (this.rollen == null) {
+			return this;
+		}
+		this.rollen.removeAll(rollen);
+		LOGGER.tracef("Rollen nachher: %s", this.rollen);
+		return this;
+	}
 
+	public File getFile() {
+		return file;
+	}
+
+	public void setFile(File file) {
+		this.file = file;
+	}
 
 	@Override
 	public String toString() {

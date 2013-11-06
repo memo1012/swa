@@ -135,7 +135,7 @@ public class BestellungServiceImpl implements Serializable, BestellungService {
 		}
 		
 		// Den persistenten Kunden mit der transienten Bestellung verknuepfen
-		final AbstractKunde kunde = ks.findKundeById(kundeId, KundeService.FetchType.MIT_BESTELLUNGEN, locale);
+		final AbstractKunde kunde = ks.findKundeById(kundeId, KundeService.FetchType.MIT_BESTELLUNGEN);
 		return createBestellung(bestellung, kunde, locale);
 	}
 	
@@ -154,7 +154,7 @@ public class BestellungServiceImpl implements Serializable, BestellungService {
 		
 		// Den persistenten Kunden mit der transienten Bestellung verknuepfen
 		if (!em.contains(kunde)) {
-			kunde = ks.findKundeById(kunde.getId(), KundeService.FetchType.MIT_BESTELLUNGEN, locale);
+			kunde = ks.findKundeById(kunde.getId(), KundeService.FetchType.MIT_BESTELLUNGEN);
 		}
 		kunde.addBestellung(bestellung);
 		bestellung.setKunde(kunde);
