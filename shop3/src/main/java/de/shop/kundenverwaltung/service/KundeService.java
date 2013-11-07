@@ -88,9 +88,6 @@ public class KundeService implements Serializable {
 	private transient EntityManager em;
 
 	@Inject
-	private ValidatorProvider validatorProvider;
-
-	@Inject
 	private AuthService authService;
 
 	@Inject
@@ -337,12 +334,17 @@ public class KundeService implements Serializable {
 		}
 
 		// Pruefung, ob die Email-Adresse schon existiert
-		em.createNamedQuery(AbstractKunde.FIND_KUNDE_BY_EMAIL,
-				AbstractKunde.class)
-				.setParameter(AbstractKunde.PARAM_KUNDE_EMAIL, kunde.getEmail())
-				.getSingleResult();
-		throw new EmailExistsException(kunde.getEmail());
-
+		//em.createNamedQuery(AbstractKunde.FIND_KUNDE_BY_EMAIL,
+		//		AbstractKunde.class)
+		//		.setParameter(AbstractKunde.PARAM_KUNDE_EMAIL, kunde.getEmail())
+		//		.getSingleResult();
+		//throw new EmailExistsException(kunde.getEmail());
+		final AbstractKunde tmp = findKundeByEmail(kunde.getEmail());
+		if (tmp != null) {
+			throw new EmailExistsException(kunde.getEmail());
+		}
+		
+		
 		// Password verschluesseln
 		passwordVerschluesseln(kunde);
 
