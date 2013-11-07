@@ -224,15 +224,15 @@ public class KundeService implements Serializable {
 					.getSingleResult();
 			break;
 
-		case MIT_WARTUNGSVERTRAEGEN:
+		/*case MIT_WARTUNGSVERTRAEGEN:
 			kunde = em
 					.createNamedQuery(
 							AbstractKunde.FIND_KUNDE_BY_ID_FETCH_WARTUNGSVERTRAEGE,
 							AbstractKunde.class)
 					.setParameter(AbstractKunde.PARAM_KUNDE_ID, id)
 					.getSingleResult();
-			break;
-
+			break;*/
+			
 		default:
 			kunde = em.find(AbstractKunde.class, id);
 			break;
