@@ -1,6 +1,33 @@
 package de.shop.artikelverwaltung.domain;
 
+import static de.shop.util.Constants.ERSTE_VERSION;
 import static de.shop.util.Constants.KEINE_ID;
+import static javax.persistence.TemporalType.TIMESTAMP;
+
+import java.io.Serializable;
+import java.lang.invoke.MethodHandles;
+import java.util.Date;
+
+import javax.persistence.Basic;
+import javax.persistence.Cacheable;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Index;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.PostPersist;
+import javax.persistence.PostUpdate;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.Version;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
+
+import org.jboss.logging.Logger;
 import static de.shop.util.Constants.MIN_ID;
 import static javax.persistence.TemporalType.TIMESTAMP;
 
@@ -31,7 +58,7 @@ import de.shop.util.IdGroup;
 
 
 @Entity
-@Table(name = "artikel")
+@Table(indexes = @Index(columnList = "bezeichnung"))
 @NamedQueries({
 	@NamedQuery(name  = Artikel.FIND_ARTIKEL,
         	query = "SELECT      a"
@@ -70,6 +97,8 @@ import de.shop.util.IdGroup;
 //  		TEST  				
   						
 })
+@Cacheable
+@XmlRootElement
 public class Artikel implements Serializable {
 	private static final long serialVersionUID = -3700579190995722151L;
 	private static final Logger LOGGER = Logger.getLogger(MethodHandles.lookup().lookupClass());
@@ -92,8 +121,12 @@ public class Artikel implements Serializable {
 	@Id
 	@GeneratedValue
 	@Column(nullable = false, updatable = false)
-	@Min(value = MIN_ID, message = "{artikelverwaltung.artikel.id.min}", groups = IdGroup.class)
+	//@Min(value = MIN_ID, message = "{artikelverwaltung.artikel.id.min}", groups = IdGroup.class)
 	private Long id = KEINE_ID;
+	
+	@Version
+	@Basic(optional = false)
+	private int version = ERSTE_VERSION;
 	
 	@Column(length = BEZEICHNUNG_LENGTH_MAX, nullable = false)
 	@NotNull(message = "{artikelverwaltung.artikel.bezeichnung.notNull}")
@@ -105,16 +138,16 @@ public class Artikel implements Serializable {
 	private double preis;
 	
 
-	private boolean ausgesondert;
+	private boolean ausgesondert = false;
 	
-	@Column(nullable = false)
+	@Basic(optional = false)
 	@Temporal(TIMESTAMP)
-	@JsonIgnore
+	@XmlTransient
 	private Date erzeugt;
 
-	@Column(nullable = false)
+	@Basic(optional = false)
 	@Temporal(TIMESTAMP)
-	@JsonIgnore
+	@XmlTransient
 	private Date aktualisiert;
 	
 	public Artikel() {
@@ -138,6 +171,11 @@ public class Artikel implements Serializable {
 		LOGGER.debugf("Neuer Artikel mit ID=%d", id);
 	}
 	
+	@PostUpdate
+	private void postUpdate() {
+		LOGGER.debugf("Artikel mit ID=%s aktualisiert: version=%d", id, version);
+	}
+	
 	@PreUpdate
 	private void preUpdate() {
 		aktualisiert = new Date();
@@ -157,6 +195,14 @@ public class Artikel implements Serializable {
 		this.id = id;
 	}
 
+	public int getVersion() {
+		return version;
+	}
+
+	public void setVersion(int version) {
+		this.version = version;
+	}
+	
 	public String getBezeichnung() {
 		return bezeichnung;
 	}
