@@ -261,9 +261,6 @@ public abstract class AbstractKunde implements Serializable, Cloneable {
 	private String vorname = "";
 
 	@Basic(optional = false)
-	private short kategorie;
-
-	@Basic(optional = false)
 	@Temporal(DATE)
 	@Past(message = "{kundenverwaltung.kunde.seit.past}")
 	private Date seit;
@@ -300,10 +297,6 @@ public abstract class AbstractKunde implements Serializable, Cloneable {
 	// }
 	// return password.equals(passwordWdh);
 	// }
-	
-	@Transient
-	@AssertTrue(message = "{kunde.agb}")
-	private boolean agbAkzeptiert;
 
 	@OneToOne(cascade = { PERSIST, REMOVE }, mappedBy = "kunde")
 	@Valid
@@ -384,21 +377,18 @@ public abstract class AbstractKunde implements Serializable, Cloneable {
 	@PostLoad
 	protected void postLoad() {
 		passwordWdh = password;
-		agbAkzeptiert = true;
 	}
 
 	public void setValues(AbstractKunde k) {
 		version = k.version;
 		nachname = k.nachname;
 		vorname = k.vorname;
-		kategorie = k.kategorie;
 		umsatz = k.umsatz;
 		rabatt = k.rabatt;
 		seit = k.seit;
 		email = k.email;
 		password = k.password;
 		passwordWdh = k.password;
-		agbAkzeptiert = k.agbAkzeptiert;
 	}
 
 	public Long getId() {
@@ -430,14 +420,6 @@ public abstract class AbstractKunde implements Serializable, Cloneable {
 
 	public void setVorname(String vorname) {
 		this.vorname = vorname;
-	}
-	
-	public short getKategorie() {
-		return kategorie;
-	}
-
-	public void setKategorie(short kategorie) {
-		this.kategorie = kategorie;
 	}
 
 	public Date getSeit() {
@@ -494,14 +476,6 @@ public abstract class AbstractKunde implements Serializable, Cloneable {
 
 	public void setPasswordWdh(String passwordWdh) {
 		this.passwordWdh = passwordWdh;
-	}
-	
-	public void setAgbAkzeptiert(boolean agbAkzeptiert) {
-		this.agbAkzeptiert = agbAkzeptiert;
-	}
-
-	public boolean isAgbAkzeptiert() {
-		return agbAkzeptiert;
 	}
 
 	public Adresse getAdresse() {
@@ -655,7 +629,7 @@ public abstract class AbstractKunde implements Serializable, Cloneable {
 	public String toString() {
 		return "Kunde [id=" + id + ", version=" + version
 			   + ", nachname=" + nachname + ", vorname=" + vorname + ", seit=" + seit
-			   + ", email=" + email + ", kategorie=" + kategorie + ", rabatt=" + rabatt
+			   + ", email=" + email + ", rabatt=" + rabatt
 			   + ", bestellungenUri=" + bestellungenUri
 			   + ", rollen=" + rollen + ", password=" + password + ", passwordWdh=" + passwordWdh
 			   + ", erzeugt=" + erzeugt + ", aktualisiert=" + aktualisiert + "]";
@@ -703,13 +677,11 @@ public abstract class AbstractKunde implements Serializable, Cloneable {
 			neuesObjekt.version = version;
 			neuesObjekt.nachname = nachname;
 			neuesObjekt.vorname = vorname;
-			neuesObjekt.kategorie = kategorie;
 			neuesObjekt.umsatz = umsatz;
 			neuesObjekt.email = email;
 			neuesObjekt.newsletter = newsletter;
 			neuesObjekt.password = password;
 			neuesObjekt.passwordWdh = passwordWdh;
-			neuesObjekt.agbAkzeptiert = agbAkzeptiert;
 			neuesObjekt.adresse = adresse;
 			neuesObjekt.details = details;
 			neuesObjekt.erzeugt = erzeugt;
