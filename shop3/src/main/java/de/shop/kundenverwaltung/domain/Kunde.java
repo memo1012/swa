@@ -2,7 +2,6 @@ package de.shop.kundenverwaltung.domain;
 
 import static de.shop.util.Constants.ERSTE_VERSION;
 import static de.shop.util.Constants.KEINE_ID;
-import static de.shop.util.Constants.MIN_ID;
 import static javax.persistence.CascadeType.PERSIST;
 import static javax.persistence.CascadeType.REMOVE;
 import static javax.persistence.TemporalType.DATE;
@@ -14,15 +13,12 @@ import java.io.Serializable;
 import java.lang.invoke.MethodHandles;
 import java.math.BigDecimal;
 import java.net.URI;
-import java.text.DateFormat;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Locale;
 import java.util.Set;
 
 import javax.persistence.Basic;
@@ -55,22 +51,16 @@ import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 import javax.persistence.Version;
 import javax.validation.Valid;
-import javax.validation.constraints.AssertTrue;
-import javax.validation.constraints.DecimalMax;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import javax.validation.groups.Default;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.bind.annotation.XmlTransient;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.annotate.JsonSubTypes;
+
 import org.codehaus.jackson.annotate.JsonTypeInfo;
-import org.codehaus.jackson.annotate.JsonSubTypes.Type;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.ScriptAssert;
 import org.jboss.logging.Logger;
@@ -78,7 +68,6 @@ import org.jboss.resteasy.annotations.providers.jaxb.Formatted;
 
 import de.shop.bestellverwaltung.domain.Bestellung;
 import de.shop.util.File;
-import de.shop.util.IdGroup;
 import de.shop.auth.domain.RolleType;
 
 // Alternativen bei @Inheritance
@@ -90,69 +79,69 @@ import de.shop.auth.domain.RolleType;
 @Table(name = "kunde", indexes = { @Index(columnList = "nachname"),
 		@Index(columnList = "file_fk") })
 @Inheritance
-@DiscriminatorColumn(name = "art", length = 1)
 @NamedQueries({
-		@NamedQuery(name = AbstractKunde.FIND_KUNDEN, query = "SELECT k"
-				+ " FROM   AbstractKunde k"),
-		/*@NamedQuery(name = AbstractKunde.FIND_KUNDEN_FETCH_BESTELLUNGEN, query = "SELECT  DISTINCT k"
-				+ " FROM AbstractKunde k LEFT JOIN FETCH k.bestellungen"),*/
-		@NamedQuery(name = AbstractKunde.FIND_KUNDEN_ORDER_BY_ID, query = "SELECT   k"
-				+ " FROM  AbstractKunde k" + " ORDER BY k.id"),
-		@NamedQuery(name = AbstractKunde.FIND_IDS_BY_PREFIX, query = "SELECT   k.id"
-				+ " FROM  AbstractKunde k"
-				+ " WHERE CONCAT('', k.id) LIKE :"
-				+ AbstractKunde.PARAM_KUNDE_ID_PREFIX + " ORDER BY k.id"),
-		@NamedQuery(name = AbstractKunde.FIND_KUNDEN_BY_NACHNAME, query = "SELECT k"
-				+ " FROM   AbstractKunde k"
-				+ " WHERE  UPPER(k.nachname) = UPPER(:"
-				+ AbstractKunde.PARAM_KUNDE_NACHNAME + ")"),
-		@NamedQuery(name = AbstractKunde.FIND_NACHNAMEN_BY_PREFIX, query = "SELECT   DISTINCT k.nachname"
-				+ " FROM  AbstractKunde k "
+		@NamedQuery(name = Kunde.FIND_KUNDEN, query = "SELECT k"
+				+ " FROM   Kunde k"),
+		/*
+		 * @NamedQuery(name = Kunde.FIND_KUNDEN_FETCH_BESTELLUNGEN, query =
+		 * "SELECT  DISTINCT k" +
+		 * " FROM Kunde k LEFT JOIN FETCH k.bestellungen"),
+		 */
+		@NamedQuery(name = Kunde.FIND_KUNDEN_ORDER_BY_ID, query = "SELECT   k"
+				+ " FROM  Kunde k" + " ORDER BY k.id"),
+		@NamedQuery(name = Kunde.FIND_IDS_BY_PREFIX, query = "SELECT   k.id"
+				+ " FROM  Kunde k" + " WHERE CONCAT('', k.id) LIKE :"
+				+ Kunde.PARAM_KUNDE_ID_PREFIX + " ORDER BY k.id"),
+		@NamedQuery(name = Kunde.FIND_KUNDEN_BY_NACHNAME, query = "SELECT k"
+				+ " FROM   Kunde k" + " WHERE  UPPER(k.nachname) = UPPER(:"
+				+ Kunde.PARAM_KUNDE_NACHNAME + ")"),
+		@NamedQuery(name = Kunde.FIND_NACHNAMEN_BY_PREFIX, query = "SELECT   DISTINCT k.nachname"
+				+ " FROM  Kunde k "
 				+ " WHERE UPPER(k.nachname) LIKE UPPER(:"
-				+ AbstractKunde.PARAM_KUNDE_NACHNAME_PREFIX + ")"),
-		@NamedQuery(name = AbstractKunde.FIND_NACHNAMEN_BY_PREFIX, query = "SELECT   DISTINCT k.nachname"
-				+ " FROM  AbstractKunde k "
+				+ Kunde.PARAM_KUNDE_NACHNAME_PREFIX + ")"),
+		@NamedQuery(name = Kunde.FIND_NACHNAMEN_BY_PREFIX, query = "SELECT   DISTINCT k.nachname"
+				+ " FROM  Kunde k "
 				+ " WHERE UPPER(k.nachname) LIKE UPPER(:"
-				+ AbstractKunde.PARAM_KUNDE_NACHNAME_PREFIX + ")"),
-		@NamedQuery(name = AbstractKunde.FIND_ALL_NACHNAMEN, query = "SELECT      DISTINCT k.nachname"
-				+ " FROM     AbstractKunde k" + " ORDER BY k.nachname"),
-		@NamedQuery(name = AbstractKunde.FIND_KUNDEN_OHNE_BESTELLUNGEN, query = "SELECT k"
-				+ " FROM   AbstractKunde k" + " WHERE  k.bestellungen IS EMPTY"),
-		@NamedQuery(name = AbstractKunde.FIND_KUNDEN_BY_NACHNAME_FETCH_BESTELLUNGEN, query = "SELECT DISTINCT k"
-				+ " FROM   AbstractKunde k LEFT JOIN FETCH k.bestellungen"
+				+ Kunde.PARAM_KUNDE_NACHNAME_PREFIX + ")"),
+		@NamedQuery(name = Kunde.FIND_ALL_NACHNAMEN, query = "SELECT      DISTINCT k.nachname"
+				+ " FROM     Kunde k" + " ORDER BY k.nachname"),
+		@NamedQuery(name = Kunde.FIND_KUNDEN_OHNE_BESTELLUNGEN, query = "SELECT k"
+				+ " FROM   Kunde k" + " WHERE  k.bestellungen IS EMPTY"),
+		@NamedQuery(name = Kunde.FIND_KUNDEN_BY_NACHNAME_FETCH_BESTELLUNGEN, query = "SELECT DISTINCT k"
+				+ " FROM   Kunde k LEFT JOIN FETCH k.bestellungen"
 				+ " WHERE  UPPER(k.nachname) = UPPER(:"
-				+ AbstractKunde.PARAM_KUNDE_NACHNAME + ")"),
-		@NamedQuery(name = AbstractKunde.FIND_KUNDE_BY_ID_FETCH_BESTELLUNGEN, query = "SELECT DISTINCT k"
-				+ " FROM   AbstractKunde k LEFT JOIN FETCH k.bestellungen"
-				+ " WHERE  k.id = :" + AbstractKunde.PARAM_KUNDE_ID),
-		/*@NamedQuery(name = AbstractKunde.FIND_KUNDE_BY_ID_FETCH_WARTUNGSVERTRAEGE, query = "SELECT DISTINCT k"
-				+ " FROM   AbstractKunde k LEFT JOIN FETCH k.wartungsvertraege"
-				+ " WHERE  k.id = :" + AbstractKunde.PARAM_KUNDE_ID),*/
-		@NamedQuery(name = AbstractKunde.FIND_KUNDE_BY_EMAIL, query = "SELECT DISTINCT k"
-				+ " FROM   AbstractKunde k"
+				+ Kunde.PARAM_KUNDE_NACHNAME + ")"),
+		@NamedQuery(name = Kunde.FIND_KUNDE_BY_ID_FETCH_BESTELLUNGEN, query = "SELECT DISTINCT k"
+				+ " FROM   Kunde k LEFT JOIN FETCH k.bestellungen"
+				+ " WHERE  k.id = :" + Kunde.PARAM_KUNDE_ID),
+		/*
+		 * @NamedQuery(name = Kunde.FIND_KUNDE_BY_ID_FETCH_WARTUNGSVERTRAEGE,
+		 * query = "SELECT DISTINCT k" +
+		 * " FROM   Kunde k LEFT JOIN FETCH k.wartungsvertraege" +
+		 * " WHERE  k.id = :" + Kunde.PARAM_KUNDE_ID),
+		 */
+		@NamedQuery(name = Kunde.FIND_KUNDE_BY_EMAIL, query = "SELECT DISTINCT k"
+				+ " FROM   Kunde k"
 				+ " WHERE  k.email = :"
-				+ AbstractKunde.PARAM_KUNDE_EMAIL),
-		@NamedQuery(name = AbstractKunde.FIND_KUNDEN_BY_PLZ, query = "SELECT k"
-				+ " FROM  AbstractKunde k" + " WHERE k.adresse.plz = :"
-				+ AbstractKunde.PARAM_KUNDE_ADRESSE_PLZ),
-		@NamedQuery(name = AbstractKunde.FIND_KUNDE_BY_USERNAME, query = "SELECT   k"
-				+ " FROM  AbstractKunde k"
-				+ " WHERE CONCAT('', k.id) = :"
-				+ AbstractKunde.PARAM_KUNDE_USERNAME),
-		@NamedQuery(name = AbstractKunde.FIND_USERNAME_BY_USERNAME_PREFIX, query = "SELECT   CONCAT('', k.id)"
-				+ " FROM  AbstractKunde k"
+				+ Kunde.PARAM_KUNDE_EMAIL),
+		@NamedQuery(name = Kunde.FIND_KUNDEN_BY_PLZ, query = "SELECT k"
+				+ " FROM  Kunde k" + " WHERE k.adresse.plz = :"
+				+ Kunde.PARAM_KUNDE_ADRESSE_PLZ),
+		@NamedQuery(name = Kunde.FIND_KUNDE_BY_USERNAME, query = "SELECT   k"
+				+ " FROM  Kunde k" + " WHERE CONCAT('', k.id) = :"
+				+ Kunde.PARAM_KUNDE_USERNAME),
+		@NamedQuery(name = Kunde.FIND_USERNAME_BY_USERNAME_PREFIX, query = "SELECT   CONCAT('', k.id)"
+				+ " FROM  Kunde k"
 				+ " WHERE CONCAT('', k.id) LIKE :"
-				+ AbstractKunde.PARAM_USERNAME_PREFIX),
-		@NamedQuery(name = AbstractKunde.FIND_KUNDEN_BY_DATE, query = "SELECT k"
-				+ " FROM  AbstractKunde k"
-				+ " WHERE k.seit = :"
-				+ AbstractKunde.PARAM_KUNDE_SEIT),
-		@NamedQuery(name = AbstractKunde.FIND_PRIVATKUNDEN_FIRMENKUNDEN, query = "SELECT k"
-				+ " FROM  AbstractKunde k"
-				+ " WHERE TYPE(k) IN (Privatkunde, Firmenkunde)") })
+				+ Kunde.PARAM_USERNAME_PREFIX),
+		@NamedQuery(name = Kunde.FIND_KUNDEN_BY_DATE, query = "SELECT k"
+				+ " FROM  Kunde k" + " WHERE k.seit = :"
+				+ Kunde.PARAM_KUNDE_SEIT),
+		@NamedQuery(name = Kunde.FIND_KUNDEN, query = "SELECT k"
+				+ " FROM  Kunde k") })
 @NamedEntityGraphs({
-		@NamedEntityGraph(name = AbstractKunde.GRAPH_BESTELLUNGEN, attributeNodes = @NamedAttributeNode("bestellungen")),
-		@NamedEntityGraph(name = AbstractKunde.GRAPH_WARTUNGSVERTRAEGE, attributeNodes = @NamedAttributeNode("wartungsvertraege")) })
+		@NamedEntityGraph(name = Kunde.GRAPH_BESTELLUNGEN, attributeNodes = @NamedAttributeNode("bestellungen")),
+		@NamedEntityGraph(name = Kunde.GRAPH_WARTUNGSVERTRAEGE, attributeNodes = @NamedAttributeNode("wartungsvertraege")) })
 @ScriptAssert(lang = "javascript", script = "_this.password != null && !_this.password.equals(\"\")"
 		+ "&& _this.password.equals(_this.passwordWdh)", message = "{kundenverwaltung.kunde.password.notEqual}", groups = {
 		Default.class, PasswordGroup.class })
@@ -161,19 +150,15 @@ import de.shop.auth.domain.RolleType;
 // message = "{kundenverwaltung.kunde.password.notEqual}", groups =
 // PasswordGroup.class)
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
-@JsonSubTypes({
-		@Type(value = Privatkunde.class, name = AbstractKunde.PRIVATKUNDE),
-		@Type(value = Firmenkunde.class, name = AbstractKunde.FIRMENKUNDE) })
 @XmlRootElement
 @Formatted
-@XmlSeeAlso({ Firmenkunde.class, Privatkunde.class })
-public abstract class AbstractKunde implements Serializable, Cloneable {
+public abstract class Kunde implements Serializable, Cloneable {
 	private static final long serialVersionUID = 5685115602958386843L;
 	private static final Logger LOGGER = Logger.getLogger(MethodHandles
 			.lookup().lookupClass().getName());
 	// Pattern mit UTF-8 (statt Latin-1 bzw. ISO-8859-1) Schreibweise fuer
 	// Umlaute:
-	private static final String NAME_PATTERN = "[A-Z\u00C4\u00D6\u00DC][a-z\u00E4\u00F6\u00FC\u00DF]+";
+	private static final String NAME_PATTERN = "[A-Z\u00C4\u00D6\u00DC][a-z\u00E4\u00F6\u00FC\u00DF]";
 	private static final String PREFIX_ADEL = "(o'|von|von der|von und zu|van)?";
 
 	public static final String NACHNAME_PATTERN = PREFIX_ADEL + NAME_PATTERN
@@ -185,10 +170,7 @@ public abstract class AbstractKunde implements Serializable, Cloneable {
 	private static final int DETAILS_LENGTH_MAX = 128 * 1024;
 	private static final int PASSWORD_LENGTH_MAX = 256;
 
-	public static final String PRIVATKUNDE = "P";
-	public static final String FIRMENKUNDE = "F";
-
-	private static final String PREFIX = "AbstractKunde.";
+	private static final String PREFIX = "Kunde.";
 	public static final String FIND_KUNDEN = PREFIX + "findKunden";
 	/*
 	 * public static final String FIND_KUNDEN_FETCH_BESTELLUNGEN = PREFIX +
@@ -223,8 +205,7 @@ public abstract class AbstractKunde implements Serializable, Cloneable {
 			+ "findKundeByUsernamePrefix";
 	public static final String FIND_KUNDEN_BY_DATE = PREFIX
 			+ "findKundenByDate";
-	public static final String FIND_PRIVATKUNDEN_FIRMENKUNDEN = PREFIX
-			+ "findPrivatkundenFirmenkunden";
+
 
 	public static final String PARAM_KUNDE_ID = "kundeId";
 	public static final String PARAM_KUNDE_ID_PREFIX = "idPrefix";
@@ -259,6 +240,9 @@ public abstract class AbstractKunde implements Serializable, Cloneable {
 	@Column(length = VORNAME_LENGTH_MAX)
 	@Size(max = VORNAME_LENGTH_MAX, message = "{kundenverwaltung.kunde.vorname.length}")
 	private String vorname = "";
+
+	@Column(name = "geschlecht_fk")
+	private GeschlechtType geschlecht = GeschlechtType.WEIBLICH;
 
 	@Basic(optional = false)
 	@Temporal(DATE)
@@ -324,14 +308,14 @@ public abstract class AbstractKunde implements Serializable, Cloneable {
 			"kunde_fk", "rolle" }))
 	@Column(table = "kunde_rolle", name = "rolle", length = 32, nullable = false)
 	private Set<RolleType> rollen;
-	
+
 	@Column
 	@Size(max = DETAILS_LENGTH_MAX)
-	//@SafeHtml
+	// @SafeHtml
 	private String details;
-	
+
 	@Basic(optional = false)
-	//@Column(nullable = false)
+	// @Column(nullable = false)
 	@Temporal(TIMESTAMP)
 	@XmlTransient
 	private Date erzeugt;
@@ -340,12 +324,12 @@ public abstract class AbstractKunde implements Serializable, Cloneable {
 	@Temporal(TIMESTAMP)
 	@XmlTransient
 	private Date aktualisiert;
-	
-	public AbstractKunde() {
+
+	public Kunde() {
 		super();
 	}
 
-	public AbstractKunde(String nachname, String vorname, String email, Date seit) {
+	public Kunde(String nachname, String vorname, String email, Date seit) {
 		super();
 		this.nachname = nachname;
 		this.vorname = vorname;
@@ -368,7 +352,7 @@ public abstract class AbstractKunde implements Serializable, Cloneable {
 	protected void preUpdate() {
 		aktualisiert = new Date();
 	}
-	
+
 	@PostUpdate
 	protected void postUpdate() {
 		LOGGER.debugf("Kunde mit ID=%d aktualisiert: version=%d", id, version);
@@ -379,11 +363,12 @@ public abstract class AbstractKunde implements Serializable, Cloneable {
 		passwordWdh = password;
 	}
 
-	public void setValues(AbstractKunde k) {
+	public void setValues(Kunde k) {
 		version = k.version;
 		nachname = k.nachname;
 		vorname = k.vorname;
 		umsatz = k.umsatz;
+		geschlecht = k.geschlecht;
 		rabatt = k.rabatt;
 		seit = k.seit;
 		email = k.email;
@@ -402,10 +387,11 @@ public abstract class AbstractKunde implements Serializable, Cloneable {
 	public int getVersion() {
 		return version;
 	}
+
 	public void setVersion(int version) {
 		this.version = version;
 	}
-	
+
 	public String getNachname() {
 		return nachname;
 	}
@@ -420,6 +406,14 @@ public abstract class AbstractKunde implements Serializable, Cloneable {
 
 	public void setVorname(String vorname) {
 		this.vorname = vorname;
+	}
+
+	public GeschlechtType getGeschlecht() {
+		return geschlecht;
+	}
+
+	public void setGeschlecht(GeschlechtType geschlecht) {
+		this.geschlecht = geschlecht;
 	}
 
 	public Date getSeit() {
@@ -506,7 +500,7 @@ public abstract class AbstractKunde implements Serializable, Cloneable {
 		}
 	}
 
-	public AbstractKunde addBestellung(Bestellung bestellung) {
+	public Kunde addBestellung(Bestellung bestellung) {
 		if (bestellungen == null) {
 			bestellungen = new ArrayList<>();
 		}
@@ -543,7 +537,7 @@ public abstract class AbstractKunde implements Serializable, Cloneable {
 		}
 	}
 
-	public AbstractKunde addWartungsvertrag(Wartungsvertrag wartungsvertrag) {
+	public Kunde addWartungsvertrag(Wartungsvertrag wartungsvertrag) {
 		if (wartungsvertraege == null) {
 			wartungsvertraege = new ArrayList<>();
 		}
@@ -555,7 +549,7 @@ public abstract class AbstractKunde implements Serializable, Cloneable {
 		if (rollen == null) {
 			return null;
 		}
-		
+
 		return Collections.unmodifiableSet(rollen);
 	}
 
@@ -564,14 +558,14 @@ public abstract class AbstractKunde implements Serializable, Cloneable {
 			this.rollen = rollen;
 			return;
 		}
-		
+
 		// Wiederverwendung der vorhandenen Collection
 		this.rollen.clear();
 		if (rollen != null) {
 			this.rollen.addAll(rollen);
 		}
 	}
-	
+
 	public Date getAktualisiert() {
 		return aktualisiert == null ? null : (Date) aktualisiert.clone();
 	}
@@ -589,7 +583,7 @@ public abstract class AbstractKunde implements Serializable, Cloneable {
 		this.erzeugt = erzeugt == null ? null : (Date) erzeugt.clone();
 	}
 
-	public AbstractKunde addRollen(Collection<RolleType> rollen) {
+	public Kunde addRollen(Collection<RolleType> rollen) {
 		LOGGER.tracef("neue Rollen: %s", rollen);
 		if (this.rollen == null) {
 			this.rollen = new HashSet<>();
@@ -599,7 +593,7 @@ public abstract class AbstractKunde implements Serializable, Cloneable {
 		return this;
 	}
 
-	public AbstractKunde removeRollen(Collection<RolleType> rollen) {
+	public Kunde removeRollen(Collection<RolleType> rollen) {
 		LOGGER.tracef("zu entfernende Rollen: %s", rollen);
 		if (this.rollen == null) {
 			return this;
@@ -624,15 +618,16 @@ public abstract class AbstractKunde implements Serializable, Cloneable {
 	public void setDetails(String details) {
 		this.details = details;
 	}
-	
+
 	@Override
 	public String toString() {
-		return "Kunde [id=" + id + ", version=" + version
-			   + ", nachname=" + nachname + ", vorname=" + vorname + ", seit=" + seit
-			   + ", email=" + email + ", rabatt=" + rabatt
-			   + ", bestellungenUri=" + bestellungenUri
-			   + ", rollen=" + rollen + ", password=" + password + ", passwordWdh=" + passwordWdh
-			   + ", erzeugt=" + erzeugt + ", aktualisiert=" + aktualisiert + "]";
+		return "Kunde [id=" + id + ", version=" + version + ", nachname="
+				+ nachname + ", vorname=" + vorname + ", seit=" + seit
+				+ ", email=" + email + ", rabatt=" + rabatt
+				+ ", bestellungenUri=" + bestellungenUri + ", rollen=" + rollen
+				+ ", password=" + password + ", passwordWdh=" + passwordWdh
+				+ ", erzeugt=" + erzeugt + ", aktualisiert=" + aktualisiert
+				+ ", geschlecht=" + geschlecht + "]";
 	}
 
 	/**
@@ -658,7 +653,7 @@ public abstract class AbstractKunde implements Serializable, Cloneable {
 		if (getClass() != obj.getClass()) {
 			return false;
 		}
-		final AbstractKunde other = (AbstractKunde) obj;
+		final Kunde other = (Kunde) obj;
 
 		if (email == null) {
 			if (other.email != null) {
@@ -669,23 +664,24 @@ public abstract class AbstractKunde implements Serializable, Cloneable {
 		}
 
 		return true;
-	}	
-		@Override
-		public Object clone() throws CloneNotSupportedException {
-			final AbstractKunde neuesObjekt = AbstractKunde.class.cast(super.clone());
-			neuesObjekt.id = id;
-			neuesObjekt.version = version;
-			neuesObjekt.nachname = nachname;
-			neuesObjekt.vorname = vorname;
-			neuesObjekt.umsatz = umsatz;
-			neuesObjekt.email = email;
-			neuesObjekt.newsletter = newsletter;
-			neuesObjekt.password = password;
-			neuesObjekt.passwordWdh = passwordWdh;
-			neuesObjekt.adresse = adresse;
-			neuesObjekt.details = details;
-			neuesObjekt.erzeugt = erzeugt;
-			neuesObjekt.aktualisiert = aktualisiert;
-			return neuesObjekt;
+	}
+
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		final Kunde neuesObjekt = Kunde.class.cast(super.clone());
+		neuesObjekt.id = id;
+		neuesObjekt.version = version;
+		neuesObjekt.nachname = nachname;
+		neuesObjekt.vorname = vorname;
+		neuesObjekt.umsatz = umsatz;
+		neuesObjekt.email = email;
+		neuesObjekt.newsletter = newsletter;
+		neuesObjekt.password = password;
+		neuesObjekt.passwordWdh = passwordWdh;
+		neuesObjekt.adresse = adresse;
+		neuesObjekt.details = details;
+		neuesObjekt.erzeugt = erzeugt;
+		neuesObjekt.aktualisiert = aktualisiert;
+		return neuesObjekt;
 	}
 }

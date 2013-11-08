@@ -71,7 +71,7 @@ public class Adresse implements Serializable {
 	@JoinColumn(name = "kunde_fk", nullable = false)
 	@NotNull(message = "{kundenverwaltung.adresse.kunde.notNull}")
 	@JsonIgnore
-	private AbstractKunde kunde;
+	private Kunde kunde;
 
 	
 	@Column(nullable = false)
@@ -136,10 +136,10 @@ public class Adresse implements Serializable {
 		this.hausnr = hausnr;
 	}
 
-	public void setKunde(AbstractKunde kunde) {
+	public void setKunde(Kunde kunde) {
 		this.kunde = kunde;
 	}
-	public AbstractKunde getKunde() {
+	public Kunde getKunde() {
 		return kunde;
 	}
 	@Override

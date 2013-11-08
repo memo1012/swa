@@ -36,7 +36,7 @@ import de.shop.bestellverwaltung.domain.Bestellposition;
 import de.shop.bestellverwaltung.domain.Bestellposition_;
 import de.shop.bestellverwaltung.domain.Bestellung;
 import de.shop.bestellverwaltung.domain.Bestellung_;
-import de.shop.kundenverwaltung.domain.AbstractKunde;
+import de.shop.kundenverwaltung.domain.Kunde;
 import de.shop.kundenverwaltung.domain.AbstractKunde_;
 import de.shop.kundenverwaltung.domain.Wartungsvertrag;
 import de.shop.util.NoMimeTypeException;
@@ -71,9 +71,9 @@ public class KundeService implements Serializable {
 
 	static {
 		GRAPH_BESTELLUNGEN.put("javax.persistence.loadgraph",
-				AbstractKunde.GRAPH_BESTELLUNGEN);
+				Kunde.GRAPH_BESTELLUNGEN);
 		GRAPH_WARTUNGSVERTRAEGE.put("javax.persistence.loadgraph",
-				AbstractKunde.GRAPH_WARTUNGSVERTRAEGE);
+				Kunde.GRAPH_WARTUNGSVERTRAEGE);
 	}
 
 	@Inject
@@ -90,7 +90,7 @@ public class KundeService implements Serializable {
 
 	@Inject
 	@NeuerKunde
-	private transient Event<AbstractKunde> event;
+	private transient Event<Kunde> event;
 
 	@PostConstruct
 	private void postConstruct() {
@@ -104,59 +104,59 @@ public class KundeService implements Serializable {
 
 	/**
 	 */
-	public List<AbstractKunde> findAllKunden(FetchType fetch, OrderByType order) {
-		final TypedQuery<AbstractKunde> query = OrderByType.ID.equals(order) ? em
-				.createNamedQuery(AbstractKunde.FIND_KUNDEN_ORDER_BY_ID,
-						AbstractKunde.class) : em.createNamedQuery(
-				AbstractKunde.FIND_KUNDEN, AbstractKunde.class);
+	public List<Kunde> findAllKunden(FetchType fetch, OrderByType order) {
+		final TypedQuery<Kunde> query = OrderByType.ID.equals(order) ? em
+				.createNamedQuery(Kunde.FIND_KUNDEN_ORDER_BY_ID,
+						Kunde.class) : em.createNamedQuery(
+				Kunde.FIND_KUNDEN, Kunde.class);
 		switch (fetch) {
 		case NUR_KUNDE:
 			break;
 		case MIT_BESTELLUNGEN:
 			query.setHint("javax.persistence.loadgraph",
-					AbstractKunde.GRAPH_BESTELLUNGEN);
+					Kunde.GRAPH_BESTELLUNGEN);
 			break;
 		case MIT_WARTUNGSVERTRAEGEN:
 			query.setHint("javax.persistence.loadgraph",
-					AbstractKunde.GRAPH_WARTUNGSVERTRAEGE);
+					Kunde.GRAPH_WARTUNGSVERTRAEGE);
 			break;
 		default:
 			break;
 		}
 
-		final List<AbstractKunde> kunden = query.getResultList();
+		final List<Kunde> kunden = query.getResultList();
 		return kunden;
 	}
 
 	/**
 	 */
-	public List<AbstractKunde> findKundenByNachname(String nachname,
+	public List<Kunde> findKundenByNachname(String nachname,
 			FetchType fetch) {
 
-		List<AbstractKunde> kunden;
+		List<Kunde> kunden;
 		switch (fetch) {
 		case NUR_KUNDE:
 			kunden = em
-					.createNamedQuery(AbstractKunde.FIND_KUNDEN_BY_NACHNAME,
-							AbstractKunde.class)
-					.setParameter(AbstractKunde.PARAM_KUNDE_NACHNAME, nachname)
+					.createNamedQuery(Kunde.FIND_KUNDEN_BY_NACHNAME,
+							Kunde.class)
+					.setParameter(Kunde.PARAM_KUNDE_NACHNAME, nachname)
 					.getResultList();
 			break;
 
 		case MIT_BESTELLUNGEN:
 			kunden = em
 					.createNamedQuery(
-							AbstractKunde.FIND_KUNDEN_BY_NACHNAME_FETCH_BESTELLUNGEN,
-							AbstractKunde.class)
-					.setParameter(AbstractKunde.PARAM_KUNDE_NACHNAME, nachname)
+							Kunde.FIND_KUNDEN_BY_NACHNAME_FETCH_BESTELLUNGEN,
+							Kunde.class)
+					.setParameter(Kunde.PARAM_KUNDE_NACHNAME, nachname)
 					.getResultList();
 			break;
 
 		default:
 			kunden = em
-					.createNamedQuery(AbstractKunde.FIND_KUNDEN_BY_NACHNAME,
-							AbstractKunde.class)
-					.setParameter(AbstractKunde.PARAM_KUNDE_NACHNAME, nachname)
+					.createNamedQuery(Kunde.FIND_KUNDEN_BY_NACHNAME,
+							Kunde.class)
+					.setParameter(Kunde.PARAM_KUNDE_NACHNAME, nachname)
 					.getResultList();
 			break;
 		}
@@ -188,31 +188,31 @@ public class KundeService implements Serializable {
 
 	public List<String> findNachnamenByPrefix(String nachnamePrefix) {
 		return em
-				.createNamedQuery(AbstractKunde.FIND_NACHNAMEN_BY_PREFIX,
+				.createNamedQuery(Kunde.FIND_NACHNAMEN_BY_PREFIX,
 						String.class)
-				.setParameter(AbstractKunde.PARAM_KUNDE_NACHNAME_PREFIX,
+				.setParameter(Kunde.PARAM_KUNDE_NACHNAME_PREFIX,
 						nachnamePrefix + '%').setMaxResults(MAX_AUTOCOMPLETE)
 				.getResultList();
 	}
 
 	/**
 	 */
-	public AbstractKunde findKundeById(Long id, FetchType fetch) {
+	public Kunde findKundeById(Long id, FetchType fetch) {
 		if (id == null) {
 			return null;
 		}
-		AbstractKunde kunde = null;
+		Kunde kunde = null;
 		switch (fetch) {
 		case NUR_KUNDE:
-			kunde = em.find(AbstractKunde.class, id);
+			kunde = em.find(Kunde.class, id);
 			break;
 
 		case MIT_BESTELLUNGEN:
 			kunde = em
 					.createNamedQuery(
-							AbstractKunde.FIND_KUNDE_BY_ID_FETCH_BESTELLUNGEN,
-							AbstractKunde.class)
-					.setParameter(AbstractKunde.PARAM_KUNDE_ID, id)
+							Kunde.FIND_KUNDE_BY_ID_FETCH_BESTELLUNGEN,
+							Kunde.class)
+					.setParameter(Kunde.PARAM_KUNDE_ID, id)
 					.getSingleResult();
 			break;
 
@@ -226,7 +226,7 @@ public class KundeService implements Serializable {
 			break;*/
 			
 		default:
-			kunde = em.find(AbstractKunde.class, id);
+			kunde = em.find(Kunde.class, id);
 			break;
 		}
 
@@ -238,20 +238,20 @@ public class KundeService implements Serializable {
 			return Collections.emptyList();
 		}
 		final List<Long> ids = em
-				.createNamedQuery(AbstractKunde.FIND_IDS_BY_PREFIX, Long.class)
-				.setParameter(AbstractKunde.PARAM_KUNDE_ID_PREFIX,
+				.createNamedQuery(Kunde.FIND_IDS_BY_PREFIX, Long.class)
+				.setParameter(Kunde.PARAM_KUNDE_ID_PREFIX,
 						idPrefix + '%').getResultList();
 		return ids;
 	}
 
 	/**
 	 */
-	public AbstractKunde findKundeByEmail(String email) {
+	public Kunde findKundeByEmail(String email) {
 		try {
-			final AbstractKunde kunde = em
-					.createNamedQuery(AbstractKunde.FIND_KUNDE_BY_EMAIL,
-							AbstractKunde.class)
-					.setParameter(AbstractKunde.PARAM_KUNDE_EMAIL, email)
+			final Kunde kunde = em
+					.createNamedQuery(Kunde.FIND_KUNDE_BY_EMAIL,
+							Kunde.class)
+					.setParameter(Kunde.PARAM_KUNDE_EMAIL, email)
 					.getSingleResult();
 			return kunde;
 		} catch (NoResultException e) {
@@ -264,8 +264,8 @@ public class KundeService implements Serializable {
 	 * @param kundeId Die ID des Kunden
 	 * @param bytes Das Byte-Array der hochgeladenen Datei
 	 */
-	public AbstractKunde setFile(Long kundeId, byte[] bytes) {
-		final AbstractKunde kunde = findKundeById(kundeId, FetchType.NUR_KUNDE);
+	public Kunde setFile(Long kundeId, byte[] bytes) {
+		final Kunde kunde = findKundeById(kundeId, FetchType.NUR_KUNDE);
 		if (kunde == null) {
 			return null;
 		}
@@ -280,13 +280,13 @@ public class KundeService implements Serializable {
 	 * @param bytes Das Byte-Array der hochgeladenen Datei
 	 * @param mimeTypeStr Der MIME-Type als String
 	 */
-	public AbstractKunde setFile(AbstractKunde kunde, byte[] bytes, String mimeTypeStr) {
+	public Kunde setFile(Kunde kunde, byte[] bytes, String mimeTypeStr) {
 		final MimeType mimeType = MimeType.build(mimeTypeStr);
 		setFile(kunde, bytes, mimeType);
 		return kunde;
 	}
 	
-	private void setFile(AbstractKunde kunde, byte[] bytes, MimeType mimeType) {
+	private void setFile(Kunde kunde, byte[] bytes, MimeType mimeType) {
 		if (mimeType == null) {
 			throw new NoMimeTypeException();
 		}
@@ -320,7 +320,7 @@ public class KundeService implements Serializable {
 
 	/**
 	 */
-	public AbstractKunde createKunde(AbstractKunde kunde) {
+	public Kunde createKunde(Kunde kunde) {
 		if (kunde == null) {
 			return kunde;
 		}
@@ -331,7 +331,7 @@ public class KundeService implements Serializable {
 		//		.setParameter(AbstractKunde.PARAM_KUNDE_EMAIL, kunde.getEmail())
 		//		.getSingleResult();
 		//throw new EmailExistsException(kunde.getEmail());
-		final AbstractKunde tmp = findKundeByEmail(kunde.getEmail());
+		final Kunde tmp = findKundeByEmail(kunde.getEmail());
 		if (tmp != null) {
 			throw new EmailExistsException(kunde.getEmail());
 		}
@@ -349,7 +349,7 @@ public class KundeService implements Serializable {
 		return kunde;
 	}
 
-	private void passwordVerschluesseln(AbstractKunde kunde) {
+	private void passwordVerschluesseln(Kunde kunde) {
 		LOGGER.debugf("passwordVerschluesseln BEGINN: %s", kunde);
 
 		final String unverschluesselt = kunde.getPassword();
@@ -363,7 +363,7 @@ public class KundeService implements Serializable {
 
 	/**
 	 */
-	public AbstractKunde updateKunde(AbstractKunde kunde,
+	public Kunde updateKunde(Kunde kunde,
 			boolean geaendertPassword) {
 		if (kunde == null) {
 			return null;
@@ -374,7 +374,7 @@ public class KundeService implements Serializable {
 		em.detach(kunde);
 
 		// Wurde das Objekt konkurrierend geloescht?
-		AbstractKunde tmp = findKundeById(kunde.getId(), FetchType.NUR_KUNDE);
+		Kunde tmp = findKundeById(kunde.getId(), FetchType.NUR_KUNDE);
 		if (tmp == null) {
 			throw new ConcurrentDeletedException(kunde.getId());
 		}
@@ -403,7 +403,7 @@ public class KundeService implements Serializable {
 
 	/**
 	 */
-	public void deleteKunde(AbstractKunde kunde) {
+	public void deleteKunde(Kunde kunde) {
 		if (kunde == null) {
 			return;
 		}
@@ -425,42 +425,42 @@ public class KundeService implements Serializable {
 
 	/**
 	 */
-	public List<AbstractKunde> findKundenByPLZ(String plz) {
-		final List<AbstractKunde> kunden = em
-				.createNamedQuery(AbstractKunde.FIND_KUNDEN_BY_PLZ,
-						AbstractKunde.class)
-				.setParameter(AbstractKunde.PARAM_KUNDE_ADRESSE_PLZ, plz)
+	public List<Kunde> findKundenByPLZ(String plz) {
+		final List<Kunde> kunden = em
+				.createNamedQuery(Kunde.FIND_KUNDEN_BY_PLZ,
+						Kunde.class)
+				.setParameter(Kunde.PARAM_KUNDE_ADRESSE_PLZ, plz)
 				.getResultList();
 		return kunden;
 	}
 
 	/**
 	 */
-	public List<AbstractKunde> findKundenBySeit(Date seit) {
-		final List<AbstractKunde> kunden = em
-				.createNamedQuery(AbstractKunde.FIND_KUNDEN_BY_DATE,
-						AbstractKunde.class)
-				.setParameter(AbstractKunde.PARAM_KUNDE_SEIT, seit)
+	public List<Kunde> findKundenBySeit(Date seit) {
+		final List<Kunde> kunden = em
+				.createNamedQuery(Kunde.FIND_KUNDEN_BY_DATE,
+						Kunde.class)
+				.setParameter(Kunde.PARAM_KUNDE_SEIT, seit)
 				.getResultList();
 		return kunden;
 	}
 
 	/**
 	 */
-	public List<AbstractKunde> findPrivatkundenFirmenkunden() {
-		final List<AbstractKunde> kunden = em.createNamedQuery(
-				AbstractKunde.FIND_PRIVATKUNDEN_FIRMENKUNDEN,
-				AbstractKunde.class).getResultList();
+	public List<Kunde> findKunden() {
+		final List<Kunde> kunden = em.createNamedQuery(
+				Kunde.FIND_KUNDEN,
+				Kunde.class).getResultList();
 		return kunden;
 	}
 
 	/**
 	 */
-	public List<AbstractKunde> findKundenByNachnameCriteria(String nachname) {
+	public List<Kunde> findKundenByNachnameCriteria(String nachname) {
 		final CriteriaBuilder builder = em.getCriteriaBuilder();
-		final CriteriaQuery<AbstractKunde> criteriaQuery = builder
-				.createQuery(AbstractKunde.class);
-		final Root<AbstractKunde> k = criteriaQuery.from(AbstractKunde.class);
+		final CriteriaQuery<Kunde> criteriaQuery = builder
+				.createQuery(Kunde.class);
+		final Root<Kunde> k = criteriaQuery.from(Kunde.class);
 
 		final Path<String> nachnamePath = k.get(AbstractKunde_.nachname);
 		
@@ -475,20 +475,20 @@ public class KundeService implements Serializable {
 		// query.unwrap(org.hibernate.Query.class).getQueryString();
 		// }
 
-		final List<AbstractKunde> kunden = em.createQuery(criteriaQuery)
+		final List<Kunde> kunden = em.createQuery(criteriaQuery)
 				.getResultList();
 		return kunden;
 	}
 
 	/**
 	 */
-	public List<AbstractKunde> findKundenMitMinBestMenge(short minMenge) {
+	public List<Kunde> findKundenMitMinBestMenge(short minMenge) {
 		final CriteriaBuilder builder = em.getCriteriaBuilder();
-		final CriteriaQuery<AbstractKunde> criteriaQuery = builder
-				.createQuery(AbstractKunde.class);
-		final Root<AbstractKunde> k = criteriaQuery.from(AbstractKunde.class);
+		final CriteriaQuery<Kunde> criteriaQuery = builder
+				.createQuery(Kunde.class);
+		final Root<Kunde> k = criteriaQuery.from(Kunde.class);
 
-		final Join<AbstractKunde, Bestellung> b = k
+		final Join<Kunde, Bestellung> b = k
 				.join(AbstractKunde_.bestellungen);
 		final Join<Bestellung, Bestellposition> bp = b
 				.join(Bestellung_.bestellpositionen);
@@ -496,7 +496,7 @@ public class KundeService implements Serializable {
 				builder.gt(bp.<Short> get(Bestellposition_.anzahl), minMenge))
 				.distinct(true);
 
-		final List<AbstractKunde> kunden = em.createQuery(criteriaQuery)
+		final List<Kunde> kunden = em.createQuery(criteriaQuery)
 				.getResultList();
 		return kunden;
 	}
@@ -516,7 +516,7 @@ public class KundeService implements Serializable {
 	/**
 	 */
 	public Wartungsvertrag createWartungsvertrag(
-			Wartungsvertrag wartungsvertrag, AbstractKunde kunde) {
+			Wartungsvertrag wartungsvertrag, Kunde kunde) {
 		if (wartungsvertrag == null || kunde == null) {
 			return null;
 		}

@@ -6,14 +6,14 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
-import de.shop.kundenverwaltung.domain.AbstractKunde;
+import de.shop.kundenverwaltung.domain.Kunde;
 import de.shop.util.Log;
 
 
 @ApplicationScoped
 @Log
 public class UriHelperKunde {
-	public URI getUriKunde(AbstractKunde kunde, UriInfo uriInfo) {
+	public URI getUriKunde(Kunde kunde, UriInfo uriInfo) {
 		final UriBuilder ub = uriInfo.getBaseUriBuilder()
 		                             .path(KundeResource.class)
 		                             .path(KundeResource.class, "findKundeById");
@@ -22,7 +22,7 @@ public class UriHelperKunde {
 	}
 	
 	
-	public void updateUriKunde(AbstractKunde kunde, UriInfo uriInfo) {
+	public void updateUriKunde(Kunde kunde, UriInfo uriInfo) {
 		// URL fuer Bestellungen setzen
 		final UriBuilder ub = uriInfo.getBaseUriBuilder()
                                      .path(KundeResource.class)

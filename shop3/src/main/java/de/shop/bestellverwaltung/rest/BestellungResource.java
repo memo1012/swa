@@ -33,7 +33,7 @@ import de.shop.bestellverwaltung.domain.Bestellposition;
 import de.shop.bestellverwaltung.domain.Bestellung;
 import de.shop.bestellverwaltung.domain.Lieferung;
 import de.shop.bestellverwaltung.service.BestellungService;
-import de.shop.kundenverwaltung.domain.AbstractKunde;
+import de.shop.kundenverwaltung.domain.Kunde;
 import de.shop.kundenverwaltung.rest.UriHelperKunde;
 import de.shop.util.LocaleHelper;
 import de.shop.util.Log;
@@ -134,8 +134,8 @@ public class BestellungResource {
 	 */
 	@GET
 	@Path("{id:[1-9][0-9]*}/kunde")
-	public AbstractKunde findKundeByBestellungId(@PathParam("id") Long id) {
-		final AbstractKunde kunde = bs.findKundeById(id);
+	public Kunde findKundeByBestellungId(@PathParam("id") Long id) {
+		final Kunde kunde = bs.findKundeById(id);
 		if (kunde == null) {
 			final String msg = "Keine Bestellung gefunden mit der ID " + id;
 			throw new NotFoundException(msg);

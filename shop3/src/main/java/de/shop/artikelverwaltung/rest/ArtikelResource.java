@@ -4,6 +4,9 @@ import static de.shop.util.Constants.SELF_LINK;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static javax.ws.rs.core.MediaType.APPLICATION_XML;
 import static javax.ws.rs.core.MediaType.TEXT_XML;
+import static de.shop.util.Constants.KEINE_ID;
+
+
 
 import java.lang.invoke.MethodHandles;
 import java.net.URI;
@@ -13,6 +16,8 @@ import javax.annotation.PreDestroy;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -25,6 +30,8 @@ import org.jboss.logging.Logger;
 
 import de.shop.artikelverwaltung.domain.Artikel;
 import de.shop.artikelverwaltung.service.ArtikelService;
+import de.shop.kundenverwaltung.domain.Kunde;
+import de.shop.kundenverwaltung.rest.KundeResource;
 import de.shop.util.Log;
 import de.shop.util.NotFoundException;
 import de.shop.util.UriHelper;
@@ -37,6 +44,9 @@ public class ArtikelResource {
 	private static final Logger LOGGER = Logger.getLogger(MethodHandles.lookup().lookupClass());
 	private static final String NOT_FOUND_ID = "artikel.notFound.id";
 
+    @Context
+    private UriInfo uriInfo;
+	
 	@Inject
 	private ArtikelService as;
 	
@@ -78,7 +88,7 @@ public class ArtikelResource {
 	public URI getUriArtikel(Artikel artikel, UriInfo uriInfo) {
 		return uriHelper.getUri(ArtikelResource.class, "findArtikelById", artikel.getId(), uriInfo);
 	}
-	
+
 	@GET
 	@Path ("/bezeichnung/{bezeichnung}")
 	public Response findArtikelByBezeichnung(@PathParam("bezeichnung") String bezeichnung, @Context UriInfo uriInfo) {
@@ -104,7 +114,6 @@ public class ArtikelResource {
 	@Produces
 	public void updateArtikel(Artikel artikel) {
 		// Vorhandenen Artikel ermitteln
-		final Locale locale = localeHelper.getLocale(headers);
 		final Artikel origArt = as.findArtikelById(artikel.getId());
 		if (origArt == null) {
 			// TODO msg passend zu locale
@@ -118,7 +127,7 @@ public class ArtikelResource {
 		LOGGER.tracef("Artikel nachher: %s", origArt);
 		
 		// Update durchfuehren
-		artikel = as.updateArtikel(origArt, locale);
+		artikel = as.updateArtikel(origArt);
 		if (artikel == null) {
 			// TODO msg passend zu locale
 			final String msg = "Kein Kunde gefunden mit der ID " + origArt.getId();
@@ -134,16 +143,13 @@ public class ArtikelResource {
 		LOGGER.trace("In Artikel Post");
 		LOGGER.tracef("Prob Artikel: %s", artikel);
 		
-		final Locale locale = localeHelper.getLocale(headers);
-
 		artikel.setId(KEINE_ID);
 		//artikel.setBezeichnung(artikel.getBezeichnung());
 		
 		//kunde = (Privatkunde) ks.createKunde(kunde, locale);
-		artikel = as.createArtikel(artikel, locale);
+		artikel = as.createArtikel(artikel);
 		LOGGER.tracef("Artikel: %s", artikel);
 		
-		final URI artikelUri = uriHelperArtikel.getUriArtikel(artikel, uriInfo);
-		return Response.created(artikelUri).build();
+		return Response.created(getUriArtikel(artikel, uriInfo)).build();
 	}
 }

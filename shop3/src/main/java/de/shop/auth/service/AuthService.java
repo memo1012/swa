@@ -1,7 +1,7 @@
 package de.shop.auth.service;
 
-import static de.shop.kundenverwaltung.domain.AbstractKunde.FIND_USERNAME_BY_USERNAME_PREFIX;
-import static de.shop.kundenverwaltung.domain.AbstractKunde.PARAM_USERNAME_PREFIX;
+import static de.shop.kundenverwaltung.domain.Kunde.FIND_USERNAME_BY_USERNAME_PREFIX;
+import static de.shop.kundenverwaltung.domain.Kunde.PARAM_USERNAME_PREFIX;
 import static de.shop.util.Constants.HASH_ALGORITHM;
 import static de.shop.util.Constants.HASH_CHARSET;
 import static de.shop.util.Constants.HASH_ENCODING;
@@ -39,7 +39,7 @@ import org.jboss.security.SimpleGroup;
 import com.google.common.base.Strings;
 
 import de.shop.auth.domain.RolleType;
-import de.shop.kundenverwaltung.domain.AbstractKunde;
+import de.shop.kundenverwaltung.domain.Kunde;
 import de.shop.kundenverwaltung.service.KundeService;
 import de.shop.kundenverwaltung.service.KundeService.FetchType;
 import de.shop.util.Log;
@@ -95,7 +95,7 @@ public class AuthService implements Serializable {
 	 * @param passwort Das abzugleichende Passwort
 	 * @return true, falls das abzugleichende Passwort mit dem des Kunden uebereinstimmt. falls sonst.
 	 */
-	public boolean validatePassword(AbstractKunde kunde, String passwort) {
+	public boolean validatePassword(Kunde kunde, String passwort) {
 		if (kunde == null) {
 			return false;
 		}

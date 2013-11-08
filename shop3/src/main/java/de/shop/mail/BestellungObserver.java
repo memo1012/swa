@@ -26,7 +26,7 @@ import org.jboss.logging.Logger;
 import de.shop.bestellverwaltung.domain.Bestellposition;
 import de.shop.bestellverwaltung.domain.Bestellung;
 import de.shop.bestellverwaltung.service.NeueBestellung;
-import de.shop.kundenverwaltung.domain.AbstractKunde;
+import de.shop.kundenverwaltung.domain.Kunde;
 import de.shop.util.Log;
 import de.shop.util.Config;
 
@@ -62,7 +62,7 @@ public class BestellungObserver implements Serializable {
 	@Asynchronous
 	@TransactionAttribute(SUPPORTS)
 	public void onCreateBestellung(@Observes @NeueBestellung Bestellung bestellung) {
-		final AbstractKunde kunde = bestellung.getKunde();
+		final Kunde kunde = bestellung.getKunde();
 		final String mailEmpfaenger = kunde.getEmail();
 		if (mailAbsender == null || mailEmpfaenger == null) {
 			return;

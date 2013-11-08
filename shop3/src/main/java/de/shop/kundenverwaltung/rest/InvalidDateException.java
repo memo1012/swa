@@ -1,8 +1,8 @@
 package de.shop.kundenverwaltung.rest;
 
-import de.shop.kundenverwaltung.service.AbstractKundeServiceException;
+import de.shop.kundenverwaltung.service.KundeServiceException;
 
-public class InvalidDateException extends AbstractKundeServiceException {
+public class InvalidDateException extends KundeServiceException {
 	private static final long serialVersionUID = 2113917506853352685L;
 	
 	private final String invalidDate;

@@ -34,7 +34,7 @@ import de.shop.artikelverwaltung.domain.Artikel;
 import de.shop.bestellverwaltung.domain.Bestellposition;
 import de.shop.bestellverwaltung.domain.Bestellung;
 import de.shop.bestellverwaltung.domain.Lieferung;
-import de.shop.kundenverwaltung.domain.AbstractKunde;
+import de.shop.kundenverwaltung.domain.Kunde;
 import de.shop.kundenverwaltung.service.KundeService;
 import de.shop.util.Log;
 import de.shop.util.ValidatorProvider;
@@ -94,9 +94,9 @@ public class BestellungServiceImpl implements Serializable, BestellungService {
 	/**
 	 */
 	@Override
-	public AbstractKunde findKundeById(Long id) {
+	public Kunde findKundeById(Long id) {
 		try {
-			final AbstractKunde kunde = em.createNamedQuery(Bestellung.FIND_KUNDE_BY_ID, AbstractKunde.class)
+			final Kunde kunde = em.createNamedQuery(Bestellung.FIND_KUNDE_BY_ID, Kunde.class)
                                           .setParameter(Bestellung.PARAM_ID, id)
 					                      .getSingleResult();
 			return kunde;
@@ -109,7 +109,7 @@ public class BestellungServiceImpl implements Serializable, BestellungService {
 	/**
 	 */
 	@Override
-	public List<Bestellung> findBestellungenByKunde(AbstractKunde kunde) {
+	public List<Bestellung> findBestellungenByKunde(Kunde kunde) {
 		if (kunde == null) {
 			return Collections.emptyList();
 		}
@@ -135,7 +135,7 @@ public class BestellungServiceImpl implements Serializable, BestellungService {
 		}
 		
 		// Den persistenten Kunden mit der transienten Bestellung verknuepfen
-		final AbstractKunde kunde = ks.findKundeById(kundeId, KundeService.FetchType.MIT_BESTELLUNGEN);
+		final Kunde kunde = ks.findKundeById(kundeId, KundeService.FetchType.MIT_BESTELLUNGEN);
 		return createBestellung(bestellung, kunde, locale);
 	}
 	
@@ -146,7 +146,7 @@ public class BestellungServiceImpl implements Serializable, BestellungService {
 	 */
 	@Override
 	public Bestellung createBestellung(Bestellung bestellung,
-			                           AbstractKunde kunde,
+			                           Kunde kunde,
 			                           Locale locale) {
 		if (bestellung == null) {
 			return null;

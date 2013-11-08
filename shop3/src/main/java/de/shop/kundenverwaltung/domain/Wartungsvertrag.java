@@ -63,7 +63,7 @@ public class Wartungsvertrag implements Serializable {
 	@JoinColumn(name = "kunde_fk", nullable = false, insertable = false, updatable = false)
 	@NotNull(message = "{kundenverwaltung.wartungsvertrag.kunde.notNull}", groups = PreExistingGroup.class)
 	@JsonIgnore
-	private AbstractKunde kunde;
+	private Kunde kunde;
 	
 	@Column(nullable = false)
 	@Temporal(TIMESTAMP)
@@ -126,11 +126,11 @@ public class Wartungsvertrag implements Serializable {
 		this.inhalt = inhalt;
 	}
 
-	public AbstractKunde getKunde() {
+	public Kunde getKunde() {
 		return kunde;
 	}
 
-	public void setKunde(AbstractKunde kunde) {
+	public void setKunde(Kunde kunde) {
 		this.kunde = kunde;
 	}
 

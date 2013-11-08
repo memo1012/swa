@@ -5,19 +5,19 @@ import java.util.Collection;
 import javax.ejb.ApplicationException;
 import javax.validation.ConstraintViolation;
 
-import de.shop.kundenverwaltung.domain.AbstractKunde;
+import de.shop.kundenverwaltung.domain.Kunde;
 
 
 /**
  * Exception, die ausgel&ouml;st wird, wenn die Attributwerte eines Kunden nicht korrekt sind
  */
 @ApplicationException(rollback = true)
-public class InvalidKundeException extends AbstractKundeValidationException {
+public class InvalidKundeException extends KundeValidationException {
 	private static final long serialVersionUID = 4255133082483647701L;
-	private final AbstractKunde kunde;
+	private final Kunde kunde;
 	
-	public InvalidKundeException(AbstractKunde kunde,
-			                        Collection<ConstraintViolation<AbstractKunde>> violations) {
+	public InvalidKundeException(Kunde kunde,
+			                        Collection<ConstraintViolation<Kunde>> violations) {
 		super(violations);
 		this.kunde = kunde;
 	}
@@ -34,7 +34,7 @@ public class InvalidKundeException extends AbstractKundeValidationException {
 //		}
 //	}
 
-	public AbstractKunde getKunde() {
+	public Kunde getKunde() {
 		return kunde;
 	}
 }

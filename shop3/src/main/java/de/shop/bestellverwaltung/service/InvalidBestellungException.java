@@ -7,7 +7,7 @@ import javax.ejb.ApplicationException;
 import javax.validation.ConstraintViolation;
 
 import de.shop.bestellverwaltung.domain.Bestellung;
-import de.shop.kundenverwaltung.domain.AbstractKunde;
+import de.shop.kundenverwaltung.domain.Kunde;
 
 
 /**
@@ -29,7 +29,7 @@ public class InvalidBestellungException extends AbstractBestellungValidationExce
 		}
 		else {
 			this.erzeugt = bestellung.getErzeugt();
-			final AbstractKunde kunde = bestellung.getKunde();
+			final Kunde kunde = bestellung.getKunde();
 			this.kundeId = kunde == null ? null : kunde.getId();
 		}
 	}

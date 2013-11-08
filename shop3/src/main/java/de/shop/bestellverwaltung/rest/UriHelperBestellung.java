@@ -12,7 +12,7 @@ import javax.ws.rs.core.UriInfo;
 import de.shop.artikelverwaltung.rest.UriHelperArtikel;
 import de.shop.bestellverwaltung.domain.Bestellposition;
 import de.shop.bestellverwaltung.domain.Bestellung;
-import de.shop.kundenverwaltung.domain.AbstractKunde;
+import de.shop.kundenverwaltung.domain.Kunde;
 import de.shop.kundenverwaltung.rest.UriHelperKunde;
 import de.shop.util.Log;
 
@@ -28,7 +28,7 @@ public class UriHelperBestellung {
 	
 	public void updateUriBestellung(Bestellung bestellung, UriInfo uriInfo) {
 		// URL fuer Kunde setzen
-		final AbstractKunde kunde = bestellung.getKunde();
+		final Kunde kunde = bestellung.getKunde();
 		if (kunde != null) {
 			
 			final URI kundeUri = uriHelperKunde.getUriKunde(bestellung.getKunde(), uriInfo);

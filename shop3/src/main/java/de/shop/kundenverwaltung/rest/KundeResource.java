@@ -25,7 +25,6 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
-import javax.persistence.Transient;
 import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -47,7 +46,7 @@ import org.jboss.logging.Logger;
 
 import de.shop.bestellverwaltung.domain.Bestellung;
 import de.shop.bestellverwaltung.service.BestellungService;
-import de.shop.kundenverwaltung.domain.AbstractKunde;
+import de.shop.kundenverwaltung.domain.Kunde;
 import de.shop.kundenverwaltung.domain.Adresse;
 import de.shop.kundenverwaltung.service.KundeService;
 import de.shop.kundenverwaltung.service.KundeService.FetchType;
@@ -107,7 +106,7 @@ public class KundeResource {
 	@Path("{id:[1-9][0-9]*}")
 	public Response findKundeById(@PathParam("id") Long id) {
 		//final Locale locale = localeHelper.getLocale(headers);
-		final AbstractKunde kunde = ks.findKundeById(id, FetchType.NUR_KUNDE);
+		final Kunde kunde = ks.findKundeById(id, FetchType.NUR_KUNDE);
 		if (kunde == null) {
 			// TODO msg passend zu locale
 			final String msg = "Kein Kunde gefunden mit der ID " + id;
@@ -121,7 +120,7 @@ public class KundeResource {
 			       .build();	
 	}
 	
-	public void setStructuralLinks(AbstractKunde kunde, UriInfo uriInfo) {
+	public void setStructuralLinks(Kunde kunde, UriInfo uriInfo) {
 		// URI fuer Bestellungen setzen
 		final URI uri = getUriBestellungen(kunde, uriInfo);
 		kunde.setBestellungenUri(uri);
@@ -129,15 +128,15 @@ public class KundeResource {
 		LOGGER.trace(kunde);
 	}
 
-	private URI getUriBestellungen(AbstractKunde kunde, UriInfo uriInfo) {
+	private URI getUriBestellungen(Kunde kunde, UriInfo uriInfo) {
 		return uriHelper.getUri(KundeResource.class, "findBestellungenByKundeId", kunde.getId(), uriInfo);
 	}
 	
-	public URI getUriKunde(AbstractKunde kunde, UriInfo uriInfo) {
+	public URI getUriKunde(Kunde kunde, UriInfo uriInfo) {
 		return uriHelper.getUri(KundeResource.class, "findKundeById", kunde.getId(), uriInfo);
 	}
 	
-	public Link[] getTransitionalLinks(AbstractKunde kunde, UriInfo uriInfo) {
+	public Link[] getTransitionalLinks(Kunde kunde, UriInfo uriInfo) {
 		final Link self = Link.fromUri(getUriKunde(kunde, uriInfo))
 	                          .rel(SELF_LINK)
 	                          .build();
@@ -168,7 +167,7 @@ public class KundeResource {
 	 */
 	@GET
 	public Response findKundenByNachname(@QueryParam("nachname") @DefaultValue("") String nachname) {
-		List<AbstractKunde> kunden = null;
+		List<Kunde> kunden = null;
 		if ("".equals(nachname)) {
 			kunden = ks.findAllKunden(FetchType.NUR_KUNDE, null);
 			if (kunden.isEmpty()) {
@@ -186,7 +185,7 @@ public class KundeResource {
 		}
 		
 		// URLs innerhalb der gefundenen Kunden anpassen
-		for (AbstractKunde kunde : kunden) {
+		for (Kunde kunde : kunden) {
 			setStructuralLinks(kunde, uriInfo);
 		}
 		
@@ -195,7 +194,7 @@ public class KundeResource {
 			       .build();	
 	}
 	
-	private Link[] getTransitionalLinksKunden(List<? extends AbstractKunde> kunden, UriInfo uriInfo) {
+	private Link[] getTransitionalLinksKunden(List<? extends Kunde> kunden, UriInfo uriInfo) {
 		if (kunden == null || kunden.isEmpty()) {
 			return null;
 		}
@@ -236,7 +235,7 @@ public class KundeResource {
 	public Collection<Bestellung> findBestellungenByKundeId(@PathParam("id") Long kundeId) {
 	//	final Locale locale = localeHelper.getLocale(headers);
 		
-		final AbstractKunde kunde = ks.findKundeById(kundeId, FetchType.MIT_BESTELLUNGEN);
+		final Kunde kunde = ks.findKundeById(kundeId, FetchType.MIT_BESTELLUNGEN);
 		if (kunde == null) {
 			throw new NotFoundException("Kein Kunde mit der ID " + kundeId + " gefunden.");
 		}
@@ -280,7 +279,7 @@ public class KundeResource {
 	@POST
 	@Consumes({ APPLICATION_JSON, APPLICATION_XML, TEXT_XML })
 	@Produces
-	public Response createKunde(@Valid AbstractKunde kunde) {
+	public Response createKunde(@Valid Kunde kunde) {
 		//final Locale locale = localeHelper.getLocale(headers);
 
 		kunde.setId(KEINE_ID);
@@ -308,10 +307,10 @@ public class KundeResource {
 	@Consumes({ APPLICATION_JSON, APPLICATION_XML, TEXT_XML })
 	@Produces({ APPLICATION_JSON, APPLICATION_XML, TEXT_XML })
 	@Transactional
-	public Response updateAbstractKunde(@Valid AbstractKunde kunde) {
+	public Response updateAbstractKunde(@Valid Kunde kunde) {
 		// Vorhandenen Kunden ermitteln
 		// final Locale locale = localeHelper.getLocale(headers);
-		final AbstractKunde origKunde = ks.findKundeById(kunde.getId(), FetchType.NUR_KUNDE);
+		final Kunde origKunde = ks.findKundeById(kunde.getId(), FetchType.NUR_KUNDE);
 		if (origKunde == null) {
 			// TODO msg passend zu locale
 			final String msg = "Kein Kunde gefunden mit der ID " + kunde.getId();
@@ -342,7 +341,7 @@ public class KundeResource {
 	@Produces
 	public void deleteKunde(@PathParam("id") Long kundeId) {
 		//final Locale locale = localeHelper.getLocale(headers);
-		final AbstractKunde kunde = ks.findKundeById(kundeId, FetchType.NUR_KUNDE);
+		final Kunde kunde = ks.findKundeById(kundeId, FetchType.NUR_KUNDE);
 		ks.deleteKunde(kunde);
 	}
 }

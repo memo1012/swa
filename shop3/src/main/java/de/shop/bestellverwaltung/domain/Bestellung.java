@@ -44,7 +44,7 @@ import org.codehaus.jackson.annotate.JsonProperty;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.jboss.logging.Logger;
 
-import de.shop.kundenverwaltung.domain.AbstractKunde;
+import de.shop.kundenverwaltung.domain.Kunde;
 import de.shop.util.IdGroup;
 import de.shop.util.PreExistingGroup;
 
@@ -88,7 +88,7 @@ public class Bestellung implements Serializable {
 	@JoinColumn(name = "kunde_fk", nullable = false, insertable = false, updatable = false)
 	@NotNull(message = "{bestellverwaltung.bestellung.kunde.notNull}", groups = PreExistingGroup.class)
 	@JsonIgnore
-	private AbstractKunde kunde;
+	private Kunde kunde;
 	
 	@Transient
 	private URI kundeUri;
@@ -181,10 +181,10 @@ public class Bestellung implements Serializable {
 		return this;
 	}
 
-	public AbstractKunde getKunde() {
+	public Kunde getKunde() {
 		return kunde;
 	}
-	public void setKunde(AbstractKunde kunde) {
+	public void setKunde(Kunde kunde) {
 		this.kunde = kunde;
 	}
 	

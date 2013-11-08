@@ -11,22 +11,22 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
-import de.shop.kundenverwaltung.domain.AbstractKunde;
-import de.shop.kundenverwaltung.service.AbstractKundeValidationException;
+import de.shop.kundenverwaltung.domain.Kunde;
+import de.shop.kundenverwaltung.service.KundeValidationException;
 import de.shop.util.Log;
 
 
 @Provider
 @ApplicationScoped
 @Log
-public class KundeValidationExceptionMapper implements ExceptionMapper<AbstractKundeValidationException> {
+public class KundeValidationExceptionMapper implements ExceptionMapper<KundeValidationException> {
 	private static final String NEWLINE = System.getProperty("line.separator");
 	
 	@Override
-	public Response toResponse(AbstractKundeValidationException e) {
-		final Collection<ConstraintViolation<AbstractKunde>> violations = e.getViolations();
+	public Response toResponse(KundeValidationException e) {
+		final Collection<ConstraintViolation<Kunde>> violations = e.getViolations();
 		final StringBuilder sb = new StringBuilder();
-		for (ConstraintViolation<AbstractKunde> v : violations) {
+		for (ConstraintViolation<Kunde> v : violations) {
 			sb.append(v.getMessage());
 			sb.append(NEWLINE);
 		}
