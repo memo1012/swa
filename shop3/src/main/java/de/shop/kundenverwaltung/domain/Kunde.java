@@ -24,7 +24,6 @@ import java.util.Set;
 import javax.persistence.Basic;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
-import javax.persistence.DiscriminatorColumn;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -114,12 +113,6 @@ import de.shop.auth.domain.RolleType;
 		@NamedQuery(name = Kunde.FIND_KUNDE_BY_ID_FETCH_BESTELLUNGEN, query = "SELECT DISTINCT k"
 				+ " FROM   Kunde k LEFT JOIN FETCH k.bestellungen"
 				+ " WHERE  k.id = :" + Kunde.PARAM_KUNDE_ID),
-		/*
-		 * @NamedQuery(name = Kunde.FIND_KUNDE_BY_ID_FETCH_WARTUNGSVERTRAEGE,
-		 * query = "SELECT DISTINCT k" +
-		 * " FROM   Kunde k LEFT JOIN FETCH k.wartungsvertraege" +
-		 * " WHERE  k.id = :" + Kunde.PARAM_KUNDE_ID),
-		 */
 		@NamedQuery(name = Kunde.FIND_KUNDE_BY_EMAIL, query = "SELECT DISTINCT k"
 				+ " FROM   Kunde k"
 				+ " WHERE  k.email = :"
@@ -296,12 +289,6 @@ public abstract class Kunde implements Serializable, Cloneable {
 
 	@Transient
 	private URI bestellungenUri;
-
-	@OneToMany
-	@JoinColumn(name = "kunde_fk", nullable = false)
-	@OrderColumn(name = "idx", nullable = false)
-	@XmlTransient
-	private List<Wartungsvertrag> wartungsvertraege;
 
 	@ElementCollection(fetch = EAGER)
 	@CollectionTable(name = "kunde_rolle", joinColumns = @JoinColumn(name = "kunde_fk", nullable = false), uniqueConstraints = @UniqueConstraint(columnNames = {
@@ -514,35 +501,6 @@ public abstract class Kunde implements Serializable, Cloneable {
 
 	public void setBestellungenUri(URI bestellungenUri) {
 		this.bestellungenUri = bestellungenUri;
-	}
-
-	public List<Wartungsvertrag> getWartungsvertraege() {
-		if (wartungsvertraege == null) {
-			return null;
-		}
-
-		return Collections.unmodifiableList(wartungsvertraege);
-	}
-
-	public void setWartungsvertraege(List<Wartungsvertrag> wartungsvertraege) {
-		if (this.wartungsvertraege == null) {
-			this.wartungsvertraege = wartungsvertraege;
-			return;
-		}
-
-		// Wiederverwendung der vorhandenen Collection
-		this.wartungsvertraege.clear();
-		if (wartungsvertraege != null) {
-			this.wartungsvertraege.addAll(wartungsvertraege);
-		}
-	}
-
-	public Kunde addWartungsvertrag(Wartungsvertrag wartungsvertrag) {
-		if (wartungsvertraege == null) {
-			wartungsvertraege = new ArrayList<>();
-		}
-		wartungsvertraege.add(wartungsvertrag);
-		return this;
 	}
 
 	public Set<RolleType> getRollen() {

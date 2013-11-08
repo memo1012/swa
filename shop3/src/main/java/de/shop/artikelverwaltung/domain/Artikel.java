@@ -28,33 +28,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 import org.jboss.logging.Logger;
-import static de.shop.util.Constants.MIN_ID;
-import static javax.persistence.TemporalType.TIMESTAMP;
-
-import java.io.Serializable;
-import java.lang.invoke.MethodHandles;
-import java.util.Date;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.PostPersist;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.jboss.logging.Logger;
-
-import de.shop.util.IdGroup;
 
 
 @Entity

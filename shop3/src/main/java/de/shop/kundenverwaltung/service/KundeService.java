@@ -38,7 +38,6 @@ import de.shop.bestellverwaltung.domain.Bestellung;
 import de.shop.bestellverwaltung.domain.Bestellung_;
 import de.shop.kundenverwaltung.domain.Kunde;
 import de.shop.kundenverwaltung.domain.Kunde_;
-import de.shop.kundenverwaltung.domain.Wartungsvertrag;
 import de.shop.util.NoMimeTypeException;
 import de.shop.util.Log;
 import de.shop.util.ConcurrentDeletedException;
@@ -56,7 +55,7 @@ public class KundeService implements Serializable {
 			.lookup().lookupClass());
 
 	public enum FetchType {
-		NUR_KUNDE, MIT_BESTELLUNGEN, MIT_WARTUNGSVERTRAEGEN, NUR_ARTIKEL
+		NUR_KUNDE, MIT_BESTELLUNGEN, NUR_ARTIKEL
 	}
 
 	public enum OrderByType {
@@ -66,14 +65,10 @@ public class KundeService implements Serializable {
 	// genau 1 Eintrag mit 100 % Fuellgrad
 	private static final Map<String, Object> GRAPH_BESTELLUNGEN = new HashMap<>(
 			1, 1);
-	private static final Map<String, Object> GRAPH_WARTUNGSVERTRAEGE = new HashMap<>(
-			1, 1);
 
 	static {
 		GRAPH_BESTELLUNGEN.put("javax.persistence.loadgraph",
 				Kunde.GRAPH_BESTELLUNGEN);
-		GRAPH_WARTUNGSVERTRAEGE.put("javax.persistence.loadgraph",
-				Kunde.GRAPH_WARTUNGSVERTRAEGE);
 	}
 
 	@Inject
@@ -115,10 +110,6 @@ public class KundeService implements Serializable {
 		case MIT_BESTELLUNGEN:
 			query.setHint("javax.persistence.loadgraph",
 					Kunde.GRAPH_BESTELLUNGEN);
-			break;
-		case MIT_WARTUNGSVERTRAEGEN:
-			query.setHint("javax.persistence.loadgraph",
-					Kunde.GRAPH_WARTUNGSVERTRAEGE);
 			break;
 		default:
 			break;
@@ -215,15 +206,6 @@ public class KundeService implements Serializable {
 					.setParameter(Kunde.PARAM_KUNDE_ID, id)
 					.getSingleResult();
 			break;
-
-		/*case MIT_WARTUNGSVERTRAEGEN:
-			kunde = em
-					.createNamedQuery(
-							AbstractKunde.FIND_KUNDE_BY_ID_FETCH_WARTUNGSVERTRAEGE,
-							AbstractKunde.class)
-					.setParameter(AbstractKunde.PARAM_KUNDE_ID, id)
-					.getSingleResult();
-			break;*/
 			
 		default:
 			kunde = em.find(Kunde.class, id);
@@ -501,33 +483,4 @@ public class KundeService implements Serializable {
 		return kunden;
 	}
 
-	/**
-	 */
-	public List<Wartungsvertrag> findWartungsvertraege(Long kundeId) {
-		final List<Wartungsvertrag> wartungsvertraege = em
-				.createNamedQuery(
-						Wartungsvertrag.FIND_WARTUNGSVERTRAEGE_BY_KUNDE_ID,
-						Wartungsvertrag.class)
-				.setParameter(Wartungsvertrag.PARAM_KUNDE_ID, kundeId)
-				.getResultList();
-		return wartungsvertraege;
-	}
-
-	/**
-	 */
-	public Wartungsvertrag createWartungsvertrag(
-			Wartungsvertrag wartungsvertrag, Kunde kunde) {
-		if (wartungsvertrag == null || kunde == null) {
-			return null;
-		}
-
-		
-		kunde = findKundeById(kunde.getId(), FetchType.NUR_KUNDE);
-
-		wartungsvertrag.setKunde(kunde);
-		kunde.addWartungsvertrag(wartungsvertrag);
-
-		em.persist(wartungsvertrag);
-		return wartungsvertrag;
-	}
 }

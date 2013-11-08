@@ -17,40 +17,11 @@ import javax.persistence.criteria.Root;
 
 import org.jboss.logging.Logger;
 
-import com.google.common.base.Strings;
-
 import de.shop.artikelverwaltung.domain.Artikel;
 import de.shop.util.Log;
 
-import java.lang.invoke.MethodHandles;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
-import javax.inject.Inject;
-import javax.persistence.Basic;
-import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
-import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-import javax.persistence.Version;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Path;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-import javax.validation.ConstraintViolation;
-import javax.validation.Validator;
-import javax.validation.groups.Default;
-
-import org.jboss.logging.Logger;
-
-import de.shop.artikelverwaltung.domain.Artikel;
-import de.shop.util.IdGroup;
-import de.shop.util.Log;
-import de.shop.util.ValidatorProvider;
 
 @Log
 public class ArtikelService implements Serializable {

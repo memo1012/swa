@@ -30,8 +30,6 @@ import org.jboss.logging.Logger;
 
 import de.shop.artikelverwaltung.domain.Artikel;
 import de.shop.artikelverwaltung.service.ArtikelService;
-import de.shop.kundenverwaltung.domain.Kunde;
-import de.shop.kundenverwaltung.rest.KundeResource;
 import de.shop.util.Log;
 import de.shop.util.NotFoundException;
 import de.shop.util.UriHelper;
@@ -42,7 +40,6 @@ import de.shop.util.UriHelper;
 @Log
 public class ArtikelResource {
 	private static final Logger LOGGER = Logger.getLogger(MethodHandles.lookup().lookupClass());
-	private static final String NOT_FOUND_ID = "artikel.notFound.id";
 
     @Context
     private UriInfo uriInfo;
