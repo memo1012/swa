@@ -1,5 +1,6 @@
 package de.shop.bestellverwaltung.domain;
 
+import static de.shop.util.Constants.ERSTE_VERSION;
 import static de.shop.util.Constants.KEINE_ID;
 import static de.shop.util.Constants.MIN_ID;
 import static javax.persistence.CascadeType.PERSIST;
@@ -17,6 +18,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -35,6 +37,7 @@ import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.Transient;
+import javax.persistence.Version;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -93,6 +96,10 @@ public class Bestellung implements Serializable {
 	@Transient
 	private URI kundeUri;
 
+	@Version
+	@Basic(optional = false)
+	private int version = ERSTE_VERSION;
+	
 	@OneToMany(fetch = EAGER, cascade = { PERSIST, REMOVE })
 	@JoinColumn(name = "bestellung_fk", nullable = false)
 	@OrderColumn(name = "idx", nullable = false)
@@ -204,13 +211,21 @@ public class Bestellung implements Serializable {
 		if (this.lieferungen == null) {
 			this.lieferungen = lieferungen;
 			return;
-		}
+	}
 		
 		// Wiederverwendung der vorhandenen Collection
 		this.lieferungen.clear();
 		if (lieferungen != null) {
 			this.lieferungen.addAll(lieferungen);
 		}
+	}
+	
+	public int getVersion() {
+		return version;
+	}
+
+	public void setVersion(int version) {
+		this.version = version;
 	}
 	
 	public void addLieferung(Lieferung lieferung) {

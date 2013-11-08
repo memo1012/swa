@@ -37,7 +37,7 @@ import de.shop.bestellverwaltung.domain.Bestellposition_;
 import de.shop.bestellverwaltung.domain.Bestellung;
 import de.shop.bestellverwaltung.domain.Bestellung_;
 import de.shop.kundenverwaltung.domain.Kunde;
-import de.shop.kundenverwaltung.domain.AbstractKunde_;
+import de.shop.kundenverwaltung.domain.Kunde_;
 import de.shop.kundenverwaltung.domain.Wartungsvertrag;
 import de.shop.util.NoMimeTypeException;
 import de.shop.util.Log;
@@ -462,7 +462,7 @@ public class KundeService implements Serializable {
 				.createQuery(Kunde.class);
 		final Root<Kunde> k = criteriaQuery.from(Kunde.class);
 
-		final Path<String> nachnamePath = k.get(AbstractKunde_.nachname);
+		final Path<String> nachnamePath = k.get(Kunde_.nachname);
 		
 		//final Path<String> nachnamePath = k.get("nachname");
 
@@ -489,7 +489,7 @@ public class KundeService implements Serializable {
 		final Root<Kunde> k = criteriaQuery.from(Kunde.class);
 
 		final Join<Kunde, Bestellung> b = k
-				.join(AbstractKunde_.bestellungen);
+				.join(Kunde_.bestellungen);
 		final Join<Bestellung, Bestellposition> bp = b
 				.join(Bestellung_.bestellpositionen);
 		criteriaQuery.where(
