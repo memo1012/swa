@@ -39,11 +39,11 @@ import de.shop.bestellverwaltung.domain.Bestellung_;
 import de.shop.kundenverwaltung.domain.Kunde;
 import de.shop.kundenverwaltung.domain.Kunde_;
 import de.shop.util.NoMimeTypeException;
-import de.shop.util.Log;
-import de.shop.util.ConcurrentDeletedException;
-import de.shop.util.File;
-import de.shop.util.FileHelper;
-import de.shop.util.MimeType;
+import de.shop.util.interceptor.Log;
+import de.shop.util.persistence.ConcurrentDeletedException;
+import de.shop.util.persistence.File;
+import de.shop.util.persistence.FileHelper;
+import de.shop.util.persistence.MimeType;
 
 /**
  * Anwendungslogik fuer die KundeService
@@ -101,9 +101,8 @@ public class KundeService implements Serializable {
 	 */
 	public List<Kunde> findAllKunden(FetchType fetch, OrderByType order) {
 		final TypedQuery<Kunde> query = OrderByType.ID.equals(order) ? em
-				.createNamedQuery(Kunde.FIND_KUNDEN_ORDER_BY_ID,
-						Kunde.class) : em.createNamedQuery(
-				Kunde.FIND_KUNDEN, Kunde.class);
+				.createNamedQuery(Kunde.FIND_KUNDEN_ORDER_BY_ID, Kunde.class)
+				: em.createNamedQuery(Kunde.FIND_KUNDEN, Kunde.class);
 		switch (fetch) {
 		case NUR_KUNDE:
 			break;
@@ -121,8 +120,7 @@ public class KundeService implements Serializable {
 
 	/**
 	 */
-	public List<Kunde> findKundenByNachname(String nachname,
-			FetchType fetch) {
+	public List<Kunde> findKundenByNachname(String nachname, FetchType fetch) {
 
 		List<Kunde> kunden;
 		switch (fetch) {
@@ -179,8 +177,7 @@ public class KundeService implements Serializable {
 
 	public List<String> findNachnamenByPrefix(String nachnamePrefix) {
 		return em
-				.createNamedQuery(Kunde.FIND_NACHNAMEN_BY_PREFIX,
-						String.class)
+				.createNamedQuery(Kunde.FIND_NACHNAMEN_BY_PREFIX, String.class)
 				.setParameter(Kunde.PARAM_KUNDE_NACHNAME_PREFIX,
 						nachnamePrefix + '%').setMaxResults(MAX_AUTOCOMPLETE)
 				.getResultList();
@@ -202,11 +199,10 @@ public class KundeService implements Serializable {
 			kunde = em
 					.createNamedQuery(
 							Kunde.FIND_KUNDE_BY_ID_FETCH_BESTELLUNGEN,
-							Kunde.class)
-					.setParameter(Kunde.PARAM_KUNDE_ID, id)
+							Kunde.class).setParameter(Kunde.PARAM_KUNDE_ID, id)
 					.getSingleResult();
 			break;
-			
+
 		default:
 			kunde = em.find(Kunde.class, id);
 			break;
@@ -221,8 +217,8 @@ public class KundeService implements Serializable {
 		}
 		final List<Long> ids = em
 				.createNamedQuery(Kunde.FIND_IDS_BY_PREFIX, Long.class)
-				.setParameter(Kunde.PARAM_KUNDE_ID_PREFIX,
-						idPrefix + '%').getResultList();
+				.setParameter(Kunde.PARAM_KUNDE_ID_PREFIX, idPrefix + '%')
+				.getResultList();
 		return ids;
 	}
 
@@ -231,8 +227,7 @@ public class KundeService implements Serializable {
 	public Kunde findKundeByEmail(String email) {
 		try {
 			final Kunde kunde = em
-					.createNamedQuery(Kunde.FIND_KUNDE_BY_EMAIL,
-							Kunde.class)
+					.createNamedQuery(Kunde.FIND_KUNDE_BY_EMAIL, Kunde.class)
 					.setParameter(Kunde.PARAM_KUNDE_EMAIL, email)
 					.getSingleResult();
 			return kunde;
@@ -240,11 +235,15 @@ public class KundeService implements Serializable {
 			return null;
 		}
 	}
-	
+
 	/**
-	 * Einem Kunden eine hochgeladene Datei ohne MIME Type (bei RESTful WS) zuordnen
-	 * @param kundeId Die ID des Kunden
-	 * @param bytes Das Byte-Array der hochgeladenen Datei
+	 * Einem Kunden eine hochgeladene Datei ohne MIME Type (bei RESTful WS)
+	 * zuordnen
+	 * 
+	 * @param kundeId
+	 *            Die ID des Kunden
+	 * @param bytes
+	 *            Das Byte-Array der hochgeladenen Datei
 	 */
 	public Kunde setFile(Long kundeId, byte[] bytes) {
 		final Kunde kunde = findKundeById(kundeId, FetchType.NUR_KUNDE);
@@ -255,26 +254,31 @@ public class KundeService implements Serializable {
 		setFile(kunde, bytes, mimeType);
 		return kunde;
 	}
-	
+
 	/**
 	 * Einem Kunden eine hochgeladene Datei zuordnen
-	 * @param kunde Der betroffene Kunde
-	 * @param bytes Das Byte-Array der hochgeladenen Datei
-	 * @param mimeTypeStr Der MIME-Type als String
+	 * 
+	 * @param kunde
+	 *            Der betroffene Kunde
+	 * @param bytes
+	 *            Das Byte-Array der hochgeladenen Datei
+	 * @param mimeTypeStr
+	 *            Der MIME-Type als String
 	 */
 	public Kunde setFile(Kunde kunde, byte[] bytes, String mimeTypeStr) {
 		final MimeType mimeType = MimeType.build(mimeTypeStr);
 		setFile(kunde, bytes, mimeType);
 		return kunde;
 	}
-	
+
 	private void setFile(Kunde kunde, byte[] bytes, MimeType mimeType) {
 		if (mimeType == null) {
 			throw new NoMimeTypeException();
 		}
-		
-		final String filename = fileHelper.getFilename(kunde.getClass(), kunde.getId(), mimeType);
-		
+
+		final String filename = fileHelper.getFilename(kunde.getClass(),
+				kunde.getId(), mimeType);
+
 		// Gibt es noch kein (Multimedia-) File
 		File file = kunde.getFile();
 		if (kunde.getFile() == null) {
@@ -282,14 +286,14 @@ public class KundeService implements Serializable {
 			LOGGER.tracef("Neue Datei %s", file);
 			kunde.setFile(file);
 			em.persist(file);
-		}
-		else {
+		} else {
 			file.set(bytes, filename, mimeType);
 			LOGGER.tracef("Ueberschreiben der Datei %s", file);
 			em.merge(file);
 		}
 
-		// Hochgeladenes Bild/Video/Audio in einem parallelen Thread als Datei fuer die Web-Anwendung abspeichern
+		// Hochgeladenes Bild/Video/Audio in einem parallelen Thread als Datei
+		// fuer die Web-Anwendung abspeichern
 		final File newFile = kunde.getFile();
 		final Runnable storeFile = new Runnable() {
 			@Override
@@ -308,17 +312,16 @@ public class KundeService implements Serializable {
 		}
 
 		// Pruefung, ob die Email-Adresse schon existiert
-		//em.createNamedQuery(AbstractKunde.FIND_KUNDE_BY_EMAIL,
-		//		AbstractKunde.class)
-		//		.setParameter(AbstractKunde.PARAM_KUNDE_EMAIL, kunde.getEmail())
-		//		.getSingleResult();
-		//throw new EmailExistsException(kunde.getEmail());
+		// em.createNamedQuery(AbstractKunde.FIND_KUNDE_BY_EMAIL,
+		// AbstractKunde.class)
+		// .setParameter(AbstractKunde.PARAM_KUNDE_EMAIL, kunde.getEmail())
+		// .getSingleResult();
+		// throw new EmailExistsException(kunde.getEmail());
 		final Kunde tmp = findKundeByEmail(kunde.getEmail());
 		if (tmp != null) {
 			throw new EmailExistsException(kunde.getEmail());
 		}
-		
-		
+
 		// Password verschluesseln
 		passwordVerschluesseln(kunde);
 
@@ -345,8 +348,7 @@ public class KundeService implements Serializable {
 
 	/**
 	 */
-	public Kunde updateKunde(Kunde kunde,
-			boolean geaendertPassword) {
+	public Kunde updateKunde(Kunde kunde, boolean geaendertPassword) {
 		if (kunde == null) {
 			return null;
 		}
@@ -409,8 +411,7 @@ public class KundeService implements Serializable {
 	 */
 	public List<Kunde> findKundenByPLZ(String plz) {
 		final List<Kunde> kunden = em
-				.createNamedQuery(Kunde.FIND_KUNDEN_BY_PLZ,
-						Kunde.class)
+				.createNamedQuery(Kunde.FIND_KUNDEN_BY_PLZ, Kunde.class)
 				.setParameter(Kunde.PARAM_KUNDE_ADRESSE_PLZ, plz)
 				.getResultList();
 		return kunden;
@@ -420,18 +421,15 @@ public class KundeService implements Serializable {
 	 */
 	public List<Kunde> findKundenBySeit(Date seit) {
 		final List<Kunde> kunden = em
-				.createNamedQuery(Kunde.FIND_KUNDEN_BY_DATE,
-						Kunde.class)
-				.setParameter(Kunde.PARAM_KUNDE_SEIT, seit)
-				.getResultList();
+				.createNamedQuery(Kunde.FIND_KUNDEN_BY_DATE, Kunde.class)
+				.setParameter(Kunde.PARAM_KUNDE_SEIT, seit).getResultList();
 		return kunden;
 	}
 
 	/**
 	 */
 	public List<Kunde> findKunden() {
-		final List<Kunde> kunden = em.createNamedQuery(
-				Kunde.FIND_KUNDEN,
+		final List<Kunde> kunden = em.createNamedQuery(Kunde.FIND_KUNDEN,
 				Kunde.class).getResultList();
 		return kunden;
 	}
@@ -445,8 +443,8 @@ public class KundeService implements Serializable {
 		final Root<Kunde> k = criteriaQuery.from(Kunde.class);
 
 		final Path<String> nachnamePath = k.get(Kunde_.nachname);
-		
-		//final Path<String> nachnamePath = k.get("nachname");
+
+		// final Path<String> nachnamePath = k.get("nachname");
 
 		final Predicate pred = builder.equal(nachnamePath, nachname);
 		criteriaQuery.where(pred);
@@ -470,8 +468,7 @@ public class KundeService implements Serializable {
 				.createQuery(Kunde.class);
 		final Root<Kunde> k = criteriaQuery.from(Kunde.class);
 
-		final Join<Kunde, Bestellung> b = k
-				.join(Kunde_.bestellungen);
+		final Join<Kunde, Bestellung> b = k.join(Kunde_.bestellungen);
 		final Join<Bestellung, Bestellposition> bp = b
 				.join(Bestellung_.bestellpositionen);
 		criteriaQuery.where(

@@ -66,7 +66,7 @@ import org.jboss.logging.Logger;
 import org.jboss.resteasy.annotations.providers.jaxb.Formatted;
 
 import de.shop.bestellverwaltung.domain.Bestellung;
-import de.shop.util.File;
+import de.shop.util.persistence.File;
 import de.shop.auth.domain.RolleType;
 
 // Alternativen bei @Inheritance

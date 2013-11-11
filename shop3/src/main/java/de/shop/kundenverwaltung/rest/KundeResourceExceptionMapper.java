@@ -9,7 +9,7 @@ import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
 import de.shop.kundenverwaltung.service.KundeServiceException;
-import de.shop.util.Log;
+import de.shop.util.interceptor.Log;
 
 
 @Provider

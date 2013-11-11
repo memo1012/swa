@@ -27,7 +27,6 @@ import javax.validation.constraints.Size;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.jboss.logging.Logger;
 
-import de.shop.util.IdGroup;
 
 @Entity
 @Table(name = "adresse")
@@ -45,7 +44,7 @@ public class Adresse implements Serializable {
 	@Id
 	@GeneratedValue
 	@Column(nullable = false, updatable = false)
-	@Min(value = MIN_ID, message = "{kundenverwaltung.adresse.id.min}", groups = IdGroup.class)
+
 	private Long id = KEINE_ID;
 
 	@Column(length = PLZ_LENGTH_MAX, nullable = false)

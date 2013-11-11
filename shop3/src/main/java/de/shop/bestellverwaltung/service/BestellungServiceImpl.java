@@ -36,8 +36,7 @@ import de.shop.bestellverwaltung.domain.Bestellung;
 import de.shop.bestellverwaltung.domain.Lieferung;
 import de.shop.kundenverwaltung.domain.Kunde;
 import de.shop.kundenverwaltung.service.KundeService;
-import de.shop.util.Log;
-import de.shop.util.ValidatorProvider;
+import de.shop.util.interceptor.Log;
 
 @Log
 public class BestellungServiceImpl implements Serializable, BestellungService {
@@ -49,9 +48,7 @@ public class BestellungServiceImpl implements Serializable, BestellungService {
 	
 	@Inject
 	private KundeService ks;
-	
-	@Inject
-	private ValidatorProvider validatorProvider;
+
 	
 	@Inject
 	@NeueBestellung
@@ -128,15 +125,14 @@ public class BestellungServiceImpl implements Serializable, BestellungService {
 	 */
 	@Override
 	public Bestellung createBestellung(Bestellung bestellung,
-			                           Long kundeId,
-			                           Locale locale) {
+			                           Long kundeId) {
 		if (bestellung == null) {
 			return null;
 		}
 		
 		// Den persistenten Kunden mit der transienten Bestellung verknuepfen
 		final Kunde kunde = ks.findKundeById(kundeId, KundeService.FetchType.MIT_BESTELLUNGEN);
-		return createBestellung(bestellung, kunde, locale);
+		return createBestellung(bestellung, kunde);
 	}
 	
 	/**
@@ -146,8 +142,7 @@ public class BestellungServiceImpl implements Serializable, BestellungService {
 	 */
 	@Override
 	public Bestellung createBestellung(Bestellung bestellung,
-			                           Kunde kunde,
-			                           Locale locale) {
+			                           Kunde kunde) {
 		if (bestellung == null) {
 			return null;
 		}
@@ -167,14 +162,14 @@ public class BestellungServiceImpl implements Serializable, BestellungService {
 			LOGGER.tracef("Bestellposition: %s", bp);				
 		}
 		
-		validateBestellung(bestellung, locale, Default.class);
+		//validateBestellung(bestellung, locale, Default.class);
 		em.persist(bestellung);
 		event.fire(bestellung);
 
 		return bestellung;
 	}
 	
-	private void validateBestellung(Bestellung bestellung, Locale locale, Class<?>... groups) {
+	/*private void validateBestellung(Bestellung bestellung, Locale locale, Class<?>... groups) {
 		final Validator validator = validatorProvider.getValidator(locale);
 		
 		final Set<ConstraintViolation<Bestellung>> violations = validator.validate(bestellung);
@@ -182,7 +177,7 @@ public class BestellungServiceImpl implements Serializable, BestellungService {
 			LOGGER.debugf("createBestellung: violations=%s", violations);
 			throw new InvalidBestellungException(bestellung, violations);
 		}
-	}
+	}*/
 
 
 	/**

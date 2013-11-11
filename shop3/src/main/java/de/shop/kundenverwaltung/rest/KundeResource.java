@@ -21,6 +21,7 @@ import java.util.List;
 //import java.util.Locale;
 
 
+
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.RequestScoped;
@@ -50,10 +51,11 @@ import de.shop.kundenverwaltung.domain.Kunde;
 import de.shop.kundenverwaltung.domain.Adresse;
 import de.shop.kundenverwaltung.service.KundeService;
 import de.shop.kundenverwaltung.service.KundeService.FetchType;
-import de.shop.util.Log;
-import de.shop.util.NotFoundException;
+import de.shop.util.persistence.File;
+import de.shop.util.interceptor.Log;
+import de.shop.util.rest.NotFoundException;
 import de.shop.util.Transactional;
-import de.shop.util.UriHelper;
+import de.shop.util.rest.UriHelper;
 
 @Path("/kunden")
 @Produces({ APPLICATION_JSON, APPLICATION_XML + ";qs=0.75", TEXT_XML + ";qs=0.5"})
@@ -65,6 +67,12 @@ public class KundeResource {
 	private static final Logger LOGGER = Logger.getLogger(MethodHandles.lookup().lookupClass());
 	private static final String VERSION = "1.0";
 
+	private static final String NOT_FOUND_ID = "kunde.notFound.id";
+	private static final String NOT_FOUND_NACHNAME = "kunde.notFound.nachname";
+	private static final String NOT_FOUND_PLZ = "kunde.notFound.plz";
+	private static final String NOT_FOUND_EMAIL = "kunde.notFound.email";
+	private static final String NOT_FOUND_FILE = "kunde.notFound.file";
+	
     @Context
     private UriInfo uriInfo;
     
@@ -343,5 +351,34 @@ public class KundeResource {
 		//final Locale locale = localeHelper.getLocale(headers);
 		final Kunde kunde = ks.findKundeById(kundeId, FetchType.NUR_KUNDE);
 		ks.deleteKunde(kunde);
+	}
+	
+	@Path("{id:[1-9][0-9]*}/file")
+	@POST
+	@Consumes({ "image/jpeg", "image/pjpeg", "image/png" })  // RESTEasy unterstuetzt nicht video/mp4
+	@Transactional
+	public Response upload(@PathParam("id") Long kundeId, byte[] bytes) {
+		ks.setFile(kundeId, bytes);
+		return Response.created(uriHelper.getUri(KundeResource.class, "download", kundeId, uriInfo))
+				       .build();
+	}
+	
+	@Path("{id:[1-9][0-9]*}/file")
+	@GET
+	@Produces({ "image/jpeg", "image/pjpeg", "image/png" })
+	@Transactional  // Nachladen der Datei : AbstractKunde referenziert File mit Lazy Fetching
+	public byte[] download(@PathParam("id") Long kundeId) {
+		final Kunde kunde = ks.findKundeById(kundeId, FetchType.NUR_KUNDE);
+		if (kunde == null) {
+			throw new NotFoundException(NOT_FOUND_ID);
+		}
+		
+		final File file = kunde.getFile();
+		if (file == null) {
+			throw new NotFoundException(NOT_FOUND_FILE);
+		}
+		LOGGER.tracef("%s", file.toString());
+		
+		return file.getBytes();
 	}
 }

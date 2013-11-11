@@ -13,7 +13,7 @@ import javax.ws.rs.ext.Provider;
 
 import de.shop.kundenverwaltung.domain.Kunde;
 import de.shop.kundenverwaltung.service.KundeValidationException;
-import de.shop.util.Log;
+import de.shop.util.interceptor.Log;
 
 
 @Provider

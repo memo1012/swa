@@ -35,9 +35,8 @@ import de.shop.bestellverwaltung.domain.Lieferung;
 import de.shop.bestellverwaltung.service.BestellungService;
 import de.shop.kundenverwaltung.domain.Kunde;
 import de.shop.kundenverwaltung.rest.UriHelperKunde;
-import de.shop.util.LocaleHelper;
-import de.shop.util.Log;
-import de.shop.util.NotFoundException;
+import de.shop.util.interceptor.Log;
+import de.shop.util.rest.NotFoundException;
 import de.shop.util.Transactional;
 
 
@@ -68,8 +67,6 @@ public class BestellungResource {
 	@Inject
 	private UriHelperKunde uriHelperKunde;
 	
-	@Inject
-	private LocaleHelper localeHelper;
 	
 	@PostConstruct
 	private void postConstruct() {
@@ -226,8 +223,7 @@ public class BestellungResource {
 		}
 		bestellung.setBestellpositionen(neueBestellpositionen);
 		
-		final Locale locale = localeHelper.getLocale(headers);
-		bestellung = bs.createBestellung(bestellung, kundeId, locale);
+		bestellung = bs.createBestellung(bestellung, kundeId);
 
 		final URI bestellungUri = uriHelperBestellung.getUriBestellung(bestellung, uriInfo);
 		final Response response = Response.created(bestellungUri).build();

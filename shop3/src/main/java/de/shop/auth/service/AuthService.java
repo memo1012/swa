@@ -42,7 +42,7 @@ import de.shop.auth.domain.RolleType;
 import de.shop.kundenverwaltung.domain.Kunde;
 import de.shop.kundenverwaltung.service.KundeService;
 import de.shop.kundenverwaltung.service.KundeService.FetchType;
-import de.shop.util.Log;
+import de.shop.util.interceptor.Log;
 
 
 /**

@@ -14,7 +14,7 @@ import de.shop.bestellverwaltung.domain.Bestellposition;
 import de.shop.bestellverwaltung.domain.Bestellung;
 import de.shop.kundenverwaltung.domain.Kunde;
 import de.shop.kundenverwaltung.rest.UriHelperKunde;
-import de.shop.util.Log;
+import de.shop.util.interceptor.Log;
 
 
 @ApplicationScoped

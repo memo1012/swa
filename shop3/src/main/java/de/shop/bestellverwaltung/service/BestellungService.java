@@ -14,8 +14,8 @@ public interface BestellungService {
 	Bestellung findBestellungByIdMitLieferungen(Long id);
 	Kunde findKundeById(Long id);
 	List<Bestellung> findBestellungenByKunde(Kunde kunde);
-	Bestellung createBestellung(Bestellung bestellung, Long kundeId, Locale locale);
-	Bestellung createBestellung(Bestellung bestellung, Kunde kunde, Locale locale);
+	Bestellung createBestellung(Bestellung bestellung, Long kundeId);
+	Bestellung createBestellung(Bestellung bestellung, Kunde kunde);
 	List<Artikel> ladenhueter(int anzahl);
 	List<Lieferung> findLieferungen(String nr);
 	Lieferung createLieferung(Lieferung lieferung, List<Bestellung> bestellungen);

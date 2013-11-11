@@ -48,7 +48,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 import org.jboss.logging.Logger;
 
 import de.shop.kundenverwaltung.domain.Kunde;
-import de.shop.util.IdGroup;
+
 import de.shop.util.PreExistingGroup;
 
 
@@ -84,7 +84,6 @@ public class Bestellung implements Serializable {
 	@Id
 	@GeneratedValue
 	@Column(nullable = false, updatable = false)
-	@Min(value = MIN_ID, message = "{bestellverwaltung.bestellung.id.min}", groups = IdGroup.class)
 	private Long id = KEINE_ID;
 
 	@ManyToOne(optional = false)

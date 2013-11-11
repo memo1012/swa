@@ -18,7 +18,7 @@ import javax.persistence.criteria.Root;
 import org.jboss.logging.Logger;
 
 import de.shop.artikelverwaltung.domain.Artikel;
-import de.shop.util.Log;
+import de.shop.util.interceptor.Log;
 
 import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
