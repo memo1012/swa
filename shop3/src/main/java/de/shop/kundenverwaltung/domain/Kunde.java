@@ -19,7 +19,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.persistence.Basic;
 import javax.persistence.CollectionTable;
@@ -133,8 +132,7 @@ import de.shop.auth.domain.RolleType;
 		@NamedQuery(name = Kunde.FIND_KUNDEN, query = "SELECT k"
 				+ " FROM  Kunde k") })
 @NamedEntityGraphs({
-		@NamedEntityGraph(name = Kunde.GRAPH_BESTELLUNGEN, attributeNodes = @NamedAttributeNode("bestellungen")),
-		@NamedEntityGraph(name = Kunde.GRAPH_WARTUNGSVERTRAEGE, attributeNodes = @NamedAttributeNode("wartungsvertraege")) })
+		@NamedEntityGraph(name = Kunde.GRAPH_BESTELLUNGEN, attributeNodes = @NamedAttributeNode("bestellungen")) })
 @ScriptAssert(lang = "javascript", script = "_this.password != null && !_this.password.equals(\"\")"
 		+ "&& _this.password.equals(_this.passwordWdh)", message = "{kundenverwaltung.kunde.password.notEqual}", groups = {
 		Default.class, PasswordGroup.class })
@@ -145,7 +143,7 @@ import de.shop.auth.domain.RolleType;
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
 @XmlRootElement
 @Formatted
-public abstract class Kunde implements Serializable, Cloneable {
+public class Kunde implements Serializable, Cloneable {
 	private static final long serialVersionUID = 5685115602958386843L;
 	private static final Logger LOGGER = Logger.getLogger(MethodHandles
 			.lookup().lookupClass().getName());
@@ -211,7 +209,7 @@ public abstract class Kunde implements Serializable, Cloneable {
 	public static final String PARAM_KUNDE_EMAIL = "email";
 
 	public static final String GRAPH_BESTELLUNGEN = "bestellungen";
-	public static final String GRAPH_WARTUNGSVERTRAEGE = "wartungsvertraege";
+
 
 	@Id
 	@GeneratedValue
@@ -294,7 +292,7 @@ public abstract class Kunde implements Serializable, Cloneable {
 	@CollectionTable(name = "kunde_rolle", joinColumns = @JoinColumn(name = "kunde_fk", nullable = false), uniqueConstraints = @UniqueConstraint(columnNames = {
 			"kunde_fk", "rolle" }))
 	@Column(table = "kunde_rolle", name = "rolle", length = 32, nullable = false)
-	private Set<RolleType> rollen;
+	private Collection<RolleType> rollen;
 
 	@Column
 	@Size(max = DETAILS_LENGTH_MAX)
@@ -503,15 +501,15 @@ public abstract class Kunde implements Serializable, Cloneable {
 		this.bestellungenUri = bestellungenUri;
 	}
 
-	public Set<RolleType> getRollen() {
+	public Collection<RolleType> getRollen() {
 		if (rollen == null) {
 			return null;
 		}
 
-		return Collections.unmodifiableSet(rollen);
+		return Collections.unmodifiableCollection(rollen);
 	}
 
-	public void setRollen(Set<RolleType> rollen) {
+	public void setRollen(Collection<RolleType> rollen) {
 		if (this.rollen == null) {
 			this.rollen = rollen;
 			return;
