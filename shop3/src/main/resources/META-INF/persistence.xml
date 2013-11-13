@@ -28,18 +28,6 @@
 			<property name="javax.persistence.schema-generation.create-script-source" value="sql/create.sql"/>
 			<property name="javax.persistence.sql-load-script-source" value="sql/load.sql"/>
 			
-	<!--		<property name="javax.persistence.sql-load-script-source" value="sql/01_enum.sql"/>
-			<property name="javax.persistence.sql-load-script-source" value="sql/02_index.sql"/>
-			<property name="javax.persistence.sql-load-script-source" value="sql/10_hibernate_sequence.sql"/>
-			<property name="javax.persistence.sql-load-script-source" value="sql/20_kunde.sql"/>
-			<property name="javax.persistence.sql-load-script-source" value="sql/21_adresse.sql"/>
-			<property name="javax.persistence.sql-load-script-source" value="sql/22_kunde_rolle.sql"/>
-			<property name="javax.persistence.sql-load-script-source" value="sql/30_artikel.sql"/>
-			<property name="javax.persistence.sql-load-script-source" value="sql/40_bestellung.sql"/>
-			<property name="javax.persistence.sql-load-script-source" value="sql/41_bestellposition.sql"/>
-			<property name="javax.persistence.sql-load-script-source" value="sql/50_lieferung.sql"/>
-			-->
-			
 		    
 			<!-- http://docs.jboss.org/hibernate/orm/4.1/manual/en-US/html/ch03.html -->
 			<!-- javadoc fuer org.hibernate.cfg.AvailableSettings -->

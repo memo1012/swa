@@ -22,16 +22,16 @@ INSERT INTO transport_art VALUES (3, 'WASSER');
 -- ===============================================================================
 -- Fremdschluessel in den bereits *generierten* Tabellen auf die obigen "Enum-Tabellen" anlegen
 -- ===============================================================================
-ALTER TABLE kunde ADD CONSTRAINT kunde__geschlecht_fk FOREIGN KEY (geschlecht_fk) REFERENCES geschlecht;
-ALTER TABLE lieferung ADD CONSTRAINT lieferung__transport_art_fk FOREIGN KEY (transport_art_fk) REFERENCES transport_art;
+--ALTER TABLE kunde ADD CONSTRAINT kunde__geschlecht_fk FOREIGN KEY (geschlecht_fk) REFERENCES geschlecht;
+--ALTER TABLE lieferung ADD CONSTRAINT lieferung__transport_art_fk FOREIGN KEY (transport_art_fk) REFERENCES transport_art;
 
 -- ===============================================================================
 -- Indexe in den *generierten* Tabellen anlegen
 -- ===============================================================================
-CREATE INDEX adresse__kunde_index ON adresse(kunde_fk);
-CREATE INDEX bestellung__kunde_index ON bestellung(kunde_fk);
-CREATE INDEX bestpos__bestellung_index ON bestellposition(bestellung_fk);
-CREATE INDEX bestpos__artikel_index ON bestellposition(artikel_fk);
+--CREATE INDEX adresse__kunde_index ON adresse(kunde_fk);
+--CREATE INDEX bestellung__kunde_index ON bestellung(kunde_fk);
+--CREATE INDEX bestpos__bestellung_index ON bestellposition(bestellung_fk);
+--CREATE INDEX bestpos__artikel_index ON bestellposition(artikel_fk);
 
 INSERT INTO kunde (id, version, nachname, vorname, seit,  geschlecht_fk, newsletter, rabatt, umsatz, email, password, erzeugt, aktualisiert) VALUES(1,1,'Admin','Admin','01.01.2001',0,1,'0,1',0,'admin@hska.de','1','01.08.2006 00:00:00','01.08.2006 00:00:00');
 INSERT INTO kunde (id, version,	nachname, vorname, seit,  geschlecht_fk, newsletter, rabatt, umsatz, email, password, erzeugt, aktualisiert) VALUES (101,1,'Alpha','Adrian','31.01.2001',0,1,'0,1','1500,5','101@hska.de','101','01.08.2006 00:00:00','01.08.2006 00:00:00');
@@ -87,15 +87,15 @@ INSERT INTO bestellung (id, version, kunde_fk, idx, erzeugt, aktualisiert) VALUE
 INSERT INTO bestellung (id, version, kunde_fk, idx, erzeugt, aktualisiert) VALUES (404,1,104,0,to_timestamp('05.08.2006 00:00:00','DD.MM.YYYY HH24:MI:SS'),to_timestamp('05.08.2006 00:00:00','DD.MM.YYYY HH24:MI:SS'));
 
 
-INSERT INTO bestellposition (id, bestellung_fk, artikel_fk, anzahl, idx) VALUES (500,400,300,1,0);
-INSERT INTO bestellposition (id, bestellung_fk, artikel_fk, anzahl, idx) VALUES (501,400,301,4,1);
-INSERT INTO bestellposition (id, bestellung_fk, artikel_fk, anzahl, idx) VALUES (502,401,302,5,0);
-INSERT INTO bestellposition (id, bestellung_fk, artikel_fk, anzahl, idx) VALUES (503,402,303,3,0);
-INSERT INTO bestellposition (id, bestellung_fk, artikel_fk, anzahl, idx) VALUES (504,402,304,2,1);
-INSERT INTO bestellposition (id, bestellung_fk, artikel_fk, anzahl, idx) VALUES (505,403,305,1,0);
-INSERT INTO bestellposition (id, bestellung_fk, artikel_fk, anzahl, idx) VALUES (506,404,300,5,0);
-INSERT INTO bestellposition (id, bestellung_fk, artikel_fk, anzahl, idx) VALUES (507,404,301,2,1);
-INSERT INTO bestellposition (id, bestellung_fk, artikel_fk, anzahl, idx) VALUES (508,404,302,8,2);
+INSERT INTO bestellposition (id, version, bestellung_fk, artikel_fk, anzahl, idx) VALUES (500,1,400,300,1,0);
+INSERT INTO bestellposition (id, version, bestellung_fk, artikel_fk, anzahl, idx) VALUES (501,1,400,301,4,1);
+INSERT INTO bestellposition (id, version, bestellung_fk, artikel_fk, anzahl, idx) VALUES (502,1,401,302,5,0);
+INSERT INTO bestellposition (id, version, bestellung_fk, artikel_fk, anzahl, idx) VALUES (503,1,402,303,3,0);
+INSERT INTO bestellposition (id, version, bestellung_fk, artikel_fk, anzahl, idx) VALUES (504,1,402,304,2,1);
+INSERT INTO bestellposition (id, version, bestellung_fk, artikel_fk, anzahl, idx) VALUES (505,1,403,305,1,0);
+INSERT INTO bestellposition (id, version, bestellung_fk, artikel_fk, anzahl, idx) VALUES (506,1,404,300,5,0);
+INSERT INTO bestellposition (id, version, bestellung_fk, artikel_fk, anzahl, idx) VALUES (507,1,404,301,2,1);
+INSERT INTO bestellposition (id, version, bestellung_fk, artikel_fk, anzahl, idx) VALUES (508,1,404,302,8,2);
 
 
 INSERT INTO lieferung (id, liefernr, transport_art_fk, erzeugt, aktualisiert) VALUES (600,'20051005-001',0,to_timestamp('01.08.2006 00:00:00','DD.MM.YYYY HH24:MI:SS'),to_timestamp('01.08.2006 00:00:00','DD.MM.YYYY HH24:MI:SS'));
