@@ -1,32 +1,37 @@
 package de.shop.bestellverwaltung.domain;
 
 import static de.shop.util.Constants.KEINE_ID;
+import static de.shop.util.Constants.ERSTE_VERSION;
 
 import java.io.Serializable;
 import java.lang.invoke.MethodHandles;
 import java.net.URI;
 
+import javax.persistence.Basic;
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Index;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.PostPersist;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.persistence.Version;
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
+import javax.xml.bind.annotation.XmlTransient;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
 import org.jboss.logging.Logger;
 
 import de.shop.artikelverwaltung.domain.Artikel;
 
 @Entity
-@Table(name = "bestellposition")
+@Table(indexes = { @Index(columnList = "bestellung_fk"), @Index(columnList = "artikel_fk") })
+@Cacheable
 @NamedQueries({
     @NamedQuery(name  = Bestellposition.FIND_LADENHUETER,
    	            query = "SELECT a"
@@ -46,10 +51,14 @@ public class Bestellposition implements Serializable {
 	@Column(nullable = false, updatable = false)
 	private Long id = KEINE_ID;
 	
-	@ManyToOne(optional = false)
+	@Version
+	@Basic(optional = false)
+	private int version = ERSTE_VERSION;
+	
+	@ManyToOne
     @JoinColumn(name = "artikel_fk", nullable = false)
-	@NotNull(message = "{bestellverwaltung.bestellposition.artikel.notNull}")
-	@JsonIgnore
+	//@NotNull(message = "{bestellverwaltung.bestellposition.artikel.notNull}")
+	@XmlTransient
 	private Artikel artikel;
 
 	@Transient
