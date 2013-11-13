@@ -54,8 +54,7 @@ import org.jboss.logging.Logger;
 import de.shop.kundenverwaltung.domain.Kunde;
 
 @Entity
-@Table(indexes = { @Index(columnList = "kunde_fk"),
-		@Index(columnList = "erzeugt") })
+@Table(name = "bestellung", indexes = { @Index(columnList = "kunde_fk")})
 @NamedQueries({
 		@NamedQuery(name = Bestellung.FIND_BESTELLUNGEN_BY_KUNDEID, query = "SELECT b"
 				+ " FROM   Bestellung b"

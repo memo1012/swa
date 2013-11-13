@@ -132,7 +132,7 @@ public class KundeResource {
 
 	private URI getUriBestellungen(Kunde kunde, UriInfo uriInfo) {
 		return uriHelper.getUri(KundeResource.class,
-				"findBestellungenByKundeid", kunde.getId(), uriInfo);
+				"findBestellungenByKundeId", kunde.getId(), uriInfo);
 	}
 
 	public URI getUriKunde(Kunde kunde, UriInfo uriInfo) {
@@ -272,7 +272,7 @@ public class KundeResource {
 				})
 				.links(getTransitionalLinksBestellungen(bestellungen, kunde,
 						uriInfo)).build();
-	}
+	} 
 
 	private Link[] getTransitionalLinksBestellungen(
 			List<Bestellung> bestellungen, Kunde kunde, UriInfo uriInfo) {

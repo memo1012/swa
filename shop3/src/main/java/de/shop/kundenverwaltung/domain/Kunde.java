@@ -28,7 +28,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Index;
-import javax.persistence.Inheritance;
 import javax.persistence.JoinColumn;
 import javax.persistence.NamedAttributeNode;
 import javax.persistence.NamedEntityGraph;
@@ -76,7 +75,6 @@ import de.shop.auth.domain.RolleType;
 // Zu email wird unten ein UNIQUE Index definiert
 @Table(name = "kunde", indexes = { @Index(columnList = "nachname"),
 		@Index(columnList = "file_fk") })
-@Inheritance
 @NamedQueries({
 		@NamedQuery(name = Kunde.FIND_KUNDEN, query = "SELECT k"
 				+ " FROM   Kunde k"),

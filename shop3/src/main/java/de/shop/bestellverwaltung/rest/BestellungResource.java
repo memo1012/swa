@@ -179,7 +179,7 @@ public class BestellungResource {
 	 * @return Objekt mit Kundendaten, falls die ID vorhanden ist
 	 */
 	@GET
-	@Path("{id:[1-9][0-9]*}/kunde")
+	@Path("{id:[1-9][0-9]*}/kunden")
 	public Response findKundeByBestellungId(@PathParam("id") Long id) {
 		final Kunde kunde = bs.findKundeById(id);
 		if (kunde == null) {
