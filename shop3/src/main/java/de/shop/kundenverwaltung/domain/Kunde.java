@@ -277,7 +277,7 @@ public class Kunde implements Serializable, Cloneable {
 	private Adresse adresse;
 
 	// Default: fetch=LAZY
-	@OneToMany
+	@OneToMany(fetch = LAZY)
 	@JoinColumn(name = "kunde_fk", nullable = false)
 	@OrderColumn(name = "idx", nullable = false)
 	@XmlTransient
