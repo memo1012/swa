@@ -12,8 +12,10 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static javax.ws.rs.core.MediaType.APPLICATION_XML;
 import static javax.ws.rs.core.MediaType.TEXT_PLAIN;
 import static javax.ws.rs.core.MediaType.TEXT_XML;
+
 import java.lang.invoke.MethodHandles;
 import java.net.URI;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -81,6 +83,9 @@ public class KundeResource {
 	@Inject
 	private UriHelper uriHelper;
 
+	@Inject
+	private Principal principal;
+
 	@PostConstruct
 	private void postConstruct() {
 		LOGGER.debugf("CDI-faehiges Bean %s wurde erzeugt", this);
@@ -109,6 +114,11 @@ public class KundeResource {
 	@Path("{id:[1-9][0-9]*}")
 	public Response findKundeById(@PathParam("id") Long id) {
 		// final Locale locale = localeHelper.getLocale(headers);
+		String username = principal.getName();
+		Kunde angemeldeter_kunde = ks.findKundeByUserName(username);
+
+		
+		
 		final Kunde kunde = ks.findKundeById(id, FetchType.NUR_KUNDE);
 		if (kunde == null) {
 			// TODO msg passend zu locale
@@ -272,7 +282,7 @@ public class KundeResource {
 				})
 				.links(getTransitionalLinksBestellungen(bestellungen, kunde,
 						uriInfo)).build();
-	} 
+	}
 
 	private Link[] getTransitionalLinksBestellungen(
 			List<Bestellung> bestellungen, Kunde kunde, UriInfo uriInfo) {
