@@ -1,6 +1,8 @@
 package de.shop.util;
 
 public final class Constants {
+	public static final String REST_PATH = "/rest";
+	
 	// Header-Links
 	public static final String SELF_LINK = "self";
 	public static final String LIST_LINK = "list";
@@ -9,7 +11,7 @@ public final class Constants {
 	public static final String REMOVE_LINK = "remove";
 	public static final String FIRST_LINK = "first";
 	public static final String LAST_LINK = "last";
-
+	
 	// JPA
 	public static final Long KEINE_ID = null;
 	public static final long MIN_ID = 1L;
@@ -23,8 +25,10 @@ public final class Constants {
 	public static final String HASH_ENCODING = "base64";
 	public static final String HASH_CHARSET = "UTF-8";
 	
-	// JNDI-NAME fuer UserTransaction
-	//public static final String TRANSACTION_NAME = "java:jboss/UserTransaction";
+	// JSF
+	public static final String JSF_INDEX = "/index";
+	public static final String JSF_DEFAULT_ERROR = "/error/defaultError";
+	public static final String JSF_REDIRECT_SUFFIX = "?faces-redirect=true";
 	
 	private Constants() {
 	}

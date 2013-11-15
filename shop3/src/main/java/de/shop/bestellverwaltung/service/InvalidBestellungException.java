@@ -41,4 +41,9 @@ public class InvalidBestellungException extends AbstractBestellungValidationExce
 	public Long getKundeId() {
 		return kundeId;
 	}
+	
+	@Override
+	public String getMessageKey() {
+		return null;
+	}
 }

@@ -22,6 +22,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Past;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlTransient;
@@ -154,7 +155,6 @@ public class Adresse implements Serializable {
 		this.hausnr = hausnr;
 	}
 	
-	@JsonProperty("Erzeugt am:")
 	public Date getErzeugt() {
 		return erzeugt == null ? null : (Date) erzeugt.clone();
 	}
@@ -176,7 +176,7 @@ public class Adresse implements Serializable {
 	}
 	@Override
 	public String toString() {
-		return "Adresse [id=" + id + ", plz=" + plz + ", ort=" + ort + ", strasse=" + strasse + ", hausnr=" + hausnr
+		return "Adresse [id=" + id + ", version=" + version + ", plz=" + plz + ", ort=" + ort + ", strasse=" + strasse + ", hausnr=" + hausnr
 		       + ", erzeugt=" + erzeugt + ", aktualisiert=" + aktualisiert + ']';
 	}
 

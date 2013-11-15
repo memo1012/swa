@@ -12,5 +12,9 @@ public class ArtikelServiceException extends AbstractShopException {
 	public ArtikelServiceException(String msg, Throwable t) {
 		super(msg, t);
 	}
-
+	
+	@Override
+	public String getMessageKey() {
+		return null;
+	}
 }

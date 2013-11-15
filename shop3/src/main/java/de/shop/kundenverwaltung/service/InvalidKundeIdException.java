@@ -21,4 +21,9 @@ public class InvalidKundeIdException extends KundeValidationException {
 	public Long getKundeId() {
 		return kundeId;
 	}
+	
+	@Override
+	public String getMessageKey() {
+		return null;
+	}
 }

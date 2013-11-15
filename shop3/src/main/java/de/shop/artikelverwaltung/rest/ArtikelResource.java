@@ -4,12 +4,17 @@ import static de.shop.util.Constants.SELF_LINK;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static javax.ws.rs.core.MediaType.APPLICATION_XML;
 import static javax.ws.rs.core.MediaType.TEXT_XML;
+import static de.shop.util.Constants.FIRST_LINK;
 import static de.shop.util.Constants.KEINE_ID;
 
 
 
+
+import static de.shop.util.Constants.LAST_LINK;
+
 import java.lang.invoke.MethodHandles;
 import java.net.URI;
+import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -82,6 +87,21 @@ public class ArtikelResource {
 		return new Link[] { self };
 	}
 	
+	private Link[] getTransitionalLinksArtikel(List<? extends Artikel> artikel,
+			UriInfo uriInfo) {
+		if (artikel == null || artikel.isEmpty()) {
+			return null;
+		}
+
+		final Link first = Link.fromUri(getUriArtikel(artikel.get(0), uriInfo))
+				.rel(FIRST_LINK).build();
+		final int lastPos = artikel.size() - 1;
+		final Link last = Link
+				.fromUri(getUriArtikel(artikel.get(lastPos), uriInfo))
+				.rel(LAST_LINK).build();
+
+		return new Link[] { first, last };
+	}
 	public URI getUriArtikel(Artikel artikel, UriInfo uriInfo) {
 		return uriHelper.getUri(ArtikelResource.class, "findArtikelById", artikel.getId(), uriInfo);
 	}
@@ -89,18 +109,16 @@ public class ArtikelResource {
 	@GET
 	@Path ("/bezeichnung/{bezeichnung}")
 	public Response findArtikelByBezeichnung(@PathParam("bezeichnung") String bezeichnung, @Context UriInfo uriInfo) {
-		final Artikel artikel = as.findArtikelByBezeichnung(bezeichnung);
-		//final AbstractKunde kunde = ks.findKundeById(id, , locale);
+		final List<Artikel> artikel = as.findArtikelByBezeichnung(bezeichnung);
 		if (artikel == null) {
 			final String msg = "Kein Artikel gefunden mit der Bezeichnung " + bezeichnung;
 			//LOGGER.trace("Error In Artikel Ressource");
 			throw new NotFoundException(msg);
 		}
 		return Response.ok(artikel)
-                .links(getTransitionalLinks(artikel, uriInfo))
+                .links(getTransitionalLinksArtikel(artikel, uriInfo))
                 .build();
 	}
-
 
 	/**
 	 * Mit der URL /artikel einen Artikel per PUT aktualisieren

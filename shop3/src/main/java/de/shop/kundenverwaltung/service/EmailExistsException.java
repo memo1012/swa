@@ -5,6 +5,8 @@ import javax.ejb.ApplicationException;
 @ApplicationException(rollback = true)
 public class EmailExistsException extends KundeServiceException {
 	private static final long serialVersionUID = 4867667611097919943L;
+	
+	private static final String MESSAGE_KEY = "kunde.emailExists";
 	private final String email;
 	
 	public EmailExistsException(String email) {
@@ -14,5 +16,10 @@ public class EmailExistsException extends KundeServiceException {
 
 	public String getEmail() {
 		return email;
+	}
+
+	@Override
+	public String getMessageKey() {
+		return MESSAGE_KEY;
 	}
 }

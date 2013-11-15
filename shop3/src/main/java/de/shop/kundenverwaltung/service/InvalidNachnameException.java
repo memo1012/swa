@@ -21,4 +21,9 @@ public class InvalidNachnameException extends KundeValidationException {
 	public String getNachname() {
 		return nachname;
 	}
+	
+	@Override
+	public String getMessageKey() {
+		return null;
+	}
 }

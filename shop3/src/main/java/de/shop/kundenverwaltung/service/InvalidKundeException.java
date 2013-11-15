@@ -37,4 +37,10 @@ public class InvalidKundeException extends KundeValidationException {
 	public Kunde getKunde() {
 		return kunde;
 	}
+	
+	@Override
+	public String getMessageKey() {
+		return null;
+	}
+
 }

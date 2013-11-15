@@ -15,6 +15,7 @@ import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import com.google.common.base.Strings;
 import org.jboss.logging.Logger;
 
 import de.shop.artikelverwaltung.domain.Artikel;
@@ -127,20 +128,19 @@ public class ArtikelService implements Serializable {
 	}
 
 	/**
+	 * Liste mit Artikeln mit gleicher Bezeichnung suchen
+	 * @param bezeichnung Die Bezeichnung der gesuchten Artikel suchen
+	 * @return Liste der gefundenen Artikel suchen
 	 */
-	public Artikel findArtikelByBezeichnung(String bezeichnung) {
-		LOGGER.trace("In Artikel Services");
-		LOGGER.trace("Nach Validation");
-		try {
-			final Artikel artikel = em
-					.createNamedQuery(Artikel.FIND_ARTIKEL_BY_BEZEICHNUNG,
-							Artikel.class)
-					.setParameter(Artikel.PARAM_ARTIKEL_BEZEICHNUNG,
-							bezeichnung).getSingleResult();
-			return artikel;
-		} catch (NoResultException e) {
-			return null;
+	public List<Artikel> findArtikelByBezeichnung(String bezeichnung) {
+		if (Strings.isNullOrEmpty(bezeichnung)) {
+			return findVerfuegbareArtikel();
 		}
+		
+		return em.createNamedQuery(Artikel.FIND_ARTIKEL_BY_BEZ, Artikel.class)
+				 .setParameter(Artikel.PARAM_BEZEICHNUNG, "%" + bezeichnung + "%")
+				 .getResultList();
+		
 	}
 
 	/**
