@@ -36,6 +36,7 @@ import de.shop.bestellverwaltung.domain.Bestellposition;
 import de.shop.bestellverwaltung.domain.Bestellposition_;
 import de.shop.bestellverwaltung.domain.Bestellung;
 import de.shop.bestellverwaltung.domain.Bestellung_;
+import de.shop.kundenverwaltung.domain.GeschlechtType;
 import de.shop.kundenverwaltung.domain.Kunde;
 import de.shop.kundenverwaltung.domain.Kunde_;
 import de.shop.util.NoMimeTypeException;
@@ -120,6 +121,34 @@ public class KundeService implements Serializable {
 
 	/**
 	 */
+	public Kunde findKundeById(Long id, FetchType fetch) {
+		if (id == null) {
+			return null;
+		}
+		Kunde kunde = null;
+		switch (fetch) {
+		case NUR_KUNDE:
+			kunde = em.find(Kunde.class, id);
+			break;
+
+		case MIT_BESTELLUNGEN:
+			kunde = em
+					.createNamedQuery(
+							Kunde.FIND_KUNDE_BY_ID_FETCH_BESTELLUNGEN,
+							Kunde.class).setParameter(Kunde.PARAM_KUNDE_ID, id)
+					.getSingleResult();
+			break;
+
+		default:
+			kunde = em.find(Kunde.class, id);
+			break;
+		}
+
+		return kunde;
+	}
+
+	/**
+	 */
 	public List<Kunde> findKundenByNachname(String nachname, FetchType fetch) {
 
 		List<Kunde> kunden;
@@ -183,32 +212,14 @@ public class KundeService implements Serializable {
 				.getResultList();
 	}
 
-	/**
-	 */
-	public Kunde findKundeById(Long id, FetchType fetch) {
+	public List<Kunde> findKundenByIdPrefix(Long id) {
 		if (id == null) {
-			return null;
-		}
-		Kunde kunde = null;
-		switch (fetch) {
-		case NUR_KUNDE:
-			kunde = em.find(Kunde.class, id);
-			break;
-
-		case MIT_BESTELLUNGEN:
-			kunde = em
-					.createNamedQuery(
-							Kunde.FIND_KUNDE_BY_ID_FETCH_BESTELLUNGEN,
-							Kunde.class).setParameter(Kunde.PARAM_KUNDE_ID, id)
-					.getSingleResult();
-			break;
-
-		default:
-			kunde = em.find(Kunde.class, id);
-			break;
+			return Collections.emptyList();
 		}
 
-		return kunde;
+		return em.createNamedQuery(Kunde.FIND_KUNDEN_BY_ID_PREFIX, Kunde.class)
+				.setParameter(Kunde.PARAM_KUNDE_ID_PREFIX, id.toString() + '%')
+				.setMaxResults(MAX_AUTOCOMPLETE).getResultList();
 	}
 
 	public List<Long> findIdsByPrefix(String idPrefix) {
@@ -235,19 +246,22 @@ public class KundeService implements Serializable {
 			return null;
 		}
 	}
-	
+
 	/**
 	 * Den Kunden zu einem Benutzernamen suchen.
-	 * @param userName Der Benutzername, zu dem der passende Kunde gesucht wird.
-	 * @return Der gefundene Kunde oder null, falls es zum angegebenen Benutzernamen keinen Kunden gibt.
+	 * 
+	 * @param userName
+	 *            Der Benutzername, zu dem der passende Kunde gesucht wird.
+	 * @return Der gefundene Kunde oder null, falls es zum angegebenen
+	 *         Benutzernamen keinen Kunden gibt.
 	 */
 	public Kunde findKundeByUserName(String userName) {
 		try {
-			return em.createNamedQuery(Kunde.FIND_KUNDE_BY_USERNAME, Kunde.class)
-					 .setParameter(Kunde.PARAM_KUNDE_USERNAME, userName)
-					 .getSingleResult();
-		}
-		catch (NoResultException e) {
+			return em
+					.createNamedQuery(Kunde.FIND_KUNDE_BY_USERNAME, Kunde.class)
+					.setParameter(Kunde.PARAM_KUNDE_USERNAME, userName)
+					.getSingleResult();
+		} catch (NoResultException e) {
 			return null;
 		}
 	}
@@ -318,6 +332,22 @@ public class KundeService implements Serializable {
 			}
 		};
 		managedExecutorService.execute(storeFile);
+	}
+
+	private static boolean hasBestellungen(Kunde kunde) {
+		LOGGER.debugf("hasBestellungen BEGINN: %s", kunde);
+
+		boolean result = false;
+
+		// Gibt es den Kunden und hat er mehr als eine Bestellung?
+		// Bestellungen nachladen wegen Hibernate-Caching
+		if (kunde != null && kunde.getBestellungen() != null
+				&& !kunde.getBestellungen().isEmpty()) {
+			result = true;
+		}
+
+		LOGGER.debugf("hasBestellungen ENDE: %s", result);
+		return result;
 	}
 
 	/**
@@ -431,6 +461,12 @@ public class KundeService implements Serializable {
 				.setParameter(Kunde.PARAM_KUNDE_ADRESSE_PLZ, plz)
 				.getResultList();
 		return kunden;
+	}
+
+	public List<Kunde> findKundenByGeschlecht(GeschlechtType geschlecht) {
+		return em.createNamedQuery(Kunde.FIND_BY_GESCHLECHT, Kunde.class)
+				.setParameter(Kunde.PARAM_GESCHLECHT, geschlecht)
+				.getResultList();
 	}
 
 	/**

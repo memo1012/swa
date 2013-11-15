@@ -19,6 +19,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Basic;
 import javax.persistence.CollectionTable;
@@ -55,6 +56,7 @@ import javax.validation.constraints.Size;
 import javax.validation.groups.Default;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+
 
 
 import org.codehaus.jackson.annotate.JsonTypeInfo;
@@ -165,6 +167,7 @@ public class Kunde implements Serializable, Cloneable {
 	 * public static final String FIND_KUNDEN_FETCH_BESTELLUNGEN = PREFIX +
 	 * "findKundenFetchBestellungen";
 	 */
+	public static final String FIND_BY_GESCHLECHT = PREFIX + "findByGeschlecht";
 	public static final String FIND_KUNDEN_ORDER_BY_ID = PREFIX
 			+ "findKundenOrderById";
 	public static final String FIND_IDS_BY_PREFIX = PREFIX + "findIdsByPrefix";
@@ -200,6 +203,7 @@ public class Kunde implements Serializable, Cloneable {
 	public static final String PARAM_KUNDE_ID_PREFIX = "idPrefix";
 	public static final String PARAM_KUNDE_NACHNAME = "nachname";
 	public static final String PARAM_KUNDE_NACHNAME_PREFIX = "nachnamePrefix";
+	public static final String PARAM_GESCHLECHT = "geschlecht";
 	public static final String PARAM_KUNDE_ADRESSE_PLZ = "plz";
 	public static final String PARAM_KUNDE_USERNAME = "username";
 	public static final String PARAM_USERNAME_PREFIX = "usernamePrefix";
@@ -293,7 +297,7 @@ public class Kunde implements Serializable, Cloneable {
 	@CollectionTable(name = "kunde_rolle", joinColumns = @JoinColumn(name = "kunde_fk", nullable = false), uniqueConstraints = @UniqueConstraint(columnNames = {
 			"kunde_fk", "rolle" }))
 	@Column(table = "kunde_rolle", name = "rolle", length = 32, nullable = false)
-	private Collection<RolleType> rollen;
+	private Set<RolleType> rollen;
 
 	@Column
 	@Size(max = DETAILS_LENGTH_MAX)
@@ -502,15 +506,15 @@ public class Kunde implements Serializable, Cloneable {
 		this.bestellungenUri = bestellungenUri;
 	}
 
-	public Collection<RolleType> getRollen() {
+	public Set<RolleType> getRollen() {
 		if (rollen == null) {
 			return null;
 		}
 
-		return Collections.unmodifiableCollection(rollen);
+		return Collections.unmodifiableSet(rollen);
 	}
 
-	public void setRollen(Collection<RolleType> rollen) {
+	public void setRollen(Set<RolleType> rollen) {
 		if (this.rollen == null) {
 			this.rollen = rollen;
 			return;
@@ -630,6 +634,7 @@ public class Kunde implements Serializable, Cloneable {
 		neuesObjekt.version = version;
 		neuesObjekt.nachname = nachname;
 		neuesObjekt.vorname = vorname;
+		neuesObjekt.geschlecht = geschlecht;
 		neuesObjekt.umsatz = umsatz;
 		neuesObjekt.email = email;
 		neuesObjekt.newsletter = newsletter;
