@@ -150,8 +150,8 @@ public class Kunde implements Serializable, Cloneable {
 	private static final String NAME_PATTERN = "[A-Z\u00C4\u00D6\u00DC][a-z\u00E4\u00F6\u00FC\u00DF]";
 	private static final String PREFIX_ADEL = "(o'|von|von der|von und zu|van)?";
 
-	public static final String NACHNAME_PATTERN = PREFIX_ADEL + NAME_PATTERN
-			+ "(-" + NAME_PATTERN + ")?";
+	public static final String VORNAME_PATTERN =  NAME_PATTERN + "( " + NAME_PATTERN + ")?";
+	public static final String NACHNAME_PATTERN = PREFIX_ADEL + NAME_PATTERN + "(-" + NAME_PATTERN + ")?";
 	private static final int NACHNAME_LENGTH_MIN = 2;
 	private static final int NACHNAME_LENGTH_MAX = 32;
 	private static final int VORNAME_LENGTH_MAX = 32;
@@ -228,6 +228,7 @@ public class Kunde implements Serializable, Cloneable {
 
 	@Column(length = VORNAME_LENGTH_MAX)
 	@Size(max = VORNAME_LENGTH_MAX, message = "{kundenverwaltung.kunde.vorname.length}")
+	@Pattern(regexp = VORNAME_PATTERN, message = "{kundenverwaltung.kunde.vorname.pattern}")
 	private String vorname = "";
 
 	@Column(name = "geschlecht_fk")
@@ -246,6 +247,8 @@ public class Kunde implements Serializable, Cloneable {
 
 	@Column(length = EMAIL_LENGTH_MAX, nullable = false, unique = true)
 	@Email(message = "{kundenverwaltung.kunde.email}")
+	@NotNull(message = "{kundenverwaltung.kunde.email.notNull}")
+	@Size(max = EMAIL_LENGTH_MAX, message = "{kundenverwaltung.kunde.email.length}")
 	private String email = "";
 
 	@OneToOne(fetch = LAZY, cascade = { PERSIST, REMOVE })
