@@ -19,6 +19,7 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.inject.Inject;
+import javax.transaction.Transactional;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -35,6 +36,7 @@ import org.jboss.logging.Logger;
 
 import de.shop.artikelverwaltung.domain.Artikel;
 import de.shop.artikelverwaltung.service.ArtikelService;
+import de.shop.kundenverwaltung.domain.Kunde;
 import de.shop.util.interceptor.Log;
 import de.shop.util.rest.NotFoundException;
 import de.shop.util.rest.UriHelper;
@@ -125,13 +127,13 @@ public class ArtikelResource {
 	 * @param artikel zu aktualisierende Daten des Artikel
 	 */
 	@PUT
-	@Consumes(APPLICATION_JSON)
-	@Produces
-	public void updateArtikel(Artikel artikel) {
+	@Consumes({ APPLICATION_JSON, APPLICATION_XML, TEXT_XML })
+	@Produces({ APPLICATION_JSON, APPLICATION_XML, TEXT_XML })
+	@Transactional
+	public Response updateArtikel(Artikel artikel) {
 		// Vorhandenen Artikel ermitteln
 		final Artikel origArt = as.findArtikelById(artikel.getId());
 		if (origArt == null) {
-			// TODO msg passend zu locale
 			final String msg = "Kein Artikel gefunden mit der ID " + artikel.getId();
 			throw new NotFoundException(msg);
 		}
@@ -148,12 +150,15 @@ public class ArtikelResource {
 			final String msg = "Kein Kunde gefunden mit der ID " + origArt.getId();
 			throw new NotFoundException(msg);
 		}
+		
+		return Response.ok(artikel).links(getTransitionalLinks(artikel, uriInfo))
+				.build();
 	}
 	
-	
 	@POST
-	@Consumes(APPLICATION_JSON)
+	@Consumes({ APPLICATION_JSON, APPLICATION_XML, TEXT_XML })
 	@Produces
+	@Transactional
 	public Response createArtikel(Artikel artikel) {
 		LOGGER.trace("In Artikel Post");
 		LOGGER.tracef("Prob Artikel: %s", artikel);

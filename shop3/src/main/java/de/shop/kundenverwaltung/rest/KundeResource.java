@@ -371,7 +371,7 @@ public class KundeResource {
 	@Consumes({ APPLICATION_JSON, APPLICATION_XML, TEXT_XML })
 	@Produces({ APPLICATION_JSON, APPLICATION_XML, TEXT_XML })
 	@Transactional
-	public Response updateAbstractKunde(@Valid Kunde kunde) {
+	public Response updateKunde(@Valid Kunde kunde) {
 		// Vorhandenen Kunden ermitteln
 		// final Locale locale = localeHelper.getLocale(headers);
 		final Kunde origKunde = ks.findKundeById(kunde.getId(),

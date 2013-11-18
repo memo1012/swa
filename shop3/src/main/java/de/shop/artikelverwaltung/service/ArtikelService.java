@@ -129,18 +129,21 @@ public class ArtikelService implements Serializable {
 
 	/**
 	 * Liste mit Artikeln mit gleicher Bezeichnung suchen
-	 * @param bezeichnung Die Bezeichnung der gesuchten Artikel suchen
+	 * 
+	 * @param bezeichnung
+	 *            Die Bezeichnung der gesuchten Artikel suchen
 	 * @return Liste der gefundenen Artikel suchen
 	 */
 	public List<Artikel> findArtikelByBezeichnung(String bezeichnung) {
 		if (Strings.isNullOrEmpty(bezeichnung)) {
 			return findVerfuegbareArtikel();
 		}
-		
-		return em.createNamedQuery(Artikel.FIND_ARTIKEL_BY_BEZ, Artikel.class)
-				 .setParameter(Artikel.PARAM_BEZEICHNUNG, "%" + bezeichnung + "%")
-				 .getResultList();
-		
+
+		return em
+				.createNamedQuery(Artikel.FIND_ARTIKEL_BY_BEZ, Artikel.class)
+				.setParameter(Artikel.PARAM_BEZEICHNUNG,
+						"%" + bezeichnung + "%").getResultList();
+
 	}
 
 	/**
