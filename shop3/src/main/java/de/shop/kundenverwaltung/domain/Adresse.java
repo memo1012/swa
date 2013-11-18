@@ -94,7 +94,18 @@ public class Adresse implements Serializable {
 	@XmlTransient
 	private Date erzeugt;
 	
+	public Adresse() {
+		super();
+	}
 
+	public Adresse(String plz, String ort, String strasse, String hausnr) {
+		super();
+		this.plz = plz;
+		this.ort = ort;
+		this.strasse = strasse;
+		this.hausnr = hausnr;
+	}
+	
 	@PrePersist
 	private void prePersist() {
 		erzeugt = new Date();

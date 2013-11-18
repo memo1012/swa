@@ -65,6 +65,14 @@ public class KundeResource {
 			.lookup().lookupClass());
 	private static final String VERSION = "1.0";
 
+	// public fuer Testklassen
+	public static final String KUNDEN_ID_PATH_PARAM = "kundeId";
+	public static final String KUNDEN_NACHNAME_QUERY_PARAM = "nachname";
+	public static final String KUNDEN_PLZ_QUERY_PARAM = "plz";
+	public static final String KUNDEN_EMAIL_QUERY_PARAM = "email";
+	public static final String KUNDEN_GESCHLECHT_QUERY_PARAM = "geschlecht";
+	
+	
 	private static final String NOT_FOUND_ID = "kunde.notFound.id";
 	private static final String NOT_FOUND_FILE = "kunde.notFound.file";
 
