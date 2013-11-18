@@ -140,7 +140,7 @@ import de.shop.auth.domain.RolleType;
 // + "|| (_this.password != null && _this.password.equals(_this.passwordWdh))",
 // message = "{kundenverwaltung.kunde.password.notEqual}", groups =
 // PasswordGroup.class)
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
+//@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
 @XmlRootElement
 @Formatted
 public class Kunde implements Serializable, Cloneable {
