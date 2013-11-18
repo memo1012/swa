@@ -158,7 +158,7 @@ public class Kunde implements Serializable, Cloneable {
 	private static final int NACHNAME_LENGTH_MAX = 32;
 	private static final int VORNAME_LENGTH_MAX = 32;
 	private static final int EMAIL_LENGTH_MAX = 128;
-	private static final int DETAILS_LENGTH_MAX = 128 * 1024;
+	
 	private static final int PASSWORD_LENGTH_MAX = 256;
 
 	private static final String PREFIX = "Kunde.";
@@ -299,10 +299,7 @@ public class Kunde implements Serializable, Cloneable {
 	@Column(table = "kunde_rolle", name = "rolle", length = 32, nullable = false)
 	private Set<RolleType> rollen;
 
-	@Column
-	@Size(max = DETAILS_LENGTH_MAX)
-	// @SafeHtml
-	private String details;
+	
 
 	@Basic(optional = false)
 	// @Column(nullable = false)
@@ -572,13 +569,7 @@ public class Kunde implements Serializable, Cloneable {
 		this.file = file;
 	}
 
-	public String getDetails() {
-		return details;
-	}
 
-	public void setDetails(String details) {
-		this.details = details;
-	}
 
 	@Override
 	public String toString() {
@@ -641,7 +632,7 @@ public class Kunde implements Serializable, Cloneable {
 		neuesObjekt.password = password;
 		neuesObjekt.passwordWdh = passwordWdh;
 		neuesObjekt.adresse = adresse;
-		neuesObjekt.details = details;
+
 		neuesObjekt.erzeugt = erzeugt;
 		neuesObjekt.aktualisiert = aktualisiert;
 		return neuesObjekt;
