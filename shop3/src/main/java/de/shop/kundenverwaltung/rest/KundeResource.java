@@ -126,10 +126,8 @@ public class KundeResource {
 		Kunde angemeldeter_kunde = ks.findKundeByUserName(username);
 
 		
-		
 		final Kunde kunde = ks.findKundeById(id, FetchType.NUR_KUNDE);
 		if (kunde == null) {
-			// TODO msg passend zu locale
 			final String msg = "Kein Kunde gefunden mit der ID " + id;
 			throw new NotFoundException(msg);
 		}
@@ -385,7 +383,6 @@ public class KundeResource {
 		final Kunde origKunde = ks.findKundeById(kunde.getId(),
 				FetchType.NUR_KUNDE);
 		if (origKunde == null) {
-			// TODO msg passend zu locale
 			final String msg = "Kein Kunde gefunden mit der ID "
 					+ kunde.getId();
 			throw new NotFoundException(msg);
